@@ -1,4 +1,49 @@
 package Model;
 
+import java.util.List;
+
 public class Customer {
+    private String customerID;
+    private String fullName;
+    private InsuranceCard insuranceCard;
+    private List<Claim> claims;
+
+    public Customer(String customerID, String fullName, InsuranceCard insuranceCard, List<Claim> claims) {
+        this.customerID = customerID;
+        this.fullName = fullName;
+        this.insuranceCard = insuranceCard;
+        this.claims = claims;
+    }
+
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public InsuranceCard getInsuranceCard() {
+        return insuranceCard;
+    }
+
+    public void setInsuranceCard(InsuranceCard insuranceCard) {
+        this.insuranceCard = insuranceCard;
+    }
+
+    public List<Claim> getClaims() {
+        return claims;
+    }
+
+    public void setClaims(List<Claim> claims) {
+        this.claims = claims;
+    }
 }
