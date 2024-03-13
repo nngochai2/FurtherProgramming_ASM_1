@@ -10,7 +10,7 @@ public class PolicyHolderView {
     public void menu() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("========================================================================= WELCOME DEPENDENT CUSTOMER =========================================================================");
+            System.out.println("========================================================================= WELCOME POLICY HOLDER =========================================================================");
             System.out.println("You can choose one of the following options: ");
             System.out.println("1. Add Dependents");
             System.out.println("2. View Policy Information");
