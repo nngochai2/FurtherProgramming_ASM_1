@@ -9,8 +9,9 @@ import java.util.Scanner;
 public class DependentCustomerView {
     private final ManageClaims manageClaims = ManageClaims.getInstance();
     private final ManageDependents manageDependents = ManageDependents.getInstance();
+    private final Scanner scanner = new Scanner(System.in);
+
     public void menu() {
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("========================================================================= WELCOME DEPENDENT CUSTOMER =========================================================================");
             System.out.println("You can choose one of the following options: ");
@@ -27,7 +28,7 @@ public class DependentCustomerView {
                 case 1 -> this.viewPolicyInfo();
                 case 2 -> this.viewPolicyHolderInfo();
                 case 3 -> this.viewClaimsMenu();
-                case 4 -> this.displayPersonalInfo();
+                case 4 -> this.viewPersonalInfo();
                 default -> {
                     System.out.println("Invalid input.");
                     return;
@@ -48,18 +49,14 @@ public class DependentCustomerView {
 
     }
 
-    public void displayPersonalInfo() {
-        viewPersonalInfo();
-    }
-
-    public void viewPersonalInfo(String ID) {
-        for (DependentCustomer dependentCustomer : manageDependents.getAllDependentCustomers()) {
-            if (dependentCustomer.getCustomerID().equals(ID)) {
-                System.out.println("ID: " + dependentCustomer.getCustomerID());
-                System.out.println("Name: " + dependentCustomer.getFullName());
-                System.out.println("Insurance Card: " + dependentCustomer.getInsuranceCard());
-            }
-        }
+    public void viewPersonalInfo() {
+//        DependentCustomer dependentCustomer = manageDependents.getDependentByID();
+//        if (dependentCustomer.getCustomerID().equals(dependentID)) {
+//            System.out.println("Personal Information");
+//            System.out.println("ID: " + dependentCustomer.getCustomerID());
+//            System.out.println("Name: " + dependentCustomer.getFullName());
+//            System.out.println("Insurance Card: " + dependentCustomer.getInsuranceCard());
+//        }
     }
 
 }

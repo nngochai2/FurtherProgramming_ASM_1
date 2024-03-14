@@ -2,17 +2,16 @@ package Model;
 
 import java.util.List;
 
-public class Customer {
+public abstract class Customer {
     private String customerID;
     private String fullName;
     private InsuranceCard insuranceCard;
     private List<Claim> claims;
 
-    public Customer(String customerID, String fullName, InsuranceCard insuranceCard, List<Claim> claims) {
+    public Customer(String customerID, String fullName, InsuranceCard insuranceCard) {
         this.customerID = customerID;
         this.fullName = fullName;
         this.insuranceCard = insuranceCard;
-        this.claims = claims;
     }
 
     public String getCustomerID() {

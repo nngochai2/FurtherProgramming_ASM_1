@@ -42,15 +42,18 @@ public class ManageDependents implements Serializable {
         dependentCustomers.add(getDependentByID(dependentID));
     }
 
-    // ALlows policyholder to remove a dependent
+    // Allows policyholder to remove a dependent
     public boolean removeDependent(String dependentID) {
         Optional<DependentCustomer> dependentToRemove = dependentCustomers.stream()
                 .filter(dependentCustomer -> dependentCustomer.getCustomerID().equals(dependentID))
                 .findFirst();
         if (dependentToRemove.isPresent()) {
             dependentCustomers.remove(dependentToRemove.get());
-
+            // Update the products in the system
+            serializeDependentsToFile("data/dependents.dat");
+            return true;
         }
+        return false;
     }
 
     // Checks if a dependent exists
@@ -80,8 +83,8 @@ public class ManageDependents implements Serializable {
     }
 
     // Read the data from the server
-    public void deserializeProductsFromFile() {
-        try (FileInputStream fileInputStream = new FileInputStream("src/data/products.dat");
+    public void deserializeDependentsFromFile() {
+        try (FileInputStream fileInputStream = new FileInputStream("data/dependents.dat");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
             Object importedObject = objectInputStream.readObject();

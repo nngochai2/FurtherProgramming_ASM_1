@@ -5,9 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 public class PolicyHolderCustomer extends Customer {
-    private List<DependentCustomer> dependentCustomers;
-    public PolicyHolderCustomer(String customerID, String fullName, InsuranceCard insuranceCard, List<Claim> claims) {
-        super(customerID, fullName, insuranceCard, claims);
+    private final List<DependentCustomer> dependentCustomers;
+    public PolicyHolderCustomer(String customerID, String fullName, InsuranceCard insuranceCard, List<DependentCustomer> dependentCustomers) {
+        super(customerID, fullName, insuranceCard);
+        this.dependentCustomers = dependentCustomers;
     }
 
     // Policy holder can add dependent(s)

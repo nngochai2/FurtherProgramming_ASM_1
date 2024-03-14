@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class InsuranceCard {
     private String cardNumber;
-    private String cardHolder;
-    private String policyOwner;
+    private Customer cardHolder; // Every customer has their one and only insurance card
+    private PolicyHolderCustomer policyOwner; // There is only one policy owner, which must be the policy holder customer
     private Date expirationDate;
 
-    public InsuranceCard(String cardNumber, String cardHolder, String policyOwner, Date expirationDate) {
+    public InsuranceCard(String cardNumber, Customer cardHolder, PolicyHolderCustomer policyOwner, Date expirationDate) {
         this.cardNumber = cardNumber;
         this.cardHolder = cardHolder;
         this.policyOwner = policyOwner;
@@ -23,19 +23,19 @@ public class InsuranceCard {
         this.cardNumber = cardNumber;
     }
 
-    public String getCardHolder() {
+    public Customer getCardHolder() {
         return cardHolder;
     }
 
-    public void setCardHolder(String cardHolder) {
+    public void setCardHolder(Customer cardHolder) {
         this.cardHolder = cardHolder;
     }
 
-    public String getPolicyOwner() {
+    public PolicyHolderCustomer getPolicyOwner() {
         return policyOwner;
     }
 
-    public void setPolicyOwner(String policyOwner) {
+    public void setPolicyOwner(PolicyHolderCustomer policyOwner) {
         this.policyOwner = policyOwner;
     }
 
