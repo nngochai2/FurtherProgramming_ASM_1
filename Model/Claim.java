@@ -3,7 +3,7 @@ package Model;
 import java.util.Date;
 import java.util.List;
 
-public class Claim implements ClaimProcessManager {
+public class Claim {
     private String claimID;
     private Date claimDate;
     private Customer insuredPerson;
