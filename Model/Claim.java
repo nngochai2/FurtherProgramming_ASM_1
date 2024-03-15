@@ -11,7 +11,6 @@ public class Claim {
     private Date examDate;
     private List<Document> documents;
     private int claimAmount;
-
     private Status status;
     private String receiverBankingInfo;
 

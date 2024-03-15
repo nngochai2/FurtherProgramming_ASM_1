@@ -2,16 +2,64 @@ package View;
 
 import Controller.ManageClaims;
 import Controller.ManageDependents;
+import Controller.ManagePolicyHolders;
 import Model.DependentCustomer;
+import Model.InsuranceCard;
+import Model.PolicyHolderCustomer;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class PolicyHolderView {
     private final ManageClaims manageClaims = ManageClaims.getInstance();
     private final ManageDependents manageDependents = ManageDependents.getInstance();
+    private final ManagePolicyHolders managePolicyHolders = ManagePolicyHolders.getInstance();
     private final DependentCustomerView dependentCustomerView = new DependentCustomerView();
     private final Scanner scanner = new Scanner(System.in);
+
+    public void authenticateUser() {
+        int maxAttempts = 5; // Limits fail attempts
+        int attempts = 0;
+
+        while (true) {
+            System.out.println("________________________________________________________________________________POLICY HOLDER LOGIN____________________________________________________________________________________");
+            System.out.println("Enter your user ID:");
+            String inputID = scanner.nextLine();
+
+            System.out.println("Enter your full name: ");
+            String inputName = scanner.nextLine();
+
+            Optional<PolicyHolderCustomer> policyHolderCustomer = managePolicyHolders.findPolicyHolder(inputID, inputName);
+
+            if (policyHolderCustomer.isPresent()) {
+                System.out.println("Login successful. Welcome, " + inputName + "!");
+                menu(); // Proceed to main menu
+                return; // Exit the method
+            } else {
+                System.out.println("Login failed. Please check your user ID and full name.");
+                attempts++;
+
+                if (attempts < maxAttempts) {
+                    System.out.println("Login failed. Please check your user ID and full name.");
+                    System.out.println("Attempts remaining: " + (maxAttempts - attempts));
+                    System.out.println("1. Try again");
+                    System.out.println("2. Cancel");
+                    System.out.println("Enter your choice: ");
+                    int choice = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (choice != 1) {
+                        System.out.println("Exiting policy holder login...");
+                        break;
+                    }
+                } else {
+                    System.out.println("Maximum login attempts reached. Exiting policy holder login...");
+                    break;
+                }
+            }
+        }
+    }
 
     public void menu() {
         // Get the data from the system
@@ -20,7 +68,7 @@ public class PolicyHolderView {
             System.out.println("========================================================================= WELCOME POLICY HOLDER =========================================================================");
             System.out.println("You can choose one of the following options: ");
             System.out.println("1. Manage Dependents");
-            System.out.println("2. View Policy Information");
+            System.out.println("2. View Insurance Card");
             System.out.println("3. Submit Claims");
             System.out.println("4. Track Claim Status");
             System.out.println("5. Update Personal Information");
@@ -34,6 +82,7 @@ public class PolicyHolderView {
 
             switch (choice) {
                 case 1 -> manageDependents();
+                case 2 -> viewInsuranceCard();
                 case 8 -> {
                     // Exit the program
                     System.out.println("Exiting the program...");
@@ -49,7 +98,7 @@ public class PolicyHolderView {
     // Display a menu for managing dependents
     public void manageDependents() {
         while (true) {
-            System.out.println("========================================================================= MANAGE DEPENDENTS =========================================================================");
+            System.out.println("___________________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS____________________________________________________________________________________");
             System.out.println("You can choose one of the following options: ");
             System.out.println("1. View All Dependents");
             System.out.println("2. Add A Dependent");
@@ -122,6 +171,11 @@ public class PolicyHolderView {
         } else {
             System.err.println("Error: No dependent found. Please try again.");
         }
+    }
+
+    public void viewInsuranceCard() {
+        // Get insurance card
+        InsuranceCard insuranceCard
     }
 
     public void addDependent() {

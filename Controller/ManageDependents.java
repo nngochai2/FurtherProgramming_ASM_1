@@ -1,12 +1,9 @@
 package Controller;
 
 import Model.DependentCustomer;
-
-import javax.imageio.IIOException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class ManageDependents implements Serializable {
     private static ManageDependents instance;
