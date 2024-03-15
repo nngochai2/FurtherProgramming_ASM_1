@@ -20,11 +20,11 @@ public class Main {
             switch (input) {
                 case 1 -> {
                     PolicyHolderView policyHolderView = new PolicyHolderView();
-                    policyHolderView.menu();
+                    policyHolderView.authenticateUser();
                 }
                 case 2 -> {
                     DependentCustomerView dependentCustomerView = new DependentCustomerView();
-                    dependentCustomerView.menu();
+                    dependentCustomerView.authenticateUser();
                 }
             }
         } while (input != 0);

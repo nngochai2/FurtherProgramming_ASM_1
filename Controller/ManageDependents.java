@@ -1,6 +1,8 @@
 package Controller;
 
 import Model.DependentCustomer;
+import Model.PolicyHolderCustomer;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -21,6 +23,12 @@ public class ManageDependents implements Serializable {
 
     public ArrayList<DependentCustomer> getAllDependentCustomers() {
         return dependentCustomers;
+    }
+
+    public Optional<DependentCustomer> findDependent(String ID, String name) {
+        return dependentCustomers.stream()
+                .filter(dependentCustomer -> dependentCustomer.getCustomerID().equals(ID) && dependentCustomer.getFullName().equals(name))
+                .findFirst();
     }
 
     // Allows policyholder to find a dependent by ID

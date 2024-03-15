@@ -18,6 +18,7 @@ public class PolicyHolderView {
     private final DependentCustomerView dependentCustomerView = new DependentCustomerView();
     private final Scanner scanner = new Scanner(System.in);
 
+    // Manage user login
     public void authenticateUser() {
         int maxAttempts = 5; // Limits fail attempts
         int attempts = 0;
@@ -175,7 +176,7 @@ public class PolicyHolderView {
 
     public void viewInsuranceCard() {
         // Get insurance card
-        InsuranceCard insuranceCard
+
     }
 
     public void addDependent() {

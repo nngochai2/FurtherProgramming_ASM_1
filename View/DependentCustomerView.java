@@ -3,13 +3,58 @@ package View;
 import Controller.ManageClaims;
 import Controller.ManageDependents;
 import Model.DependentCustomer;
+import Model.PolicyHolderCustomer;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class DependentCustomerView {
     private final ManageClaims manageClaims = ManageClaims.getInstance();
     private final ManageDependents manageDependents = ManageDependents.getInstance();
     private final Scanner scanner = new Scanner(System.in);
+
+    public void authenticateUser() {
+        int maxAttempts = 5; // Limits fail attempts
+        int attempts = 0;
+
+        while (true) {
+            System.out.println("________________________________________________________________________________DEPENDENT LOGIN____________________________________________________________________________________");
+            System.out.println("Enter your user ID:");
+            String inputID = scanner.nextLine();
+
+            System.out.println("Enter your full name: ");
+            String inputName = scanner.nextLine();
+
+            Optional<DependentCustomer> dependentCustomer = manageDependents.findDependent(inputID, inputName);
+
+            if (dependentCustomer.isPresent()) {
+                System.out.println("Login successful. Welcome, " + inputName + "!");
+                menu(); // Proceed to main menu
+                return; // Exit the method
+            } else {
+                System.out.println("Login failed. Please check your user ID and full name.");
+                attempts++;
+
+                if (attempts < maxAttempts) {
+                    System.out.println("Login failed. Please check your user ID and full name.");
+                    System.out.println("Attempts remaining: " + (maxAttempts - attempts));
+                    System.out.println("1. Try again");
+                    System.out.println("2. Cancel");
+                    System.out.println("Enter your choice: ");
+                    int choice = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (choice != 1) {
+                        System.out.println("Exiting dependent login...");
+                        break;
+                    }
+                } else {
+                    System.out.println("Maximum login attempts reached. Exiting dependent login...");
+                    break;
+                }
+            }
+        }
+    }
 
     public void menu() {
         while (true) {
