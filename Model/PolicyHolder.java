@@ -51,4 +51,9 @@ public class PolicyHolder extends Customer implements Serializable {
     public List<Claim> viewClaimHistory() {
         return getClaims();
     }
+
+    @Override
+    public String toString() {
+        return "Policy Owner: " + getFullName() + "(" + getCustomerID() + ")";
+    }
 }

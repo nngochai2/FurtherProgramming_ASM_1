@@ -15,7 +15,7 @@ public class PolicyHolderView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
-    private final DependentCustomerView dependentCustomerView = new DependentCustomerView();
+    private final ClaimView claimView = new ClaimView();
     private final Scanner scanner = new Scanner(System.in);
 
     // Manage user login
@@ -70,12 +70,10 @@ public class PolicyHolderView {
             System.out.println("You can choose one of the following options: ");
             System.out.println("1. Manage Dependents");
             System.out.println("2. View Insurance Card");
-            System.out.println("3. Submit Claims");
-            System.out.println("4. Track Claim Status");
-            System.out.println("5. Update Personal Information");
-            System.out.println("6. Renew or Modify Policy");
-            System.out.println("7. View Claim History");
-            System.out.println("8. Exit");
+            System.out.println("3. Manage Claims");
+            System.out.println("4. Manage Personal Information");
+            System.out.println("5. Renew or Modify Policy");
+            System.out.println("6. Exit");
             System.out.println("Enter your choice: ");
 
             int choice = scanner.nextInt();
@@ -84,7 +82,8 @@ public class PolicyHolderView {
             switch (choice) {
                 case 1 -> manageDependents();
                 case 2 -> viewInsuranceCard();
-                case 8 -> {
+                case 3 -> claimView.viewClaimsMenu();
+                case 6 -> {
                     // Exit the program
                     System.out.println("Exiting the program...");
                     System.exit(0);
@@ -136,13 +135,13 @@ public class PolicyHolderView {
             System.out.println("You currently have " + dependents.size() + " dependent(s).");
 
             // Display header
-            System.out.printf("%-60s | %-70s", "ID", "Full name");
+            System.out.printf("%-20s | %-70s", "ID", "Full name");
             System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             System.out.println("List of dependents:");
             for (Dependent dependent : dependents) {
-                System.out.printf("%-60s | %-70s", dependent.getCustomerID(), dependent.getFullName());
+                System.out.printf("%-20s | %-70s", dependent.getCustomerID(), dependent.getFullName());
             }
             System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------\n");
         }
@@ -170,7 +169,7 @@ public class PolicyHolderView {
             System.out.println("Full name: " + dependent.getFullName());
 
         } else {
-            System.err.println("Error: No dependent found. Please try again.");
+            System.out.println("Error: No dependent found. Please try again.");
         }
     }
 

@@ -2,17 +2,21 @@ package View;
 
 import Controller.ClaimsController;
 import Controller.DependentsController;
+import Model.Claim;
 import Model.Dependent;
 import Model.InsuranceCard;
 
 import java.util.Optional;
 import java.util.Scanner;
 
-public class DependentCustomerView {
+public class DependentView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
+    private final Dependent currentDependent = dependentsController.getCurrentDependent();
+    private final ClaimView claimView = new ClaimView();
     private final Scanner scanner = new Scanner(System.in);
 
+    // Authenticates dependent logins
     public void authenticateUser() {
         int maxAttempts = 5; // Limits fail attempts
         int attempts = 0;
@@ -56,6 +60,7 @@ public class DependentCustomerView {
         }
     }
 
+    // Display the home menu for the dependents
     public void menu() {
         while (true) {
             System.out.println("========================================================================= WELCOME DEPENDENT CUSTOMER =========================================================================");
@@ -70,7 +75,7 @@ public class DependentCustomerView {
             switch (choice) {
                 case 1 -> this.viewInsuranceCard();
                 case 2 -> this.viewPersonalInfo();
-                case 3 -> this.viewClaimsMenu();
+                case 3 -> claimView.viewClaimsMenu();
                 default -> {
                     System.out.println("Invalid input.");
                     return;
@@ -79,17 +84,12 @@ public class DependentCustomerView {
         }
     }
 
-
+    // Allows dependent to view his/her insurance card
     public void viewInsuranceCard() {
         System.out.println("________________________________________________________________________________DEPENDENT - VIEW INSURANCE CARD____________________________________________________________________________________");
-        System.out.println("Enter your user ID: ");
-        String userID = scanner.nextLine();
-
-        System.out.println("Enter your full name: ");
-        String fullName = scanner.nextLine();
 
         // Get the insurance card
-        InsuranceCard insuranceCard = dependentsController.getInsuranceCard(userID, fullName);
+        InsuranceCard insuranceCard = dependentsController.getInsuranceCard(currentDependent.getCustomerID(), currentDependent.getFullName());
         if (insuranceCard != null) {
             System.out.println("Insurance Card Details: ");
             System.out.println("Card Number: " + insuranceCard.getCardNumber());
@@ -100,25 +100,13 @@ public class DependentCustomerView {
         }
     }
 
-    public void viewPolicyHolderInfo() {
-
-        System.out.println("___________________________________________________________________________DEPENDENT - VIEW POLICY OWNER INFORMATION____________________________________________________________________________________");
-
-    }
-
-    public void viewClaimsMenu() {
-
-    }
-
     public void viewPersonalInfo() {
-        Dependent currentDependent = dependentsController.getCurrentDependent();
         if (currentDependent != null) {
             System.out.println("__________________________________________________________________________DEPENDENT - VIEW PERSONAL INFORMATION____________________________________________________________________________________");
             System.out.println("ID: " + currentDependent.getCustomerID());
             System.out.println("Name: " + currentDependent.getFullName());
-            System.out.println("Insurance Card: " + currentDependent.getInsuranceCard());
-            System.out.println("Policy Owner: " + currentDependent.getPolicyHolder());
+            System.out.println("Insurance Card: " + currentDependent.getInsuranceCard().toString());
+            System.out.println(currentDependent.getPolicyHolder().toString());
         }
     }
-
 }

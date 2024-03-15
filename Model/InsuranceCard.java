@@ -47,4 +47,9 @@ public class InsuranceCard implements Serializable {
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }
+
+    @Override
+    public String toString() {
+        return "Insurance Card Number: " + cardNumber;
+    }
 }

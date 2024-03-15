@@ -46,4 +46,12 @@ public abstract class Customer implements Serializable {
     public void setClaims(List<Claim> claims) {
         this.claims = claims;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerID='" + customerID + '\'' +
+                ", fullName='" + fullName + '\'' +
+                '}';
+    }
 }

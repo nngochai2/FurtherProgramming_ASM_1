@@ -23,8 +23,8 @@ public class Main {
                     policyHolderView.authenticateUser();
                 }
                 case 2 -> {
-                    DependentCustomerView dependentCustomerView = new DependentCustomerView();
-                    dependentCustomerView.authenticateUser();
+                    DependentView dependentView = new DependentView();
+                    dependentView.authenticateUser();
                 }
             }
         } while (input != 0);
