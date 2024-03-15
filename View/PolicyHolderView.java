@@ -175,8 +175,23 @@ public class PolicyHolderView {
     }
 
     public void viewInsuranceCard() {
-        // Get insurance card
+        System.out.println("________________________________________________________________________________POLICY HOLDER - VIEW INSURANCE CARD____________________________________________________________________________________");
+        System.out.println("Enter your user ID: ");
+        String userID = scanner.nextLine();
 
+        System.out.println("Enter your full name: ");
+        String fullName = scanner.nextLine();
+
+        // Get the insurance card
+        InsuranceCard insuranceCard = managePolicyHolders.getInsuranceCard(userID, fullName);
+        if (insuranceCard != null) {
+            System.out.println("Insurance Card Details: ");
+            System.out.println("Card Number: " + insuranceCard.getCardNumber());
+            System.out.println("Policy Owner: " + insuranceCard.getPolicyOwner());
+            System.out.println("Expiration Date: " + insuranceCard.getExpirationDate());
+        } else {
+            System.out.println("No insurance card found for the provided ID and full name.");
+        }
     }
 
     public void addDependent() {

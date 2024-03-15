@@ -60,7 +60,7 @@ public class DependentCustomerView {
         while (true) {
             System.out.println("========================================================================= WELCOME DEPENDENT CUSTOMER =========================================================================");
             System.out.println("You can choose one of the following options: ");
-            System.out.println("1. View Policy Information");
+            System.out.println("1. View Insurance Card");
             System.out.println("2. View Policy Holder Information");
             System.out.println("3. Manage Claims");
             System.out.println("5. View Personal Information");

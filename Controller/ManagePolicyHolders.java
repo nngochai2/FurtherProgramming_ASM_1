@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.InsuranceCard;
 import Model.PolicyHolderCustomer;
 
 import java.io.Serializable;
@@ -26,9 +27,15 @@ public class ManagePolicyHolders implements Serializable {
     }
 
     // Find a policyholder by name and ID
-    public Optional<PolicyHolderCustomer> findPolicyHolder(String ID, String name) {
+    public Optional<PolicyHolderCustomer> findPolicyHolder(String policyHolderID, String fullName) {
         return policyHolderCustomers.stream()
-                .filter(policyHolderCustomer -> policyHolderCustomer.getCustomerID().equals(ID) && policyHolderCustomer.getFullName().equals(name))
+                .filter(policyHolderCustomer -> policyHolderCustomer.getCustomerID().equals(policyHolderID) && policyHolderCustomer.getFullName().equals(fullName))
                 .findFirst();
+    }
+
+    // Get the insurance card of a policyholder by their ID
+    public InsuranceCard getInsuranceCard(String policyHolderID, String fullName) {
+        Optional<PolicyHolderCustomer> policyHolderCustomerOptional = findPolicyHolder(policyHolderID, fullName);
+        return policyHolderCustomerOptional.map(PolicyHolderCustomer::getInsuranceCard).orElse(null);
     }
 }

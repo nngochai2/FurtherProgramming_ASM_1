@@ -5,7 +5,7 @@ import java.util.Date;
 public class InsuranceCard {
     private String cardNumber;
     private Customer cardHolder; // Every customer has their one and only insurance card
-    private PolicyHolderCustomer policyOwner; // There is only one policy owner, which must be the policy holder customer
+    private PolicyHolderCustomer policyOwner; // There is only one policy owner, which must be the policyholder customer
     private Date expirationDate;
 
     public InsuranceCard(String cardNumber, Customer cardHolder, PolicyHolderCustomer policyOwner, Date expirationDate) {
