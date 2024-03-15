@@ -1,28 +1,29 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class PolicyHolderCustomer extends Customer {
-    private final List<DependentCustomer> dependentCustomers;
-    public PolicyHolderCustomer(String customerID, String fullName, InsuranceCard insuranceCard, List<DependentCustomer> dependentCustomers) {
+public class PolicyHolder extends Customer implements Serializable {
+    private final List<Dependent> dependents;
+    public PolicyHolder(String customerID, String fullName, InsuranceCard insuranceCard, List<Dependent> dependents) {
         super(customerID, fullName, insuranceCard);
-        this.dependentCustomers = dependentCustomers;
+        this.dependents = dependents;
     }
 
     // Policy holder can add dependent(s)
-    public void addDependent(DependentCustomer dependentCustomer) {
-        dependentCustomers.add(dependentCustomer);
+    public void addDependent(Dependent dependent) {
+        dependents.add(dependent);
     }
 
-    public void removeDependent(DependentCustomer dependentCustomer) {
-        dependentCustomers.remove(dependentCustomer);
+    public void removeDependent(Dependent dependent) {
+        dependents.remove(dependent);
     }
 
-    public void updateDependentInfo(DependentCustomer dependentCustomer, String fullName, InsuranceCard insuranceCard) {
-        dependentCustomer.setFullName(fullName);
-        dependentCustomer.setInsuranceCard(insuranceCard);
+    public void updateDependentInfo(Dependent dependent, String fullName, InsuranceCard insuranceCard) {
+        dependent.setFullName(fullName);
+        dependent.setInsuranceCard(insuranceCard);
     }
 
     // Policyholder can renew a policy

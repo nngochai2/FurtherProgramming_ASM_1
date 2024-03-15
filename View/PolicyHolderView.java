@@ -1,20 +1,20 @@
 package View;
 
-import Controller.ManageClaims;
-import Controller.ManageDependents;
-import Controller.ManagePolicyHolders;
-import Model.DependentCustomer;
+import Controller.ClaimsController;
+import Controller.DependentsController;
+import Controller.PolicyHoldersController;
+import Model.Dependent;
 import Model.InsuranceCard;
-import Model.PolicyHolderCustomer;
+import Model.PolicyHolder;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class PolicyHolderView {
-    private final ManageClaims manageClaims = ManageClaims.getInstance();
-    private final ManageDependents manageDependents = ManageDependents.getInstance();
-    private final ManagePolicyHolders managePolicyHolders = ManagePolicyHolders.getInstance();
+    private final ClaimsController claimsController = ClaimsController.getInstance();
+    private final DependentsController dependentsController = DependentsController.getInstance();
+    private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
     private final DependentCustomerView dependentCustomerView = new DependentCustomerView();
     private final Scanner scanner = new Scanner(System.in);
 
@@ -31,7 +31,7 @@ public class PolicyHolderView {
             System.out.println("Enter your full name: ");
             String inputName = scanner.nextLine();
 
-            Optional<PolicyHolderCustomer> policyHolderCustomer = managePolicyHolders.findPolicyHolder(inputID, inputName);
+            Optional<PolicyHolder> policyHolderCustomer = policyHoldersController.findPolicyHolder(inputID, inputName);
 
             if (policyHolderCustomer.isPresent()) {
                 System.out.println("Login successful. Welcome, " + inputName + "!");
@@ -64,7 +64,7 @@ public class PolicyHolderView {
 
     public void menu() {
         // Get the data from the system
-        manageDependents.deserializeDependentsFromFile();
+        dependentsController.deserializeDependentsFromFile();
         while (true) {
             System.out.println("========================================================================= WELCOME POLICY HOLDER =========================================================================");
             System.out.println("You can choose one of the following options: ");
@@ -128,7 +128,7 @@ public class PolicyHolderView {
     public void viewAllDependents() {
         System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - VIEW ALL DEPENDENTS____________________________________________________________________________________");
 
-        List<DependentCustomer> dependents = manageDependents.getAllDependentCustomers();
+        List<Dependent> dependents = dependentsController.getAllDependentCustomers();
 
         if (dependents.isEmpty()) {
             System.out.println("No dependents found.");
@@ -141,8 +141,8 @@ public class PolicyHolderView {
 
             // Display content
             System.out.println("List of dependents:");
-            for (DependentCustomer dependentCustomer : dependents) {
-                System.out.printf("%-60s | %-70s", dependentCustomer.getCustomerID(), dependentCustomer.getFullName());
+            for (Dependent dependent : dependents) {
+                System.out.printf("%-60s | %-70s", dependent.getCustomerID(), dependent.getFullName());
             }
             System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------\n");
         }
@@ -152,9 +152,9 @@ public class PolicyHolderView {
         String selectedID = scanner.nextLine();
 
         if (!selectedID.equalsIgnoreCase("cancel")) {
-            DependentCustomer dependentCustomer = manageDependents.getDependentByID(selectedID);
+            Dependent dependent = dependentsController.getDependentByID(selectedID);
 
-            if (dependentCustomer != null) {
+            if (dependent != null) {
                 displayADependentDetails(selectedID);
             } else {
                 System.out.println("No dependent was found.");
@@ -164,10 +164,10 @@ public class PolicyHolderView {
 
     // Display a dependent details
     public void displayADependentDetails(String dependentID) {
-        DependentCustomer dependentCustomer = manageDependents.getDependentByID(dependentID);
-        if (dependentCustomer != null) {
-            System.out.println("ID: " + dependentCustomer.getCustomerID());
-            System.out.println("Full name: " + dependentCustomer.getFullName());
+        Dependent dependent = dependentsController.getDependentByID(dependentID);
+        if (dependent != null) {
+            System.out.println("ID: " + dependent.getCustomerID());
+            System.out.println("Full name: " + dependent.getFullName());
 
         } else {
             System.err.println("Error: No dependent found. Please try again.");
@@ -183,7 +183,7 @@ public class PolicyHolderView {
         String fullName = scanner.nextLine();
 
         // Get the insurance card
-        InsuranceCard insuranceCard = managePolicyHolders.getInsuranceCard(userID, fullName);
+        InsuranceCard insuranceCard = policyHoldersController.getInsuranceCard(userID, fullName);
         if (insuranceCard != null) {
             System.out.println("Insurance Card Details: ");
             System.out.println("Card Number: " + insuranceCard.getCardNumber());
@@ -224,8 +224,8 @@ public class PolicyHolderView {
         String selectedID = scanner.nextLine();
 
         // Check if the targeted dependent exists
-        DependentCustomer dependentCustomerToEdit = manageDependents.getDependentByID(selectedID);
-        if (dependentCustomerToEdit == null) {
+        Dependent dependentToEdit = dependentsController.getDependentByID(selectedID);
+        if (dependentToEdit == null) {
             System.err.println("Error: Dependent with this ID does not exist.");
             return;
         }
@@ -247,7 +247,7 @@ public class PolicyHolderView {
         do {
             System.out.println("Enter the ID of the dependent (enter 'cancel' to cancel the procedure): ");
             selectedID = scanner.nextLine();
-            if (manageDependents.dependentExists(selectedID)) {
+            if (dependentsController.dependentExists(selectedID)) {
                 // Display dependent information first
                 System.out.println("Dependent found: ");
                displayADependentDetails(selectedID);
@@ -256,7 +256,7 @@ public class PolicyHolderView {
                 String confirmation = scanner.nextLine();
 
                 if (confirmation.equalsIgnoreCase("yes")) {
-                    boolean removed = manageDependents.removeDependent(selectedID);
+                    boolean removed = dependentsController.removeDependent(selectedID);
                 }
             }
         } while (!selectedID.equals("cancel"));

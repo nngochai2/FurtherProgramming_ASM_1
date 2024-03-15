@@ -1,16 +1,16 @@
 package View;
 
-import Controller.ManageClaims;
-import Controller.ManageDependents;
-import Model.DependentCustomer;
-import Model.PolicyHolderCustomer;
+import Controller.ClaimsController;
+import Controller.DependentsController;
+import Model.Dependent;
+import Model.InsuranceCard;
 
 import java.util.Optional;
 import java.util.Scanner;
 
 public class DependentCustomerView {
-    private final ManageClaims manageClaims = ManageClaims.getInstance();
-    private final ManageDependents manageDependents = ManageDependents.getInstance();
+    private final ClaimsController claimsController = ClaimsController.getInstance();
+    private final DependentsController dependentsController = DependentsController.getInstance();
     private final Scanner scanner = new Scanner(System.in);
 
     public void authenticateUser() {
@@ -25,7 +25,7 @@ public class DependentCustomerView {
             System.out.println("Enter your full name: ");
             String inputName = scanner.nextLine();
 
-            Optional<DependentCustomer> dependentCustomer = manageDependents.findDependent(inputID, inputName);
+            Optional<Dependent> dependentCustomer = dependentsController.findDependent(inputID, inputName);
 
             if (dependentCustomer.isPresent()) {
                 System.out.println("Login successful. Welcome, " + inputName + "!");
@@ -61,19 +61,16 @@ public class DependentCustomerView {
             System.out.println("========================================================================= WELCOME DEPENDENT CUSTOMER =========================================================================");
             System.out.println("You can choose one of the following options: ");
             System.out.println("1. View Insurance Card");
-            System.out.println("2. View Policy Holder Information");
+            System.out.println("2. View Personal Information");
             System.out.println("3. Manage Claims");
-            System.out.println("5. View Personal Information");
-            System.out.println("6. Update Personal Information");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
             switch (choice) {
-                case 1 -> this.viewPolicyInfo();
-                case 2 -> this.viewPolicyHolderInfo();
+                case 1 -> this.viewInsuranceCard();
+                case 2 -> this.viewPersonalInfo();
                 case 3 -> this.viewClaimsMenu();
-                case 4 -> this.viewPersonalInfo();
                 default -> {
                     System.out.println("Invalid input.");
                     return;
@@ -82,11 +79,30 @@ public class DependentCustomerView {
         }
     }
 
-    public void viewPolicyInfo() {
 
+    public void viewInsuranceCard() {
+        System.out.println("________________________________________________________________________________DEPENDENT - VIEW INSURANCE CARD____________________________________________________________________________________");
+        System.out.println("Enter your user ID: ");
+        String userID = scanner.nextLine();
+
+        System.out.println("Enter your full name: ");
+        String fullName = scanner.nextLine();
+
+        // Get the insurance card
+        InsuranceCard insuranceCard = dependentsController.getInsuranceCard(userID, fullName);
+        if (insuranceCard != null) {
+            System.out.println("Insurance Card Details: ");
+            System.out.println("Card Number: " + insuranceCard.getCardNumber());
+            System.out.println("Policy Owner: " + insuranceCard.getPolicyOwner());
+            System.out.println("Expiration Date: " + insuranceCard.getExpirationDate());
+        } else {
+            System.out.println("No insurance card found for the provided ID and full name.");
+        }
     }
 
     public void viewPolicyHolderInfo() {
+
+        System.out.println("___________________________________________________________________________DEPENDENT - VIEW POLICY OWNER INFORMATION____________________________________________________________________________________");
 
     }
 
@@ -95,13 +111,14 @@ public class DependentCustomerView {
     }
 
     public void viewPersonalInfo() {
-//        DependentCustomer dependentCustomer = manageDependents.getDependentByID();
-//        if (dependentCustomer.getCustomerID().equals(dependentID)) {
-//            System.out.println("Personal Information");
-//            System.out.println("ID: " + dependentCustomer.getCustomerID());
-//            System.out.println("Name: " + dependentCustomer.getFullName());
-//            System.out.println("Insurance Card: " + dependentCustomer.getInsuranceCard());
-//        }
+        Dependent currentDependent = dependentsController.getCurrentDependent();
+        if (currentDependent != null) {
+            System.out.println("__________________________________________________________________________DEPENDENT - VIEW PERSONAL INFORMATION____________________________________________________________________________________");
+            System.out.println("ID: " + currentDependent.getCustomerID());
+            System.out.println("Name: " + currentDependent.getFullName());
+            System.out.println("Insurance Card: " + currentDependent.getInsuranceCard());
+            System.out.println("Policy Owner: " + currentDependent.getPolicyHolder());
+        }
     }
 
 }

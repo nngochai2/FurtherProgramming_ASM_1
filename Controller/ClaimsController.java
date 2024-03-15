@@ -3,21 +3,20 @@ package Controller;
 import Model.Claim;
 import Model.ClaimProcessManager;
 
-import javax.imageio.IIOException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManageClaims implements Serializable, ClaimProcessManager {
-    private static ManageClaims instance;
+public class ClaimsController implements Serializable, ClaimProcessManager {
+    private static ClaimsController instance;
     public ArrayList<Claim> claims;
-    public ManageClaims() {
+    public ClaimsController() {
         claims = new ArrayList<>();
     }
 
-    public static ManageClaims getInstance() {
+    public static ClaimsController getInstance() {
         if (instance == null) {
-            instance = new ManageClaims();
+            instance = new ClaimsController();
         }
         return instance;
     }

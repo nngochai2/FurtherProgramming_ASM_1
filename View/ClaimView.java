@@ -1,10 +1,10 @@
 package View;
 
-import Controller.ManageClaims;
+import Controller.ClaimsController;
 import Model.Claim;
 
 public class ClaimView {
-    private final ManageClaims manageClaims = ManageClaims.getInstance();
+    private final ClaimsController claimsController = ClaimsController.getInstance();
     public void displayClaimDetails(Claim claim) {
         System.out.println("Claim ID: " + claim.getClaimID());
         System.out.println("Date: " + claim.getClaimDate());

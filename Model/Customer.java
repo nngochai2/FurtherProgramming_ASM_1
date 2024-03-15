@@ -1,8 +1,9 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class Customer {
+public abstract class Customer implements Serializable {
     private String customerID;
     private String fullName;
     private InsuranceCard insuranceCard;

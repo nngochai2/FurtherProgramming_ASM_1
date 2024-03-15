@@ -1,59 +1,69 @@
 package Controller;
 
-import Model.DependentCustomer;
-import Model.PolicyHolderCustomer;
+import Model.Dependent;
+import Model.InsuranceCard;
+import Model.PolicyHolder;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class ManageDependents implements Serializable {
-    private static ManageDependents instance;
-    public ArrayList<DependentCustomer> dependentCustomers;
-    public ManageDependents() {
-        dependentCustomers = new ArrayList<>();
+public class DependentsController implements Serializable {
+    private static DependentsController instance;
+    private Dependent currentDependent;
+    public ArrayList<Dependent> dependents;
+    public DependentsController() {
+        dependents = new ArrayList<>();
     }
 
-    public static ManageDependents getInstance() {
+    public static DependentsController getInstance() {
         if (instance == null) {
-            instance = new ManageDependents();
+            instance = new DependentsController();
         }
         return instance;
     }
 
-    public ArrayList<DependentCustomer> getAllDependentCustomers() {
-        return dependentCustomers;
+    public Dependent getCurrentDependent() {
+        return currentDependent;
     }
 
-    public Optional<DependentCustomer> findDependent(String ID, String name) {
-        return dependentCustomers.stream()
-                .filter(dependentCustomer -> dependentCustomer.getCustomerID().equals(ID) && dependentCustomer.getFullName().equals(name))
+    public void setCurrentDependent(Dependent currentDependent) {
+        this.currentDependent = currentDependent;
+    }
+
+    public ArrayList<Dependent> getAllDependentCustomers() {
+        return dependents;
+    }
+
+    public Optional<Dependent> findDependent(String ID, String name) {
+        return dependents.stream()
+                .filter(dependent -> dependent.getCustomerID().equals(ID) && dependent.getFullName().equals(name))
                 .findFirst();
     }
 
     // Allows policyholder to find a dependent by ID
-    public DependentCustomer getDependentByID(String dependentID) {
-        DependentCustomer dependentCustomer = null;
-        for (DependentCustomer d : dependentCustomers) {
+    public Dependent getDependentByID(String dependentID) {
+        Dependent dependent = null;
+        for (Dependent d : dependents) {
             if (d.getCustomerID().equals(dependentID)) {
-                dependentCustomer = d;
+                dependent = d;
             }
         }
-        return dependentCustomer;
+        return dependent;
     }
 
     // Allows policyholder to add a dependent
     public void addDependent(String dependentID) {
-        dependentCustomers.add(getDependentByID(dependentID));
+        dependents.add(getDependentByID(dependentID));
     }
 
     // Allows policyholder to remove a dependent
     public boolean removeDependent(String dependentID) {
-        Optional<DependentCustomer> dependentToRemove = dependentCustomers.stream()
-                .filter(dependentCustomer -> dependentCustomer.getCustomerID().equals(dependentID))
+        Optional<Dependent> dependentToRemove = dependents.stream()
+                .filter(dependent -> dependent.getCustomerID().equals(dependentID))
                 .findFirst();
         if (dependentToRemove.isPresent()) {
-            dependentCustomers.remove(dependentToRemove.get());
+            dependents.remove(dependentToRemove.get());
             // Update the products in the system
             serializeDependentsToFile("data/dependents.dat");
             return true;
@@ -63,8 +73,8 @@ public class ManageDependents implements Serializable {
 
     // Checks if a dependent exists
     public boolean dependentExists(String dependentID) {
-        for (DependentCustomer dependentCustomer : getAllDependentCustomers()) {
-            if (dependentCustomer.getCustomerID().equals(dependentID)) {
+        for (Dependent dependent : getAllDependentCustomers()) {
+            if (dependent.getCustomerID().equals(dependentID)) {
                 return true;
             }
         }
@@ -80,7 +90,7 @@ public class ManageDependents implements Serializable {
         ){
             File file = new File(filePath);
             file.getParentFile().mkdirs(); // Create parent directory
-            objectOutputStream.writeObject(dependentCustomers);
+            objectOutputStream.writeObject(dependents);
             System.out.println("Products have been saved products to " + filePath);
         } catch (IOException e) {
             System.err.println("Error: Unable to save products to " + filePath);
@@ -96,8 +106,8 @@ public class ManageDependents implements Serializable {
 
             if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
 
-                if (importedData.get(0) instanceof DependentCustomer) {
-                    dependentCustomers = (ArrayList<DependentCustomer>) importedData;
+                if (importedData.get(0) instanceof Dependent) {
+                    dependents = (ArrayList<Dependent>) importedData;
                     System.out.println("Products have been deserialized and imported from data/dependents.dat");
                     return;
                 }
@@ -123,6 +133,15 @@ public class ManageDependents implements Serializable {
                 System.err.println("Error: Unable to create file " + filePath);
             }
         }
+    }
+
+    public InsuranceCard getInsuranceCard(String dependentID, String fullName) {
+        Optional<Dependent> dependentCustomerOptional = findDependent(dependentID, fullName);
+        return dependentCustomerOptional.map(Dependent::getInsuranceCard).orElse(null);
+    }
+
+    public PolicyHolder getPolicyOwner(Dependent dependent) {
+        return dependent.getPolicyHolder();
     }
 
 //
