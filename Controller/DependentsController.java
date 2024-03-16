@@ -52,6 +52,16 @@ public class DependentsController implements Serializable {
         return dependent;
     }
 
+    // Allows policyholder to find a dependent by name
+    public Optional<Dependent> getDependentByName(String dependentName) {
+        for (Dependent dependent : dependents) {
+            if (dependent.getFullName().equalsIgnoreCase(dependentName)) {
+                return Optional.of(dependent);
+            }
+        }
+        return Optional.empty();
+    }
+
     // Allows policyholder to add a dependent
     public void addDependent(String dependentID) {
         dependents.add(getDependentByID(dependentID));
