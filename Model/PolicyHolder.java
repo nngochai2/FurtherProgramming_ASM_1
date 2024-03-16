@@ -6,10 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 public class PolicyHolder extends Customer implements Serializable {
-    private final List<Dependent> dependents;
-    public PolicyHolder(String customerID, String fullName, InsuranceCard insuranceCard, List<Dependent> dependents) {
+    private List<Dependent> dependents;
+    public PolicyHolder(String customerID, String fullName, InsuranceCard insuranceCard) {
         super(customerID, fullName, insuranceCard);
-        this.dependents = dependents;
     }
 
     // Policy holder can add dependent(s)
@@ -19,6 +18,14 @@ public class PolicyHolder extends Customer implements Serializable {
 
     public void removeDependent(Dependent dependent) {
         dependents.remove(dependent);
+    }
+
+    public List<Dependent> getDependents() {
+        return dependents;
+    }
+
+    public void setDependents(List<Dependent> dependents) {
+        this.dependents = dependents;
     }
 
     public void updateDependentInfo(Dependent dependent, String fullName, InsuranceCard insuranceCard) {

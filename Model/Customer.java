@@ -1,9 +1,13 @@
 package Model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 public abstract class Customer implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private static int lastAssignedID = 0;
     private String customerID;
     private String fullName;
     private InsuranceCard insuranceCard;
@@ -13,6 +17,12 @@ public abstract class Customer implements Serializable {
         this.customerID = customerID;
         this.fullName = fullName;
         this.insuranceCard = insuranceCard;
+    }
+
+    private String generateID() {
+        // Increment the last assigned ID and format it
+        lastAssignedID++;
+        return "c-" + String.format("%07d", lastAssignedID);
     }
 
     public String getCustomerID() {

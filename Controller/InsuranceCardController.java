@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.Customer;
-import Model.Dependent;
 import Model.InsuranceCard;
 import Model.PolicyHolder;
 
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class InsuranceCardController {
+public class InsuranceCardController implements Serializable {
     private static InsuranceCardController instance;
     public List<InsuranceCard> insuranceCards;
 
@@ -25,14 +24,23 @@ public class InsuranceCardController {
         return instance;
     }
 
-    public InsuranceCard generateInsuranceCard(Customer customer) {
+//    public InsuranceCard generateInsuranceCard(Customer customer) {
+//        String cardNumber = generateCardNumber();
+//        Date expirationDate = getDefaultExpirationDate();
+//
+//        // Create insurance card with provided customer and policy owner information
+//        PolicyHolder policyHolder = customer instanceof PolicyHolder ? (PolicyHolder) customer : null;
+//        return new InsuranceCard(cardNumber, customer, policyHolder, expirationDate);
+//    }
+
+    public InsuranceCard generateInsuranceCard(Customer customer, String cardHolderName, String policyOwnerName) {
         String cardNumber = generateCardNumber();
         Date expirationDate = getDefaultExpirationDate();
 
         // Create insurance card with provided customer and policy owner information
-        PolicyHolder policyHolder = customer instanceof PolicyHolder ? (PolicyHolder) customer : null;
-        return new InsuranceCard(cardNumber, customer, policyHolder, expirationDate);
+        return new InsuranceCard(cardNumber, cardHolderName, policyOwnerName, expirationDate);
     }
+
 
     // Method to generate a random card number
     private String generateCardNumber() {
@@ -46,11 +54,11 @@ public class InsuranceCardController {
         return new Date(System.currentTimeMillis() + oneYearInMillis);
     }
 
-    public void serializeDependentsToFile(String filePath) {
+    public void serializeInsuranceCardsToFile(String filePath) {
         createFileIfNotExists("data/insuranceCards.dat");
         try (
                 FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)
         ){
             File file = new File(filePath);
             file.getParentFile().mkdirs(); // Create parent directory

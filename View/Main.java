@@ -7,7 +7,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         // Welcome message
-        System.out.println("=============================================================== WELCOME TO SHOPPING APPLICATION! ===============================================================");
+        System.out.println("=============================================================== WELCOME TO INSURANCE CLAIMS MANAGEMENT SYSTEM! ===============================================================");
         int input;
         do {
             System.out.println("Please login (enter '0' to cancel): ");

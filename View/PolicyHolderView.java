@@ -1,9 +1,6 @@
 package View;
 
-import Controller.ClaimsController;
-import Controller.DependentsController;
-import Controller.InsuranceCardController;
-import Controller.PolicyHoldersController;
+import Controller.*;
 import Model.Dependent;
 import Model.InsuranceCard;
 import Model.PolicyHolder;
@@ -14,6 +11,7 @@ import java.util.Scanner;
 
 public class PolicyHolderView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
+    private final CustomersController customersController = CustomersController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
     private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
@@ -38,6 +36,7 @@ public class PolicyHolderView {
 
             if (policyHolderCustomer.isPresent()) {
                 System.out.println("Login successful. Welcome, " + inputName + "!");
+                policyHoldersController.deserializePolicyHoldersFromFile();
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {
@@ -66,8 +65,6 @@ public class PolicyHolderView {
     }
 
     public void menu() {
-        // Get the data from the system
-        dependentsController.deserializeDependentsFromFile();
         while (true) {
             System.out.println("========================================================================= WELCOME POLICY HOLDER =========================================================================");
             System.out.println("You can choose one of the following options: ");
@@ -102,6 +99,7 @@ public class PolicyHolderView {
 
     // Display a menu for managing dependents
     public void manageDependents() {
+        dependentsController.deserializeDependentsFromFile();
         while (true) {
             System.out.println("___________________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS____________________________________________________________________________________");
             System.out.println("You can choose one of the following options: ");
@@ -199,34 +197,37 @@ public class PolicyHolderView {
     }
 
     public void addDependent() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - ADD A DEPENDENT____________________________________________________________________________________");
-        System.out.println("Adding a new dependent (Enter 'cancel' at any time to cancel the procedure: ");
         while (true){
+            System.out.println("Adding a new dependent (Enter 'cancel' at any time to cancel the procedure.");
             System.out.println("Enter the dependent's full name: ");
             String fullName = scanner.nextLine();
+
             if (fullName.equals("cancel")) {
                 System.out.println("Procedure has been canceled.");
                 break;
             }
 
-            // Create a new insurance card
-
-
             // Create a new dependent
-//            DependentCustomer dependentCustomer = new DependentCustomer();
+            String newDependentID = customersController.generateUserID();
+            Dependent newDependent = new Dependent(newDependentID, fullName, null, currentPolicyHolder);
+            policyHoldersController.addDependent(newDependentID);
 
-            // Add the dependent to the policyholder's account
+            // Serialize the new dependent into the system
+            dependentsController.serializeDependentsToFile("data/dependents.dat");
 
+            // Create a new insurance card
+            createNewInsuranceCard(fullName);
+
+            // Print out the result and view all dependents
+            System.out.println("Dependent" + newDependent.getFullName() + "has been added successfully!");
+            viewAllDependents();
         }
-
     }
 
-    public void createNewInsuranceCard() {
+    public void createNewInsuranceCard(String dependentFullName) {
+        dependentsController.deserializeDependentsFromFile();
         System.out.println("________________________________________________________________________________POLICY HOLDER - CREATE NEW INSURANCE CARD____________________________________________________________________________________");
-        System.out.println("Enter the full name of the dependent for whom you want to create an insurance card:");
-        String dependentFullName = scanner.nextLine();
-
         System.out.println("Are you sure you want to proceed? (yes/no):");
         String confirmation = scanner.nextLine();
         if (confirmation.equalsIgnoreCase("yes")) {
@@ -234,16 +235,19 @@ public class PolicyHolderView {
             Optional<Dependent> dependentOptional = dependentsController.getDependentByName(dependentFullName);
             if (dependentOptional.isPresent()) {
                 Dependent dependent = dependentOptional.get();
-                InsuranceCard insuranceCard = insuranceCardController.generateInsuranceCard(dependent);
+                InsuranceCard insuranceCard = insuranceCardController.generateInsuranceCard(dependent, dependentFullName, currentPolicyHolder.getFullName());
 
                 System.out.println("New insurance card has been created successfully: ");
+                System.out.println(insuranceCard);
 
+                // Serialize the updated insurance cards data
+                insuranceCardController.serializeInsuranceCardsToFile("data/insuranceCards.dat");
+            } else {
+                System.out.println("Dependent with name " + dependentFullName + " not found.");
             }
         } else {
             System.out.println("Procedure has been canceled.");
         }
-
-
     }
 
     public void modifyDependent() {
