@@ -152,21 +152,18 @@ public class PolicyHolderView {
         // User can view a dependent's details
         System.out.println("Enter the ID of a dependent that you want to view (enter 'cancel' to cancel): ");
         String selectedID = scanner.nextLine();
-
         if (!selectedID.equalsIgnoreCase("cancel")) {
-            Dependent dependent = dependentsController.getDependentByID(selectedID);
-
-            if (dependent != null) {
-                displayADependentDetails(selectedID);
-            } else {
-                System.out.println("No dependent was found.");
-            }
+            displayADependentDetails(selectedID);
+        } else {
+            // Return to the manage dependents menu
+            manageDependents();
         }
+
     }
 
     // Display a dependent details
     public void displayADependentDetails(String dependentID) {
-        Dependent dependent = dependentsController.getDependentByID(dependentID);
+        Dependent dependent = policyHoldersController.getDependentByID(dependentID);
         if (dependent != null) {
             System.out.println("ID: " + dependent.getCustomerID());
             System.out.println("Full name: " + dependent.getFullName());
@@ -256,7 +253,7 @@ public class PolicyHolderView {
         String selectedID = scanner.nextLine();
 
         // Check if the targeted dependent exists
-        Dependent dependentToEdit = dependentsController.getDependentByID(selectedID);
+        Dependent dependentToEdit = policyHoldersController.getDependentByID(selectedID);
         if (dependentToEdit == null) {
             System.err.println("Error: Dependent with this ID does not exist.");
             return;
@@ -279,7 +276,7 @@ public class PolicyHolderView {
         do {
             System.out.println("Enter the ID of the dependent (enter 'cancel' to cancel the procedure): ");
             selectedID = scanner.nextLine();
-            if (dependentsController.dependentExists(selectedID)) {
+            if (policyHoldersController.dependentExists(selectedID)) {
                 // Display dependent information first
                 System.out.println("Dependent found: ");
                displayADependentDetails(selectedID);

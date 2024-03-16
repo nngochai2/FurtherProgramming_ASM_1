@@ -19,7 +19,6 @@ public class PolicyHoldersController implements Serializable {
         dependents = new ArrayList<>();
     }
 
-    //
     public static PolicyHoldersController getInstance() {
         if (instance == null) {
             instance = new PolicyHoldersController();
@@ -109,6 +108,16 @@ public class PolicyHoldersController implements Serializable {
             // Update the products in the system
             serializeDependentsToFile("data/dependents.dat");
             return true;
+        }
+        return false;
+    }
+
+    // Checks if a dependent exists
+    public boolean dependentExists(String dependentID) {
+        for (Dependent dependent : getAllDependents()) {
+            if (dependent.getCustomerID().equals(dependentID)) {
+                return true;
+            }
         }
         return false;
     }

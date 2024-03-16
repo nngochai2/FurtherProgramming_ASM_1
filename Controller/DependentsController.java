@@ -6,6 +6,7 @@ import Model.PolicyHolder;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DependentsController implements Serializable {
@@ -27,35 +28,19 @@ public class DependentsController implements Serializable {
         return currentDependent;
     }
 
-    public ArrayList<Dependent> getAllDependentCustomers() {
+    public void setCurrentDependent(Dependent currentDependent) {
+        this.currentDependent = currentDependent;
+    }
+
+    public List<Dependent> getAllDependentCustomers() {
         return dependents;
     }
 
+    // Find a dependent by name and ID for login purpose
     public Optional<Dependent> findDependent(String ID, String name) {
         return dependents.stream()
                 .filter(dependent -> dependent.getCustomerID().equals(ID) && dependent.getFullName().equals(name))
                 .findFirst();
-    }
-
-    // Allows policyholder to find a dependent by ID
-    public Dependent getDependentByID(String dependentID) {
-        Dependent dependent = null;
-        for (Dependent d : dependents) {
-            if (d.getCustomerID().equals(dependentID)) {
-                dependent = d;
-            }
-        }
-        return dependent;
-    }
-
-    // Checks if a dependent exists
-    public boolean dependentExists(String dependentID) {
-        for (Dependent dependent : getAllDependentCustomers()) {
-            if (dependent.getCustomerID().equals(dependentID)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public InsuranceCard getInsuranceCard(String dependentID, String fullName) {
@@ -66,5 +51,4 @@ public class DependentsController implements Serializable {
     public PolicyHolder getPolicyOwner(Dependent dependent) {
         return dependent.getPolicyHolder();
     }
-
 }
