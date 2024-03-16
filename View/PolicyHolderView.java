@@ -15,6 +15,7 @@ public class PolicyHolderView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
+    private final PolicyHolder currentPolicyHolder = policyHoldersController.getCurrentPolicyHolder();
     private final ClaimView claimView = new ClaimView();
     private final Scanner scanner = new Scanner(System.in);
 
@@ -80,9 +81,11 @@ public class PolicyHolderView {
             scanner.nextLine();
 
             switch (choice) {
-                case 1 -> manageDependents();
-                case 2 -> viewInsuranceCard();
-                case 3 -> claimView.viewClaimsMenu();
+                case 1 -> this.manageDependents();
+                case 2 -> this.viewInsuranceCard();
+                case 3 -> this.claimView.viewClaimsMenu();
+                case 4 -> this.managePersonalInfo();
+                case 5 -> this.managePolicy();
                 case 6 -> {
                     // Exit the program
                     System.out.println("Exiting the program...");
@@ -205,7 +208,8 @@ public class PolicyHolderView {
                 break;
             }
 
-            System.out.println("Enter the dependent's");
+            // Create a new insurance card
+
 
             // Create a new dependent
 //            DependentCustomer dependentCustomer = new DependentCustomer();
@@ -216,8 +220,12 @@ public class PolicyHolderView {
 
     }
 
+    public void createNewInsuranceCard() {
+        System.out.println("Fill in this form to create a new insurance card: ");
+        System.out.println("Card Holder");
+    }
+
     public void modifyDependent() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("_____________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - MODIFY A DEPENDENT'S INFORMATION____________________________________________________________________________________");
         System.out.println("Enter the dependent's ID: ");
         String selectedID = scanner.nextLine();
@@ -259,6 +267,44 @@ public class PolicyHolderView {
                 }
             }
         } while (!selectedID.equals("cancel"));
+    }
+
+    public void managePersonalInfo() {
+        while (true) {
+            System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE PERSONAL INFORMATION____________________________________________________________________________________");
+            System.out.println("You can choose one of the following options:");
+            System.out.println("1. View Personal Information");
+            System.out.println("2. Edit Personal Information");
+            System.out.println("3. Cancel");
+            System.out.println("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1 -> viewPersonalInfo();
+                case 2 -> editPersonalInfo();
+                case 3 -> {
+                    return;
+                }
+                default -> System.out.println("Invalid input. Please try again.");
+            }
+        }
+    }
+
+    public void viewPersonalInfo() {
+        if (currentPolicyHolder != null) {
+            System.out.println("__________________________________________________________________________POLICY HOLDER - VIEW PERSONAL INFORMATION____________________________________________________________________________________");
+            System.out.println("ID: " + currentPolicyHolder.getCustomerID());
+            System.out.println("Full Name: " + currentPolicyHolder.getFullName());
+            System.out.println("Insurance Card: " + currentPolicyHolder.getInsuranceCard().toString());
+        }
+    }
+
+    public void editPersonalInfo() {
+
+    }
+
+    public void managePolicy() {
 
     }
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public class PolicyHoldersController implements Serializable {
     private static PolicyHoldersController instance;
+    private PolicyHolder currentPolicyHolder;
     private final ArrayList<PolicyHolder> policyHolders;
     public PolicyHoldersController() {
         policyHolders = new ArrayList<>();
@@ -19,6 +20,14 @@ public class PolicyHoldersController implements Serializable {
             instance = new PolicyHoldersController();
         }
         return instance;
+    }
+
+    public PolicyHolder getCurrentPolicyHolder() {
+        return currentPolicyHolder;
+    }
+
+    public void setCurrentPolicyHolder(PolicyHolder currentPolicyHolder) {
+        this.currentPolicyHolder = currentPolicyHolder;
     }
 
     // Add a policyholder to the list
