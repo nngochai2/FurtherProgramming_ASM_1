@@ -99,7 +99,7 @@ public class PolicyHolderView {
 
     // Display a menu for managing dependents
     public void manageDependents() {
-        dependentsController.deserializeDependentsFromFile();
+        policyHoldersController.deserializeDependentsFromFile();
         while (true) {
             System.out.println("___________________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS____________________________________________________________________________________");
             System.out.println("You can choose one of the following options: ");
@@ -130,7 +130,7 @@ public class PolicyHolderView {
     public void viewAllDependents() {
         System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - VIEW ALL DEPENDENTS____________________________________________________________________________________");
 
-        List<Dependent> dependents = dependentsController.getAllDependentCustomers();
+        List<Dependent> dependents = policyHoldersController.getAllDependents();
 
         if (dependents.isEmpty()) {
             System.out.println("No dependents found.");
@@ -214,7 +214,7 @@ public class PolicyHolderView {
             policyHoldersController.addDependent(newDependentID);
 
             // Serialize the new dependent into the system
-            dependentsController.serializeDependentsToFile("data/dependents.dat");
+            policyHoldersController.serializeDependentsToFile("data/dependents.dat");
 
             // Create a new insurance card
             createNewInsuranceCard(fullName);
@@ -226,13 +226,13 @@ public class PolicyHolderView {
     }
 
     public void createNewInsuranceCard(String dependentFullName) {
-        dependentsController.deserializeDependentsFromFile();
+        policyHoldersController.deserializeDependentsFromFile();
         System.out.println("________________________________________________________________________________POLICY HOLDER - CREATE NEW INSURANCE CARD____________________________________________________________________________________");
         System.out.println("Are you sure you want to proceed? (yes/no):");
         String confirmation = scanner.nextLine();
         if (confirmation.equalsIgnoreCase("yes")) {
             // Find the dependent
-            Optional<Dependent> dependentOptional = dependentsController.getDependentByName(dependentFullName);
+            Optional<Dependent> dependentOptional = policyHoldersController.getDependentByName(dependentFullName);
             if (dependentOptional.isPresent()) {
                 Dependent dependent = dependentOptional.get();
                 InsuranceCard insuranceCard = insuranceCardController.generateInsuranceCard(dependent, dependentFullName, currentPolicyHolder.getFullName());
@@ -288,7 +288,7 @@ public class PolicyHolderView {
                 String confirmation = scanner.nextLine();
 
                 if (confirmation.equalsIgnoreCase("yes")) {
-                    boolean removed = dependentsController.removeDependent(selectedID);
+                    boolean removed = policyHoldersController.removeDependent(selectedID);
                 }
             }
         } while (!selectedID.equals("cancel"));

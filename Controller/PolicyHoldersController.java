@@ -13,7 +13,7 @@ public class PolicyHoldersController implements Serializable {
     private static PolicyHoldersController instance;
     private PolicyHolder currentPolicyHolder;
     private List<PolicyHolder> policyHolders;
-    private final List<Dependent> dependents;
+    private List<Dependent> dependents;
     public PolicyHoldersController() {
         policyHolders = new ArrayList<>();
         dependents = new ArrayList<>();
@@ -29,7 +29,7 @@ public class PolicyHoldersController implements Serializable {
 
     // Method to serialize the policyholders into the system
     public void serializePolicyHoldersToFile(String filePath) {
-        createFileIfNotExists();
+        createFileIfNotExists("data/policyholders.dat");
         try (
                 FileOutputStream fileOutputStream = new FileOutputStream(filePath);
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)
@@ -90,7 +90,7 @@ public class PolicyHoldersController implements Serializable {
         this.currentPolicyHolder = currentPolicyHolder;
     }
 
-    // Add a policyholder to the list
+    // Add a policyholder to the list (might be usable if the application is upgraded)
     public void addPolicyHolder(PolicyHolder policyHolder) {
         policyHolders.add(policyHolder);
     }
@@ -168,11 +168,6 @@ public class PolicyHoldersController implements Serializable {
             }
         }
         return Optional.empty();
-    }
-
-
-    public List<PolicyHolder> getAllPolicyHolders() {
-        return policyHolders;
     }
 
     public List<Dependent> getAllDependents() {
