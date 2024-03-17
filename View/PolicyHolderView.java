@@ -39,7 +39,6 @@ public class PolicyHolderView {
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {
-                System.out.println("Login failed. Please check your user ID and full name.");
                 attempts++;
 
                 if (attempts < maxAttempts) {

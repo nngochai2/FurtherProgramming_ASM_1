@@ -1,10 +1,22 @@
 package View;
 
+import Controller.DependentsController;
+import Controller.InsuranceCardController;
+import Controller.PolicyHoldersController;
+
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        PolicyHoldersController policyHoldersController = new PolicyHoldersController();
+        DependentsController dependentsController = new DependentsController();
+        InsuranceCardController insuranceCardController = new InsuranceCardController();
+
+        // Get the data
+        policyHoldersController.deserializePolicyHoldersFromFile();
+        policyHoldersController.deserializeDependentsFromFile();
+        insuranceCardController.deserializeInsuranceCardsFromFile();
 
         // Welcome message
         System.out.println("=============================================================== WELCOME TO INSURANCE CLAIMS MANAGEMENT SYSTEM! ===============================================================");
