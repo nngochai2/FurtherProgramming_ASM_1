@@ -24,6 +24,7 @@ public class PolicyHolderView {
         int attempts = 0;
 
         while (true) {
+            policyHoldersController.deserializePolicyHoldersFromFile();
             System.out.println("________________________________________________________________________________POLICY HOLDER LOGIN____________________________________________________________________________________");
             System.out.println("Enter your user ID:");
             String inputID = scanner.nextLine();
@@ -35,7 +36,8 @@ public class PolicyHolderView {
 
             if (policyHolderCustomer.isPresent()) {
                 System.out.println("Login successful. Welcome, " + inputName + "!");
-                policyHoldersController.deserializePolicyHoldersFromFile();
+                policyHoldersController.deserializeDependentsFromFile();
+                insuranceCardController.deserializeInsuranceCardsFromFile();
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {
@@ -137,7 +139,7 @@ public class PolicyHolderView {
 
             // Display header
             System.out.printf("%-20s | %-70s", "ID", "Full name");
-            System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------------------------------");
 
             // Display content
             System.out.println("List of dependents:");

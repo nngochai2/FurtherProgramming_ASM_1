@@ -54,9 +54,9 @@ public class InsuranceCardController implements Serializable {
             File file = new File(filePath);
             file.getParentFile().mkdirs(); // Create parent directory
             objectOutputStream.writeObject(insuranceCards);
-            System.out.println("Products have been saved products to " + filePath);
+            System.out.println("Insurance cards have been saved products to " + filePath);
         } catch (IOException e) {
-            System.err.println("Error: Unable to save products to " + filePath);
+            System.err.println("Error: Unable to save insurance cards to " + filePath);
         }
     }
 
@@ -70,7 +70,7 @@ public class InsuranceCardController implements Serializable {
 
                 if (importedData.get(0) instanceof InsuranceCard) {
                     insuranceCards = (ArrayList<InsuranceCard>) importedData;
-                    System.out.println("Products have been deserialized and imported from data/insuranceCards.dat");
+                    System.out.println("Insurance cards have been deserialized and imported from data/insuranceCards.dat");
                     return;
                 }
             }

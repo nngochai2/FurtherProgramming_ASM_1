@@ -30,9 +30,25 @@ public class PolicyHoldersController implements Serializable {
         return policyHolders;
     }
 
+    private void createFileIfNotExists(String filePath) {
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    System.out.println("File created: " + filePath);
+                } else {
+                    System.err.println("Error: Unable to create file " + filePath);
+                }
+            } catch (IOException e) {
+                System.err.println("Error: Unable to create file " + filePath);
+            }
+        }
+    }
+
     // Method to serialize the policyholders into the system
     public void serializePolicyHoldersToFile(String filePath) {
-        createFileIfNotExists("data/policyholders.dat");
+        createFileIfNotExists(filePath);
         try (
                 FileOutputStream fileOutputStream = new FileOutputStream(filePath);
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)
@@ -40,24 +56,24 @@ public class PolicyHoldersController implements Serializable {
             File file = new File(filePath);
             file.getParentFile().mkdirs(); // Create parent directory
             objectOutputStream.writeObject(policyHolders);
-            System.out.println("Products have been saved products to " + filePath);
+            System.out.println("Policy holders have been saved to " + filePath);
         } catch (IOException e) {
-            System.err.println("Error: Unable to save products to " + filePath);
+            System.err.println("Error: Unable to save policy holders to " + filePath);
         }
     }
 
     // Method to read the policyholders' data from the system
     public void deserializePolicyHoldersFromFile() {
-        try (FileInputStream fileInputStream = new FileInputStream("data/insuranceCards.dat");
+        try (FileInputStream fileInputStream = new FileInputStream("data/policyholders.dat");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
             Object importedObject = objectInputStream.readObject();
 
             if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
 
-                if (importedData.get(0) instanceof InsuranceCard) {
+                if (importedData.get(0) instanceof PolicyHolder) {
                     policyHolders = (ArrayList<PolicyHolder>) importedData;
-                    System.out.println("Products have been deserialized and imported from data/insuranceCards.dat");
+                    System.out.println("Policy holders have been deserialized and imported from data/policyholders.dat");
                     return;
                 }
             }
@@ -67,24 +83,7 @@ public class PolicyHoldersController implements Serializable {
         }
     }
 
-    // Method for serialize function in case the targeted file path does not exist
-    private void createFileIfNotExists(String filePath) {
-        File file = new File(filePath);
-
-        if (!file.exists()) {
-            try {
-                if (file.createNewFile()) {
-                    System.out.println("File created: " + "data/policyholders.dat");
-                } else {
-                    System.err.println("Error: Unable to create file " + "data/policyholders.dat");
-                }
-            } catch (IOException e) {
-                System.err.println("Error: Unable to create file " + "data/policyholders.dat");
-            }
-        }
-    }
-
-    // Method to
+    // Method to get the current policyholder user
     public PolicyHolder getCurrentPolicyHolder() {
         return currentPolicyHolder;
     }
@@ -98,11 +97,12 @@ public class PolicyHoldersController implements Serializable {
         policyHolders.add(policyHolder);
     }
 
+    // Add a dependent to the list of dependents
     public void addDependent(Dependent dependent) {
         dependents.add(dependent);
     }
 
-    // Allows policyholder to remove a dependent
+    // Allows policyholder to remove a dependent from the dependents list
     public boolean removeDependent(String dependentID) {
         Optional<Dependent> dependentToRemove = dependents.stream()
                 .filter(dependent -> dependent.getCustomerID().equals(dependentID))
@@ -128,7 +128,7 @@ public class PolicyHoldersController implements Serializable {
 
     // Serialize the dependents into the system
     public void serializeDependentsToFile(String filePath) {
-        createFileIfNotExists("data/dependents.dat");
+        createFileIfNotExists(filePath);
         try (
                 FileOutputStream fileOutputStream = new FileOutputStream(filePath);
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -136,12 +136,13 @@ public class PolicyHoldersController implements Serializable {
             File file = new File(filePath);
             file.getParentFile().mkdirs(); // Create parent directory
             objectOutputStream.writeObject(dependents);
-            System.out.println("Dependents have been saved products to " + filePath);
+            System.out.println("Dependents have been saved to " + filePath);
         } catch (IOException e) {
-            System.err.println("Error: Unable to save products to " + filePath);
+            System.err.println("Error: Unable to save dependents to " + filePath);
         }
     }
 
+    // Read the dependents' data from the system
     public void deserializeDependentsFromFile() {
         try (FileInputStream fileInputStream = new FileInputStream("data/dependents.dat");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
@@ -162,6 +163,7 @@ public class PolicyHoldersController implements Serializable {
             e.printStackTrace();
         }
     }
+
 
     public Dependent getDependentByID(String dependentID) {
         Dependent dependent = null;

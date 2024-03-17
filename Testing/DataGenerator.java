@@ -17,7 +17,6 @@ public class DataGenerator {
         // Initialize controllers
         CustomersController customersController = CustomersController.getInstance();
         PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
-        DependentsController dependentsController = DependentsController.getInstance();
         InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
 
         // Adding first policyholder and their insurance card
@@ -49,7 +48,7 @@ public class DataGenerator {
         dependent2.setInsuranceCard(dependentInsuranceCard2);
 
         // Serialize data
-        policyHoldersController.serializePolicyHoldersToFile("data/policyHolders.dat");
+        policyHoldersController.serializePolicyHoldersToFile("data/policyholders.dat");
         policyHoldersController.serializeDependentsToFile("data/dependents.dat");
         insuranceCardController.serializeInsuranceCardsToFile("data/insuranceCards.dat");
 
@@ -61,35 +60,35 @@ public class DataGenerator {
         System.out.println(dependent2);
 
         // Get the data
-//        policyHoldersController.deserializePolicyHoldersFromFile();
-//        policyHoldersController.deserializeDependentsFromFile();
-//        insuranceCardController.deserializeInsuranceCardsFromFile();
-//
-//        int i = 0;
-//        for (PolicyHolder policyHolder : policyHoldersController.getAllPolicyHolders()) {
-//            System.out.println("Policy Holder " + (i + 1) + ":");
-//            System.out.println("ID: " + policyHolder.getCustomerID());
-//            System.out.println("Name: " + policyHolder.getFullName());
-//
-//            // Check if the insurance card is not null before accessing its properties
-//            InsuranceCard insuranceCard = policyHolder.getInsuranceCard();
-//            if (insuranceCard != null) {
-//                System.out.println("Insurance Card: " + insuranceCard.getCardNumber());
-//            } else {
-//                System.out.println("No Insurance Card found.");
-//            }
-//            i++;
-//        }
-//
-//
-//        i = 0;
-//        for (Dependent dependent : policyHoldersController.getAllDependents()) {
-//            System.out.println("Dependent: " + (i + 1) + ":");
-//            System.out.println("ID: " + dependent.getCustomerID());
-//            System.out.println("Name: " + dependent.getFullName());
-//            System.out.println("Insurance Card: " + dependent.getInsuranceCard().getCardNumber());
-//            System.out.println("Policy Owner: " + dependent.getPolicyHolder());
-//            i++;
-//        }
+        policyHoldersController.deserializePolicyHoldersFromFile();
+        policyHoldersController.deserializeDependentsFromFile();
+        insuranceCardController.deserializeInsuranceCardsFromFile();
+
+        int i = 0;
+        for (PolicyHolder policyHolder : policyHoldersController.getAllPolicyHolders()) {
+            System.out.println("Policy Holder " + (i + 1) + ":");
+            System.out.println("ID: " + policyHolder.getCustomerID());
+            System.out.println("Name: " + policyHolder.getFullName());
+
+            // Check if the insurance card is not null before accessing its properties
+            InsuranceCard insuranceCard = policyHolder.getInsuranceCard();
+            if (insuranceCard != null) {
+                System.out.println("Insurance Card: " + insuranceCard.getCardNumber());
+            } else {
+                System.out.println("No Insurance Card found.");
+            }
+            i++;
+        }
+
+
+        i = 0;
+        for (Dependent dependent : policyHoldersController.getAllDependents()) {
+            System.out.println("Dependent: " + (i + 1) + ":");
+            System.out.println("ID: " + dependent.getCustomerID());
+            System.out.println("Name: " + dependent.getFullName());
+            System.out.println("Insurance Card: " + dependent.getInsuranceCard().getCardNumber());
+            System.out.println("Policy Owner: " + dependent.getPolicyHolder());
+            i++;
+        }
     }
 }
