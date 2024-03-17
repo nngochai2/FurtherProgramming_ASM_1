@@ -232,7 +232,7 @@ public class PolicyHolderView {
             Optional<Dependent> dependentOptional = policyHoldersController.getDependentByName(dependentFullName);
             if (dependentOptional.isPresent()) {
                 Dependent dependent = dependentOptional.get();
-                InsuranceCard insuranceCard = insuranceCardController.generateInsuranceCard(dependent, dependentFullName, currentPolicyHolder.getFullName());
+                InsuranceCard insuranceCard = insuranceCardController.generateInsuranceCard(dependent, currentPolicyHolder);
 
                 System.out.println("New insurance card has been created successfully: ");
                 System.out.println(insuranceCard);
