@@ -9,7 +9,7 @@ import java.util.List;
 public class CustomersController implements Serializable {
     private static CustomersController instance;
     private final ArrayList<Customer> customers;
-    private static int lastUserID = 0;
+    private static int lastUserID = 0; // Ensuring each generated ID is unique
 
     public static CustomersController getInstance() {
         if (instance == null) {
@@ -21,14 +21,10 @@ public class CustomersController implements Serializable {
     // Method to generate a new user ID
     public String generateUserID() {
         lastUserID++;
-        return "c" + String.format("%07d", lastUserID);
+        return "c-" + String.format("%07d", lastUserID);
     }
 
     public CustomersController() {
         this.customers = new ArrayList<>();
-    }
-
-    public List<Customer> getAllCustomer() {
-        return customers;
     }
 }

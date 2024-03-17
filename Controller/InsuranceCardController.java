@@ -24,15 +24,6 @@ public class InsuranceCardController implements Serializable {
         return instance;
     }
 
-//    public InsuranceCard generateInsuranceCard(Customer customer) {
-//        String cardNumber = generateCardNumber();
-//        Date expirationDate = getDefaultExpirationDate();
-//
-//        // Create insurance card with provided customer and policy owner information
-//        PolicyHolder policyHolder = customer instanceof PolicyHolder ? (PolicyHolder) customer : null;
-//        return new InsuranceCard(cardNumber, customer, policyHolder, expirationDate);
-//    }
-
     public InsuranceCard generateInsuranceCard(Customer cardHolder, PolicyHolder policyOwner) {
         String cardNumber = generateCardNumber();
         Date expirationDate = getDefaultExpirationDate();
@@ -69,7 +60,7 @@ public class InsuranceCardController implements Serializable {
         }
     }
 
-    public void deserializeDependentsFromFile() {
+    public void deserializeInsuranceCardsFromFile() {
         try (FileInputStream fileInputStream = new FileInputStream("data/insuranceCards.dat");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
@@ -103,5 +94,9 @@ public class InsuranceCardController implements Serializable {
                 System.err.println("Error: Unable to create file " + filePath);
             }
         }
+    }
+
+    public void addInsuranceCard(InsuranceCard insuranceCard) {
+        insuranceCards.add(insuranceCard);
     }
 }

@@ -26,6 +26,10 @@ public class PolicyHoldersController implements Serializable {
         return instance;
     }
 
+    public List<PolicyHolder> getAllPolicyHolders() {
+        return policyHolders;
+    }
+
     // Method to serialize the policyholders into the system
     public void serializePolicyHoldersToFile(String filePath) {
         createFileIfNotExists("data/policyholders.dat");
@@ -94,8 +98,8 @@ public class PolicyHoldersController implements Serializable {
         policyHolders.add(policyHolder);
     }
 
-    public void addDependent(String dependentID) {
-        dependents.add(getDependentByID(dependentID));
+    public void addDependent(Dependent dependent) {
+        dependents.add(dependent);
     }
 
     // Allows policyholder to remove a dependent
@@ -132,7 +136,7 @@ public class PolicyHoldersController implements Serializable {
             File file = new File(filePath);
             file.getParentFile().mkdirs(); // Create parent directory
             objectOutputStream.writeObject(dependents);
-            System.out.println("Products have been saved products to " + filePath);
+            System.out.println("Dependents have been saved products to " + filePath);
         } catch (IOException e) {
             System.err.println("Error: Unable to save products to " + filePath);
         }
@@ -148,7 +152,7 @@ public class PolicyHoldersController implements Serializable {
 
                 if (importedData.get(0) instanceof Dependent) {
                     dependents = (ArrayList<Dependent>) importedData;
-                    System.out.println("Products have been deserialized and imported from data/dependents.dat");
+                    System.out.println("Dependents have been deserialized and imported from data/dependents.dat");
                     return;
                 }
             }

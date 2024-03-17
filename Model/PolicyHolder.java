@@ -1,6 +1,7 @@
 package Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ public class PolicyHolder extends Customer implements Serializable {
     private List<Dependent> dependents;
     public PolicyHolder(String customerID, String fullName, InsuranceCard insuranceCard) {
         super(customerID, fullName, insuranceCard);
+        this.dependents = new ArrayList<>();
     }
 
     // Policy holder can add dependent(s)
@@ -58,6 +60,8 @@ public class PolicyHolder extends Customer implements Serializable {
     public List<Claim> viewClaimHistory() {
         return getClaims();
     }
+
+
 
     @Override
     public String toString() {

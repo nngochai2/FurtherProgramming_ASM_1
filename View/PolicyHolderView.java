@@ -12,7 +12,6 @@ import java.util.Scanner;
 public class PolicyHolderView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private final CustomersController customersController = CustomersController.getInstance();
-    private final DependentsController dependentsController = DependentsController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
     private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
     private final PolicyHolder currentPolicyHolder = policyHoldersController.getCurrentPolicyHolder();
@@ -208,7 +207,7 @@ public class PolicyHolderView {
             // Create a new dependent
             String newDependentID = customersController.generateUserID();
             Dependent newDependent = new Dependent(newDependentID, fullName, null, currentPolicyHolder);
-            policyHoldersController.addDependent(newDependentID);
+            policyHoldersController.addDependent(newDependent);
 
             // Serialize the new dependent into the system
             policyHoldersController.serializeDependentsToFile("data/dependents.dat");
@@ -232,10 +231,11 @@ public class PolicyHolderView {
             Optional<Dependent> dependentOptional = policyHoldersController.getDependentByName(dependentFullName);
             if (dependentOptional.isPresent()) {
                 Dependent dependent = dependentOptional.get();
-                InsuranceCard insuranceCard = insuranceCardController.generateInsuranceCard(dependent, currentPolicyHolder);
+                InsuranceCard newInsuranceCard = insuranceCardController.generateInsuranceCard(dependent, currentPolicyHolder);
+                insuranceCardController.addInsuranceCard(newInsuranceCard);
 
                 System.out.println("New insurance card has been created successfully: ");
-                System.out.println(insuranceCard);
+                System.out.println(newInsuranceCard);
 
                 // Serialize the updated insurance cards data
                 insuranceCardController.serializeInsuranceCardsToFile("data/insuranceCards.dat");
