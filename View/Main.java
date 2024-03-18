@@ -3,6 +3,7 @@ package View;
 import Controller.DependentsController;
 import Controller.InsuranceCardController;
 import Controller.PolicyHoldersController;
+import Model.PolicyHolder;
 
 import java.util.Scanner;
 
