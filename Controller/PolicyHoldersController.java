@@ -233,8 +233,17 @@ public class PolicyHoldersController implements Serializable {
         return dependents;
     }
 
+    public void setPolicyHolders(List<PolicyHolder> policyHolders) {
+        this.policyHolders = policyHolders;
+    }
 
-
+    public void setDependents(PolicyHolder currentPolicyHolder, List<Dependent> dependents) {
+        if (currentPolicyHolder != null) {
+            currentPolicyHolder.setDependents(dependents);
+        } else {
+            System.err.println("Error: No current policy holder set ");
+        }
+    }
 
     // Get the insurance card of a policyholder by their ID
     public InsuranceCard getInsuranceCard(String policyHolderID, String fullName) {

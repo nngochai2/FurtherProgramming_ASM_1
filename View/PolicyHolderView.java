@@ -139,6 +139,7 @@ public class PolicyHolderView {
 
         if (dependents.isEmpty()) {
             System.out.println("No dependents found.");
+            manageDependents();
         } else {
             System.out.println("You currently have " + dependents.size() + " dependent(s).");
 
@@ -153,19 +154,16 @@ public class PolicyHolderView {
             }
             System.out.println("-----------------------------------------------------");
 
-
+            // User can view a dependent's details
+            System.out.println("Enter the ID of a dependent that you want to view (enter 'cancel' to cancel): ");
+            String selectedID = scanner.nextLine();
+            if (!selectedID.equalsIgnoreCase("cancel")) {
+                displayADependentDetails(selectedID);
+            } else {
+                // Return to the manage dependents menu
+                manageDependents();
+            }
         }
-
-        // User can view a dependent's details
-        System.out.println("Enter the ID of a dependent that you want to view (enter 'cancel' to cancel): ");
-        String selectedID = scanner.nextLine();
-        if (!selectedID.equalsIgnoreCase("cancel")) {
-            displayADependentDetails(selectedID);
-        } else {
-            // Return to the manage dependents menu
-            manageDependents();
-        }
-
     }
 
     // Display a dependent details
@@ -183,8 +181,15 @@ public class PolicyHolderView {
     public void viewInsuranceCard() {
         System.out.println("________________________________________________________________________________POLICY HOLDER - VIEW INSURANCE CARD____________________________________________________________________________________");
 
+        // Ask the user to verify their personal information again
+        System.out.println("Enter your user ID: ");
+        String userID = scanner.nextLine();
+
+        System.out.println("Enter your full name: ");
+        String fullName = scanner.nextLine();
+
         // Get the insurance card
-        InsuranceCard insuranceCard = policyHoldersController.getInsuranceCard(currentPolicyHolder.getCustomerID(), currentPolicyHolder.getFullName());
+        InsuranceCard insuranceCard = policyHoldersController.getInsuranceCard(userID, fullName);
         if (insuranceCard != null) {
             System.out.println("Insurance Card Details: ");
             System.out.println("Card Number: " + insuranceCard.getCardNumber());
