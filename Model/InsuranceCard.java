@@ -2,17 +2,19 @@ package Model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class InsuranceCard implements Serializable {
     private String cardNumber;
     private Customer cardHolder; // Every customer has their one and only insurance card
     private String policyOwner; // There is only one policy owner, which must be the policyholder customer
     private Date expirationDate;
+    private List<Dependent> coveredDependents;
 
     public InsuranceCard(String cardNumber, Customer cardHolder, String policyOwner, Date expirationDate) {
         this.cardNumber = cardNumber;
-        this.cardHolder = cardHolder; //
-        this.policyOwner = policyOwner; // thang cap
+        this.cardHolder = cardHolder;
+        this.policyOwner = policyOwner;
         this.expirationDate = expirationDate;
     }
 
@@ -38,6 +40,14 @@ public class InsuranceCard implements Serializable {
 
     public void setPolicyOwner(String policyOwner) {
         this.policyOwner = policyOwner;
+    }
+
+    public List<Dependent> getCoveredDependents() {
+        return coveredDependents;
+    }
+
+    public void setCoveredDependents(List<Dependent> coveredDependents) {
+        this.coveredDependents = coveredDependents;
     }
 
     public Date getExpirationDate() {
