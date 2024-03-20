@@ -220,8 +220,8 @@ public class PolicyHolderView {
             // Serialize the new dependent into the system
             policyHoldersController.serializeDependentsToFile("data/dependents.dat");
 
-            // Create a new insurance card
-            createNewInsuranceCard(fullName);
+            // Set the insurance card
+            newDependent.setInsuranceCard(currentPolicyHolder.getInsuranceCard());
 
             // Print out the result and view all dependents
             System.out.println("Dependent" + newDependent.getFullName() + "has been added successfully!");
@@ -229,31 +229,31 @@ public class PolicyHolderView {
         }
     }
 
-    public void createNewInsuranceCard(String dependentFullName) {
-        policyHoldersController.deserializeDependentsFromFile();
-        System.out.println("________________________________________________________________________________POLICY HOLDER - CREATE NEW INSURANCE CARD____________________________________________________________________________________");
-        System.out.println("Are you sure you want to proceed? (yes/no):");
-        String confirmation = scanner.nextLine();
-        if (confirmation.equalsIgnoreCase("yes")) {
-            // Find the dependent
-            Optional<Dependent> dependentOptional = policyHoldersController.getDependentByName(dependentFullName);
-            if (dependentOptional.isPresent()) {
-                Dependent dependent = dependentOptional.get();
-                InsuranceCard newInsuranceCard = insuranceCardController.generateInsuranceCard(dependent, currentPolicyHolder);
-                insuranceCardController.addInsuranceCard(newInsuranceCard);
-
-                System.out.println("New insurance card has been created successfully: ");
-                System.out.println(newInsuranceCard);
-
-                // Serialize the updated insurance cards data
-                insuranceCardController.serializeInsuranceCardsToFile("data/insuranceCards.dat");
-            } else {
-                System.out.println("Dependent with name " + dependentFullName + " not found.");
-            }
-        } else {
-            System.out.println("Procedure has been canceled.");
-        }
-    }
+//    public void createNewInsuranceCard(String dependentFullName) {
+//        policyHoldersController.deserializeDependentsFromFile();
+//        System.out.println("________________________________________________________________________________POLICY HOLDER - CREATE NEW INSURANCE CARD____________________________________________________________________________________");
+//        System.out.println("Are you sure you want to proceed? (yes/no):");
+//        String confirmation = scanner.nextLine();
+//        if (confirmation.equalsIgnoreCase("yes")) {
+//            // Find the dependent
+//            Optional<Dependent> dependentOptional = policyHoldersController.getDependentByName(dependentFullName);
+//            if (dependentOptional.isPresent()) {
+//                Dependent dependent = dependentOptional.get();
+//                InsuranceCard newInsuranceCard = insuranceCardController.generateInsuranceCard(dependent, currentPolicyHolder);
+//                insuranceCardController.addInsuranceCard(newInsuranceCard);
+//
+//                System.out.println("New insurance card has been created successfully: ");
+//                System.out.println(newInsuranceCard);
+//
+//                // Serialize the updated insurance cards data
+//                insuranceCardController.serializeInsuranceCardsToFile("data/insuranceCards.dat");
+//            } else {
+//                System.out.println("Dependent with name " + dependentFullName + " not found.");
+//            }
+//        } else {
+//            System.out.println("Procedure has been canceled.");
+//        }
+//    }
 
     public void modifyDependent() {
         System.out.println("_____________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - MODIFY A DEPENDENT'S INFORMATION____________________________________________________________________________________");

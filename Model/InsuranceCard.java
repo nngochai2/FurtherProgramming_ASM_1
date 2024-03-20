@@ -6,10 +6,10 @@ import java.util.Date;
 public class InsuranceCard implements Serializable {
     private String cardNumber;
     private Customer cardHolder; // Every customer has their one and only insurance card
-    private PolicyHolder policyOwner; // There is only one policy owner, which must be the policyholder customer
+    private String policyOwner; // There is only one policy owner, which must be the policyholder customer
     private Date expirationDate;
 
-    public InsuranceCard(String cardNumber, Customer cardHolder, PolicyHolder policyOwner, Date expirationDate) {
+    public InsuranceCard(String cardNumber, Customer cardHolder, String policyOwner, Date expirationDate) {
         this.cardNumber = cardNumber;
         this.cardHolder = cardHolder; //
         this.policyOwner = policyOwner; // thang cap
@@ -32,11 +32,11 @@ public class InsuranceCard implements Serializable {
         this.cardHolder = cardHolder;
     }
 
-    public PolicyHolder getPolicyOwner() {
+    public String getPolicyOwner() {
         return policyOwner;
     }
 
-    public void setPolicyOwner(PolicyHolder policyOwner) {
+    public void setPolicyOwner(String policyOwner) {
         this.policyOwner = policyOwner;
     }
 
