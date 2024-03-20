@@ -11,8 +11,8 @@ public class InsuranceCard implements Serializable {
 
     public InsuranceCard(String cardNumber, Customer cardHolder, PolicyHolder policyOwner, Date expirationDate) {
         this.cardNumber = cardNumber;
-        this.cardHolder = cardHolder;
-        this.policyOwner = policyOwner;
+        this.cardHolder = cardHolder; //
+        this.policyOwner = policyOwner; // thang cap
         this.expirationDate = expirationDate;
     }
 
