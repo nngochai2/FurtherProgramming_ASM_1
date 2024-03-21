@@ -142,13 +142,13 @@ public class PolicyHolderView {
             manageDependents();
         } else {
             System.out.println("You currently have " + dependents.size() + " dependent(s).");
+            System.out.println("List of dependents:");
 
             // Display header
             System.out.printf("%-20s | %-70s", "ID", "Full name\n");
             System.out.println("-----------------------------------------------------");
 
             // Display content
-            System.out.println("List of dependents:");
             for (Dependent dependent : dependents) {
                 System.out.printf("%-20s | %-70s\n", dependent.getCustomerID(), dependent.getFullName());
             }
@@ -200,6 +200,7 @@ public class PolicyHolderView {
         }
     }
 
+    // Policyholders can create new dependents
     public void addDependent() {
         System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - ADD A DEPENDENT____________________________________________________________________________________");
         while (true){
@@ -228,32 +229,6 @@ public class PolicyHolderView {
             viewAllDependents();
         }
     }
-
-//    public void createNewInsuranceCard(String dependentFullName) {
-//        policyHoldersController.deserializeDependentsFromFile();
-//        System.out.println("________________________________________________________________________________POLICY HOLDER - CREATE NEW INSURANCE CARD____________________________________________________________________________________");
-//        System.out.println("Are you sure you want to proceed? (yes/no):");
-//        String confirmation = scanner.nextLine();
-//        if (confirmation.equalsIgnoreCase("yes")) {
-//            // Find the dependent
-//            Optional<Dependent> dependentOptional = policyHoldersController.getDependentByName(dependentFullName);
-//            if (dependentOptional.isPresent()) {
-//                Dependent dependent = dependentOptional.get();
-//                InsuranceCard newInsuranceCard = insuranceCardController.generateInsuranceCard(dependent, currentPolicyHolder);
-//                insuranceCardController.addInsuranceCard(newInsuranceCard);
-//
-//                System.out.println("New insurance card has been created successfully: ");
-//                System.out.println(newInsuranceCard);
-//
-//                // Serialize the updated insurance cards data
-//                insuranceCardController.serializeInsuranceCardsToFile("data/insuranceCards.dat");
-//            } else {
-//                System.out.println("Dependent with name " + dependentFullName + " not found.");
-//            }
-//        } else {
-//            System.out.println("Procedure has been canceled.");
-//        }
-//    }
 
     public void modifyDependent() {
         System.out.println("_____________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - MODIFY A DEPENDENT'S INFORMATION____________________________________________________________________________________");

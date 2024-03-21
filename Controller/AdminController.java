@@ -68,4 +68,14 @@ public class AdminController implements Serializable {
                 .findFirst()
                 .orElse(null);
     }
+
+    // Get all customers
+
+    public List<Customer> getAllCustomers() {
+        return customers;
+    }
+
+
+    // Read all customers' data from the system
+
 }
