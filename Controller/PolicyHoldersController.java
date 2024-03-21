@@ -46,7 +46,7 @@ public class PolicyHoldersController implements Serializable {
                 return policyHolder;
             }
         }
-        return null; // Return null if no policy holder is found
+        return null; // Return null if no policyholder is found
     }
 
     private void createFileIfNotExists(String filePath) {

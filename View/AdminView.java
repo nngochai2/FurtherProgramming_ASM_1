@@ -1,7 +1,9 @@
 package View;
 
 import Controller.*;
+import Model.Admin;
 import Model.Customer;
+import Model.Dependent;
 import Model.PolicyHolder;
 
 import java.util.List;
@@ -15,22 +17,24 @@ public class AdminView {
     private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
     private final Scanner scanner = new Scanner(System.in);
 
+    // Authenticate admins' login
     public void authenticateAdmins() {
         int maxAttempts = 5;
         int attempts = 0;
         while (true) {
-            policyHoldersController.deserializePolicyHoldersFromFile();
+            adminController.deserializeAdminsFromFile();
             System.out.println("________________________________________________________________________________ADMIN LOGIN____________________________________________________________________________________");
-            System.out.println("Enter your user ID:");
-            String inputID = scanner.nextLine();
+            System.out.println("Enter your username:");
+            String username = scanner.nextLine();
 
-            System.out.println("Enter your full name: ");
-            String inputName = scanner.nextLine();
+            System.out.println("Enter your password: ");
+            String password = scanner.nextLine();
 
-            PolicyHolder policyHolderCustomer = policyHoldersController.authenticatePolicyHolder(inputID, inputName);
+            Admin admin = adminController.authenticateAdmin(username, password);
 
-            if (policyHolderCustomer != null) {
-                System.out.println("Login successful. Welcome, " + inputName + "!");
+            if (admin != null) {
+                System.out.println("Login successful. Welcome, " + admin.getUsername() + "!");
+                policyHoldersController.deserializeDependentsFromFile();
                 policyHoldersController.deserializeDependentsFromFile();
                 insuranceCardController.deserializeInsuranceCardsFromFile();
                 menu(); // Proceed to main menu
@@ -39,7 +43,7 @@ public class AdminView {
                 attempts++;
 
                 if (attempts < maxAttempts) {
-                    System.out.println("Login failed. Please check your user ID and full name.");
+                    System.out.println("Login failed. Please check your username and password.");
                     System.out.println("Attempts remaining: " + (maxAttempts - attempts));
                     System.out.println("1. Try again");
                     System.out.println("2. Cancel");
@@ -48,11 +52,11 @@ public class AdminView {
                     scanner.nextLine();
 
                     if (choice != 1) {
-                        System.out.println("Exiting policy holder login...");
+                        System.out.println("Exiting admin login...");
                         break;
                     }
                 } else {
-                    System.out.println("Maximum login attempts reached. Exiting policy holder login...");
+                    System.out.println("Maximum login attempts reached. Exiting admin login...");
                     break;
                 }
             }
@@ -105,7 +109,10 @@ public class AdminView {
                 case 3 -> this.addDependent();
                 case 4 -> this.removeCustomer();
                 case 5 -> this.modifyCustomer();
-                case 6 -> this.menu();
+                case 6 -> {
+                    this.menu();
+                    return;
+                }
                 default -> System.out.println("Invalid input. Please try again.");
             }
         }
@@ -126,6 +133,13 @@ public class AdminView {
 
             switch (choice) {
                 case 1 -> this.viewAllCustomers();
+                case 2 -> this.viewAllPolicyHolders();
+                case 3 -> this.viewAllDependents();
+                case 4 -> {
+                    this.manageCustomers();
+                    return;
+                }
+                default -> System.out.println("Invalid input. Please try again.");
             }
         }
     }
@@ -135,23 +149,75 @@ public class AdminView {
         List<Customer> customers = adminController.getAllCustomers();
         if (customers.isEmpty()) {
             System.out.println("No customers found.");
-            manageCustomers();
+            this.viewAllCustomersMenu();
         } else {
             System.out.println("There are currently " + customers.size() + " users in the system.");
 
             // Display header
-            System.out.printf("%-20s | %-70s" , "ID", "Full name\n");
-            System.out.println("-----------------------------------------------------");
+            System.out.printf("%-20s | %-70s | %-70s | %70s%n\n" , "ID", "Full name", "Insurance Card Number", "Role");
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (Customer customer : customers) {
-                System.out.printf();
+                String id = customer.getCustomerID();
+                String fullName = customer.getFullName();
+                String insuranceCardNumber = customer.getInsuranceCard().getCardNumber();
+                String role = (customer instanceof PolicyHolder) ? "Policy Holder" : "Dependent";
+
+                System.out.printf("%-20s | %-70s | %-70s | %70s%n\n", id, fullName, insuranceCardNumber, role);
             }
         }
     }
 
-    public void addPolicyHolder() {
+    public void viewAllPolicyHolders() {
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL POLICY HOLDERS____________________________________________________________________________________");
+        List<PolicyHolder> policyHolders = adminController.getPolicyHolders();
+        if (policyHolders.isEmpty()) {
+            System.out.println("No policy holder found.");
+            this.viewAllCustomersMenu();
+        } else {
+            System.out.println("There are currently " + policyHolders.size() + " policy holders in the system.");
 
+            // Display header
+            System.out.printf("%-20s | %-70s | %-70s\n" , "ID", "Full name", "Insurance Card Number");
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+
+            // Display content
+            for (PolicyHolder policyHolder : policyHolders) {
+                String id = policyHolder.getCustomerID();
+                String fullName = policyHolder.getFullName();
+                String insuranceCardNumber = policyHolder.getInsuranceCard().getCardNumber();
+                System.out.printf("%-20s | %-70s | %-70s\n", id, fullName, insuranceCardNumber);
+            }
+        }
+    }
+
+    public void viewAllDependents() {
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL DEPENDENTS____________________________________________________________________________________");
+        List<Dependent> dependents = adminController.getDependents();
+        if (dependents.isEmpty()) {
+            System.out.println("No dependents found.");
+            this.viewAllCustomersMenu();
+        } else {
+            System.out.println("There are currently " + dependents.size() + " dependents in the system.");
+
+            // Display header
+            System.out.printf("%-20s | %-70s | %-70s\n" , "ID", "Full name", "Insurance Card Number");
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+
+            // Display content
+            for (Dependent dependent : dependents) {
+                String id = dependent.getCustomerID();
+                String fullName = dependent.getFullName();
+                String insuranceCardNumber = dependent.getInsuranceCard().getCardNumber();
+                System.out.printf("%-20s | %-70s | %-70s\n", id, fullName, insuranceCardNumber);
+            }
+        }
+    }
+
+
+    public void addPolicyHolder() {
+        
     }
 
     public void addDependent() {

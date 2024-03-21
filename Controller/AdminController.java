@@ -1,8 +1,9 @@
 package Controller;
 
 import Model.*;
+import View.AdminView;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,20 @@ public class AdminController implements Serializable {
             instance = new AdminController();
         }
         return instance;
+    }
+
+    // Find an admin by his/her username and password
+    public Admin findAdmin(String username, String password) {
+        for (Admin admin : adminList) {
+            if (admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
+                return admin;
+            }
+        }
+        return null; // Return null if no policyholder is found
+    }
+
+    public Admin authenticateAdmin(String username, String password) {
+        return findAdmin(username, password);
     }
 
     // Add a policyholder
@@ -75,6 +90,67 @@ public class AdminController implements Serializable {
         return customers;
     }
 
+    public List<PolicyHolder> getPolicyHolders() {
+        return policyHolders;
+    }
+
+    public List<Dependent> getDependents() {
+        return dependents;
+    }
+
+    // Create a new file for admins' data
+    private void createFileIfNotExists(String filePath) {
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    System.out.println("File created: " + filePath);
+                } else {
+                    System.err.println("Error: Unable to create file " + filePath);
+                }
+            } catch (IOException e) {
+                System.err.println("Error: Unable to create file " + filePath);
+            }
+        }
+    }
+
+    // Serialize admins to file
+    public void serializeAdminToFile(String filePath) {
+        createFileIfNotExists(filePath);
+        try (
+                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)
+        ){
+            File file = new File(filePath);
+            file.getParentFile().mkdirs(); // Create parent directory
+            objectOutputStream.writeObject(adminList);
+            System.out.println("Admin have been saved to " + filePath);
+        } catch (IOException e) {
+            System.err.println("Error: Unable to save admins to " + filePath);
+        }
+    }
+
+    // Method to read the admins' data
+    public void deserializeAdminsFromFile() {
+        try (FileInputStream fileInputStream = new FileInputStream("data/admins.data");
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+
+            Object importedObject = objectInputStream.readObject();
+
+            if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
+
+                if (importedData.get(0) instanceof PolicyHolder) {
+                    policyHolders = (ArrayList<PolicyHolder>) importedData;
+                    System.out.println("Admins have been deserialized and imported from data/admins.dat");
+                    return;
+                }
+            }
+            System.err.println("Error: Unexpected data format in the file.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Read all customers' data from the system
 
