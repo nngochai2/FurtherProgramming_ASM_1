@@ -24,6 +24,7 @@ public class InsuranceCardController implements Serializable {
         return instance;
     }
 
+    // Method to create a new insurance card
     public InsuranceCard generateInsuranceCard(Customer cardHolder, String policyOwner) {
         String cardNumber = generateCardNumber();
         Date expirationDate = getDefaultExpirationDate();

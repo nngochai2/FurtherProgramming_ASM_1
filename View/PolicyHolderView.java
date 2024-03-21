@@ -87,7 +87,7 @@ public class PolicyHolderView {
             switch (choice) {
                 case 1 -> this.manageDependents();
                 case 2 -> this.viewInsuranceCard();
-                case 3 -> this.claimView.viewClaimsMenu();
+                case 3 -> claimView.viewClaimsMenu();
                 case 4 -> this.managePersonalInfo();
                 case 5 -> this.managePolicy();
                 case 6 -> {
@@ -230,6 +230,7 @@ public class PolicyHolderView {
         }
     }
 
+    // Method to edit a dependent
     public void modifyDependent() {
         System.out.println("_____________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - MODIFY A DEPENDENT'S INFORMATION____________________________________________________________________________________");
         System.out.println("Enter the dependent's ID: ");
@@ -246,9 +247,27 @@ public class PolicyHolderView {
         System.out.println("Dependent found: ");
         displayADependentDetails(selectedID);
 
-        //
+        // Edit dependent's name
+        System.out.println("Enter the new dependent name (enter 'cancel' to cancel): ");
+        String newName = scanner.nextLine();
+        if (!newName.equals("cancel")) {
+            dependentToEdit.setFullName(newName);
+        }
 
+        // Asking for user's confirmation
+        System.out.println("Do you want to save your changes (yes/no): ");
+        String confirmation = scanner.nextLine();
 
+        if (confirmation.equalsIgnoreCase("yes")) {
+            policyHoldersController.serializeDependentsToFile("data/dependents.dat"); // Updating the dependent
+            System.out.println("Dependent has been edited successfully.");
+        } else if (confirmation.equals("no")) {
+            System.out.println("Procedure has been canceled.");
+            this.manageDependents();
+        } else {
+            System.out.println("Invalid input. Procedure has been canceled.");
+            this.manageDependents();
+        }
     }
 
     public void removeDependent() {
@@ -268,12 +287,13 @@ public class PolicyHolderView {
                 String confirmation = scanner.nextLine();
 
                 if (confirmation.equalsIgnoreCase("yes")) {
-                    boolean removed = policyHoldersController.removeDependent(selectedID);
+                    policyHoldersController.removeDependent(selectedID);
                 }
             }
         } while (!selectedID.equals("cancel"));
     }
 
+    // Menu to manage personal information
     public void managePersonalInfo() {
         while (true) {
             System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE PERSONAL INFORMATION____________________________________________________________________________________");
@@ -296,6 +316,7 @@ public class PolicyHolderView {
         }
     }
 
+    // Method to view a customer's details
     public void viewPersonalInfo() {
         if (currentPolicyHolder != null) {
             System.out.println("__________________________________________________________________________POLICY HOLDER - VIEW PERSONAL INFORMATION____________________________________________________________________________________");
@@ -305,10 +326,12 @@ public class PolicyHolderView {
         }
     }
 
+    // Method to edit policyholder's personal information
     public void editPersonalInfo() {
 
     }
 
+    // Method to allow policyholder to manage a policy
     public void managePolicy() {
 
     }

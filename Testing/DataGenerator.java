@@ -136,9 +136,7 @@ public class DataGenerator {
 
 
         // Generate sample Dependents
-        InsuranceCard insuranceCard3 = insuranceCardController.generateInsuranceCard(null, policyHolder1);
-        InsuranceCard insuranceCard4 = insuranceCardController.generateInsuranceCard(null, policyHolder1);
-        InsuranceCard insuranceCard5 = insuranceCardController.generateInsuranceCard(null, policyHolder2);
+
 
         Dependent dependent1 = new Dependent("c-" + generateRandomID(), "Dependent 1", insuranceCard3, policyHolder1);
         Dependent dependent2 = new Dependent("c-" + generateRandomID(), "Dependent 2", insuranceCard4, policyHolder1);
