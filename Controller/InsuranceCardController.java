@@ -24,6 +24,10 @@ public class InsuranceCardController implements Serializable {
         return instance;
     }
 
+    public List<InsuranceCard> getInsuranceCards() {
+        return insuranceCards;
+    }
+
     // Method to create a new insurance card
     public InsuranceCard generateInsuranceCard(Customer cardHolder, String policyOwner) {
         String cardNumber = generateCardNumber();
@@ -55,7 +59,7 @@ public class InsuranceCardController implements Serializable {
             File file = new File(filePath);
             file.getParentFile().mkdirs(); // Create parent directory
             objectOutputStream.writeObject(insuranceCards);
-            System.out.println("Insurance cards have been saved products to " + filePath);
+            System.out.println("Insurance cards have been saved to " + filePath);
         } catch (IOException e) {
             System.err.println("Error: Unable to save insurance cards to " + filePath);
         }

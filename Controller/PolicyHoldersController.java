@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class PolicyHoldersController implements Serializable {
@@ -15,6 +17,7 @@ public class PolicyHoldersController implements Serializable {
     private PolicyHolder currentPolicyHolder;
     private List<PolicyHolder> policyHolders;
     private List<Dependent> dependents;
+    private static final Logger logger = Logger.getLogger(PolicyHoldersController.class.getName());
     public PolicyHoldersController() {
         policyHolders = new ArrayList<>();
         dependents = new ArrayList<>();
@@ -89,16 +92,17 @@ public class PolicyHoldersController implements Serializable {
             Object importedObject = objectInputStream.readObject();
 
             if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
-
                 if (importedData.get(0) instanceof PolicyHolder) {
                     policyHolders = (ArrayList<PolicyHolder>) importedData;
                     System.out.println("Policy holders have been deserialized and imported from data/policyholders.dat");
                     return;
+                    }
                 }
-            }
-            System.err.println("Error: Unexpected data format in the file.");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Unexpected data format in the policy holders file.");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "IO exception while reading policy holders file", e);
+        } catch (ClassNotFoundException e) {
+            logger.log(Level.SEVERE, "Class not found during serialization.", e);
         }
     }
 
@@ -205,7 +209,6 @@ public class PolicyHoldersController implements Serializable {
         } else {
             System.err.println("Error: No current policy holder set.");
         }
-
     }
 
     // Method to get a dependent by ID

@@ -42,8 +42,8 @@ public class PolicyHolderView {
             if (policyHolderCustomer != null) {
                 currentPolicyHolder = policyHolderCustomer;
                 System.out.println("Login successful. Welcome, " + inputName + "!");
-                policyHoldersController.deserializeDependentsFromFile();
                 insuranceCardController.deserializeInsuranceCardsFromFile();
+                policyHoldersController.deserializeDependentsFromFile();
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {
@@ -151,7 +151,7 @@ public class PolicyHolderView {
             System.out.println("List of dependents:");
 
             // Display header
-            System.out.printf("%-20s | %-70s", "ID", "Full name\n");
+            System.out.printf("%-20s | %-70s\n", "ID", "Full name");
             System.out.println("-----------------------------------------------------");
 
             // Display content
@@ -178,6 +178,7 @@ public class PolicyHolderView {
         if (dependent != null) {
             System.out.println("ID: " + dependent.getCustomerID());
             System.out.println("Full name: " + dependent.getFullName());
+            System.out.println(dependent.getInsuranceCard().toString());
 
         } else {
             System.out.println("Error: No dependent found. Please try again.");
@@ -305,7 +306,7 @@ public class PolicyHolderView {
     // Menu to manage personal information
     public void managePersonalInfo() {
         while (true) {
-            System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE PERSONAL INFORMATION____________________________________________________________________________________");
+            System.out.println("_________________________________________________________________________POLICY HOLDER - MANAGE PERSONAL INFORMATION____________________________________________________________________________________");
             System.out.println("You can choose one of the following options:");
             System.out.println("1. View Personal Information");
             System.out.println("2. Edit Personal Information");
@@ -331,7 +332,7 @@ public class PolicyHolderView {
             System.out.println("__________________________________________________________________________POLICY HOLDER - VIEW PERSONAL INFORMATION____________________________________________________________________________________");
             System.out.println("ID: " + currentPolicyHolder.getCustomerID());
             System.out.println("Full Name: " + currentPolicyHolder.getFullName());
-            System.out.println("Insurance Card: " + currentPolicyHolder.getInsuranceCard().toString());
+            System.out.println(currentPolicyHolder.getInsuranceCard().toString());
         }
     }
 
