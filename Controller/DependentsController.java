@@ -26,7 +26,10 @@ public class DependentsController implements Serializable {
 
     public Dependent authenticateDependent(String userID, String fullName) {
         Dependent dependent = findDependent(userID, fullName);
-
+        if (dependent != null) {
+            currentDependent = dependent;
+        }
+        return dependent;
     }
 
     public Dependent getCurrentDependent() {

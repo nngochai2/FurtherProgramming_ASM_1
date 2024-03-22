@@ -133,7 +133,7 @@ public class AdminController implements Serializable {
 
     // Method to read the admins' data
     public void deserializeAdminsFromFile() {
-        try (FileInputStream fileInputStream = new FileInputStream("data/admins.data");
+        try (FileInputStream fileInputStream = new FileInputStream("data/admins.dat");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
             Object importedObject = objectInputStream.readObject();

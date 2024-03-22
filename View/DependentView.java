@@ -34,7 +34,8 @@ public class DependentView {
             System.out.println("Enter your full name: ");
             String inputName = scanner.nextLine();
 
-            Dependent dependentCustomer = dependentsController.findDependent(inputID, inputName);
+            // Authenticate login
+            Dependent dependentCustomer = dependentsController.authenticateDependent(inputID, inputName);
 
             if (dependentCustomer != null) {
                 currentDependent = dependentCustomer;
@@ -45,18 +46,19 @@ public class DependentView {
                 System.out.println("Login failed. Please check your user ID and full name.");
                 attempts++;
 
+                // Limit login attempts
                 if (attempts < maxAttempts) {
                     System.out.println("Login failed. Please check your user ID and full name.");
                     System.out.println("Attempts remaining: " + (maxAttempts - attempts));
                     System.out.println("1. Try again");
                     System.out.println("2. Cancel");
-                    System.out.println("Enter your choice: ");
+                    System.out.println("Enter your choice: "); // Asking for user confirmation
                     int choice = scanner.nextInt();
                     scanner.nextLine();
 
                     if (choice != 1) {
                         System.out.println("Exiting dependent login...");
-                        break;
+                        return;
                     }
                 } else {
                     System.out.println("Maximum login attempts reached. Exiting dependent login...");
