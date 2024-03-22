@@ -12,9 +12,14 @@ import java.util.Scanner;
 public class DependentView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
-    private final Dependent currentDependent = dependentsController.getCurrentDependent();
-    private final ClaimView claimView = new ClaimView();
+    private final Dependent currentDependent;
+    private final ClaimView claimView;
     private final Scanner scanner = new Scanner(System.in);
+
+    public DependentView() {
+        this.currentDependent = dependentsController.getCurrentDependent();
+        this.claimView = new ClaimView(currentDependent);
+    }
 
     // Authenticates dependent logins
     public void authenticateUser() {

@@ -2,10 +2,12 @@ package Controller;
 
 import Model.Claim;
 import Model.ClaimProcessManager;
+import Model.Customer;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClaimsController implements Serializable, ClaimProcessManager {
     private static ClaimsController instance;
@@ -27,12 +29,12 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
 
 
     @Override
-    public void add(Claim claim) {
+    public void addClaim(Claim claim) {
         claims.add(claim);
     }
 
     @Override
-    public void update(Claim claim) {
+    public void updateClaim(Claim claim) {
         // Find the claim by ID and update the details
         for (int i = 0; i < claims.size(); i++) {
             if (claims.get(i).getClaimID().equals(claim.getClaimID())) {
@@ -43,13 +45,13 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     }
 
     @Override
-    public void delete(String claimID) {
+    public void deleteClaim(String claimID) {
         // Find and remove the claim by ID
         claims.removeIf(claim -> claim.getClaimID().equals(claimID));
     }
 
     @Override
-    public Claim getOne(String claimID) {
+    public Claim getAClaim(String claimID) {
         // Find and return the claim by ID
         for (Claim claim : claims) {
             if (claim.getClaimID().equals(claimID)) {
@@ -60,8 +62,16 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     }
 
     @Override
-    public List<Claim> getAll() {
+    public List<Claim> getClaims() {
         return new ArrayList<>(claims); // Return a copy of the list to prevent direct modification
+    }
+
+    // Method to get all claims of a customer
+    public List<Claim> getAllClaimsForCustomer(Customer customer) {
+        // Filter claims based on the customer's ID
+        return claims.stream()
+                .filter(claim -> claim.getInsuredPerson().getCustomerID().equals(customer.getCustomerID()))
+                .collect(Collectors.toList());
     }
 
     // Check if a claim has already exits
@@ -72,6 +82,17 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
             }
         }
         return false;
+    }
+
+    // Method to get a claim by ID
+    public Claim getClaimByID(String claimID) {
+        Claim claim = null;
+        for (Claim c : claims) {
+            if (c.getClaimID().equals(claimID)) {
+                claim = c;
+            }
+        }
+        return claim;
     }
 
     // Serialize the claims to the system

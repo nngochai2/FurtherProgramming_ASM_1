@@ -208,7 +208,7 @@ public class PolicyHoldersController implements Serializable {
 
     }
 
-
+    // Method to get a dependent by ID
     public Dependent getDependentByID(String dependentID) {
         Dependent dependent = null;
         for (Dependent d : dependents) {

@@ -14,12 +14,13 @@ public class PolicyHolderView {
     private final CustomersController customersController = CustomersController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
     private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
-    private final PolicyHolder currentPolicyHolder;
-    private final ClaimView claimView = new ClaimView();
+    private PolicyHolder currentPolicyHolder;
+    private final ClaimView claimView;
     private final Scanner scanner = new Scanner(System.in);
 
     public PolicyHolderView() {
         this.currentPolicyHolder = policyHoldersController.getCurrentPolicyHolder();
+        this.claimView = new ClaimView(currentPolicyHolder);
     }
 
     // Manage user login
@@ -39,6 +40,7 @@ public class PolicyHolderView {
             PolicyHolder policyHolderCustomer = policyHoldersController.authenticatePolicyHolder(inputID, inputName);
 
             if (policyHolderCustomer != null) {
+                currentPolicyHolder = policyHolderCustomer;
                 System.out.println("Login successful. Welcome, " + inputName + "!");
                 policyHoldersController.deserializeDependentsFromFile();
                 insuranceCardController.deserializeInsuranceCardsFromFile();
@@ -68,7 +70,6 @@ public class PolicyHolderView {
         }
     }
 
-
     public void menu() {
         while (true) {
             System.out.println("========================================================================= WELCOME POLICY HOLDER =========================================================================");
@@ -87,12 +88,17 @@ public class PolicyHolderView {
             switch (choice) {
                 case 1 -> this.manageDependents();
                 case 2 -> this.viewInsuranceCard();
-                case 3 -> claimView.viewClaimsMenu();
+                case 3 -> {
+                    // Set the current policyholder to be the current user in ClaimView
+                    claimView.setCurrentCustomer(currentPolicyHolder);
+                    claimView.viewClaimsMenu();
+                }
                 case 4 -> this.managePersonalInfo();
                 case 5 -> this.managePolicy();
                 case 6 -> {
                     // Exit the program
                     System.out.println("Exiting the program...");
+                    policyHoldersController.clearCurrentPolicyHolder();
                     System.exit(0);
                 }
                 default -> {
@@ -281,13 +287,16 @@ public class PolicyHolderView {
             if (policyHoldersController.dependentExists(selectedID)) {
                 // Display dependent information first
                 System.out.println("Dependent found: ");
-               displayADependentDetails(selectedID);
+                displayADependentDetails(selectedID);
 
                 System.out.println("Do you want to remove this dependent? (yes/no): ");
                 String confirmation = scanner.nextLine();
 
                 if (confirmation.equalsIgnoreCase("yes")) {
-                    policyHoldersController.removeDependent(selectedID);
+                    boolean removed = policyHoldersController.removeDependent(selectedID);
+                    if (removed) {
+                        System.out.println("Dependent has been removed successfully.");
+                    }
                 }
             }
         } while (!selectedID.equals("cancel"));
