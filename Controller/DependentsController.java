@@ -24,6 +24,11 @@ public class DependentsController implements Serializable {
         return instance;
     }
 
+    public Dependent authenticateDependent(String userID, String fullName) {
+        Dependent dependent = findDependent(userID, fullName);
+
+    }
+
     public Dependent getCurrentDependent() {
         return currentDependent;
     }
@@ -37,15 +42,18 @@ public class DependentsController implements Serializable {
     }
 
     // Find a dependent by name and ID for login purpose
-    public Optional<Dependent> findDependent(String ID, String name) {
-        return dependents.stream()
-                .filter(dependent -> dependent.getCustomerID().equals(ID) && dependent.getFullName().equals(name))
-                .findFirst();
+    public Dependent findDependent(String ID, String name) {
+        for (Dependent dependent : dependents) {
+            if (dependent.getCustomerID().equals(ID) && dependent.getFullName().equals(name)) {
+                return dependent;
+            }
+        }
+        return null;
     }
 
     public InsuranceCard getInsuranceCard(String dependentID, String fullName) {
-        Optional<Dependent> dependentCustomerOptional = findDependent(dependentID, fullName);
-        return dependentCustomerOptional.map(Dependent::getInsuranceCard).orElse(null);
+        Dependent dependent = findDependent(dependentID, fullName);
+        return dependent != null ? dependent.getInsuranceCard() : null;
     }
 
     public PolicyHolder getPolicyOwner(Dependent dependent) {

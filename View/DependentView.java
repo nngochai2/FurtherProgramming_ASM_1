@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class DependentView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
-    private final Dependent currentDependent;
+    private Dependent currentDependent;
     private final ClaimView claimView;
     private final Scanner scanner = new Scanner(System.in);
 
@@ -34,9 +34,10 @@ public class DependentView {
             System.out.println("Enter your full name: ");
             String inputName = scanner.nextLine();
 
-            Optional<Dependent> dependentCustomer = dependentsController.findDependent(inputID, inputName);
+            Dependent dependentCustomer = dependentsController.findDependent(inputID, inputName);
 
-            if (dependentCustomer.isPresent()) {
+            if (dependentCustomer != null) {
+                currentDependent = dependentCustomer;
                 System.out.println("Login successful. Welcome, " + inputName + "!");
                 menu(); // Proceed to main menu
                 return; // Exit the method
@@ -80,7 +81,10 @@ public class DependentView {
             switch (choice) {
                 case 1 -> this.viewInsuranceCard();
                 case 2 -> this.viewPersonalInfo();
-                case 3 -> claimView.viewClaimsMenu();
+                case 3 -> {
+                    claimView.setCurrentCustomer(currentDependent);
+                    claimView.viewClaimsMenu();
+                }
                 default -> {
                     System.out.println("Invalid input.");
                     return;
