@@ -6,7 +6,6 @@ import Model.InsuranceCard;
 import Model.PolicyHolder;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class PolicyHolderView {
@@ -38,18 +37,19 @@ public class PolicyHolderView {
             System.out.println("Enter your full name: ");
             String inputName = scanner.nextLine();
 
+            // Authenticate the login
             PolicyHolder policyHolderCustomer = policyHoldersController.authenticatePolicyHolder(inputID, inputName);
 
             if (policyHolderCustomer != null) {
-                currentPolicyHolder = policyHolderCustomer;
-                System.out.println("Login successful. Welcome, " + inputName + "!");
+                currentPolicyHolder = policyHolderCustomer; // Set the current policy holder
+                System.out.println("Login successful. Welcome, " + inputName + "!"); // Return welcome message
+                policyHoldersController.setCurrentPolicyHolder(currentPolicyHolder); // Set the current policy holder in the controller
                 insuranceCardController.deserializeInsuranceCardsFromFile();
-                dependentsController.deserializeDependentsFromFile(currentPolicyHolder);
+                dependentsController.deserializeDependentsFromFile("data/dependents.dat", currentPolicyHolder);
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {
                 attempts++;
-
                 if (attempts < maxAttempts) {
                     System.out.println("Login failed. Please check your user ID and full name.");
                     System.out.println("Attempts remaining: " + (maxAttempts - attempts));
@@ -71,6 +71,7 @@ public class PolicyHolderView {
         }
     }
 
+    // Method to display the menu for policy holders
     public void menu() {
         while (true) {
             System.out.println("========================================================================= WELCOME POLICY HOLDER =========================================================================");
@@ -111,7 +112,7 @@ public class PolicyHolderView {
 
     // Display a menu for managing dependents
     public void manageDependents() {
-        dependentsController.deserializeDependentsFromFile();
+        dependentsController.deserializeDependentsFromFile("data/dependents.dat", currentPolicyHolder);
         while (true) {
             System.out.println("___________________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS____________________________________________________________________________________");
             System.out.println("You can choose one of the following options: ");
@@ -227,7 +228,7 @@ public class PolicyHolderView {
             policyHoldersController.addDependent(newDependent);
 
             // Serialize the new dependent into the system
-            policyHoldersController.serializeDependentsToFile("data/dependents.dat");
+            dependentsController.serializeDependentsToFile("data/dependents.dat");
 
             // Set the insurance card
             newDependent.setInsuranceCard(currentPolicyHolder.getInsuranceCard());
@@ -267,7 +268,7 @@ public class PolicyHolderView {
         String confirmation = scanner.nextLine();
 
         if (confirmation.equalsIgnoreCase("yes")) {
-            policyHoldersController.serializeDependentsToFile("data/dependents.dat"); // Updating the dependent
+            dependentsController.serializeDependentsToFile("data/dependents.dat"); // Updating the dependent
             System.out.println("Dependent has been edited successfully.");
         } else if (confirmation.equals("no")) {
             System.out.println("Procedure has been canceled.");

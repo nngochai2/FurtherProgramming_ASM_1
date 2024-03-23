@@ -27,4 +27,8 @@ public class CustomersController implements Serializable {
     public CustomersController() {
         this.customers = new ArrayList<>();
     }
+
+    public ArrayList<Customer> getCustomers() {
+        return customers;
+    }
 }

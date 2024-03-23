@@ -15,8 +15,9 @@ import java.util.stream.Collectors;
 public class PolicyHoldersController implements Serializable {
     private static PolicyHoldersController instance;
     private PolicyHolder currentPolicyHolder;
-    private List<PolicyHolder> policyHolders;
-    private List<Dependent> dependents;
+    private ArrayList<PolicyHolder> policyHolders;
+    private final ArrayList<Dependent> dependents;
+    private final DependentsController dependentsController = DependentsController.getInstance();
     private static final Logger logger = Logger.getLogger(PolicyHoldersController.class.getName());
     public PolicyHoldersController() {
         policyHolders = new ArrayList<>();
@@ -34,6 +35,7 @@ public class PolicyHoldersController implements Serializable {
         return policyHolders;
     }
 
+    // Method to authenticate a policy holder's login
     public PolicyHolder authenticatePolicyHolder(String userID, String fullName) {
         PolicyHolder policyHolder = findPolicyHolder(userID, fullName);
         if (policyHolder != null) {
@@ -52,6 +54,7 @@ public class PolicyHoldersController implements Serializable {
         return null; // Return null if no policyholder is found
     }
 
+    // Method to create a file if the targeted file does not exist during the serialize process
     private void createFileIfNotExists(String filePath) {
         File file = new File(filePath);
 
@@ -100,21 +103,23 @@ public class PolicyHoldersController implements Serializable {
                 }
             logger.log(Level.SEVERE, "Unexpected data format in the policy holders file.");
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "IO exception while reading policy holders file", e);
+            logger.log(Level.SEVERE, "IO exception while reading policy holders file.", e);
         } catch (ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "Class not found during serialization.", e);
+            logger.log(Level.SEVERE, "Class not found during deserialization.", e);
         }
     }
 
-    // Method to get the current policyholder user
+    // Method to get the current policy holder user
     public PolicyHolder getCurrentPolicyHolder() {
         return currentPolicyHolder;
     }
 
+    // Method to set the current policy holder user
     public void setCurrentPolicyHolder(PolicyHolder currentPolicyHolder) {
         this.currentPolicyHolder = currentPolicyHolder;
     }
 
+    // Method to clear current policy holder when they log out
     public void clearCurrentPolicyHolder() {
         this.currentPolicyHolder = null;
     }
@@ -124,14 +129,14 @@ public class PolicyHoldersController implements Serializable {
         policyHolders.add(policyHolder);
     }
 
-    // Add a dependent to the list of dependents
+    // Method to add a dependent into policy holder's list
     public void addDependent(Dependent dependent) {
         if (currentPolicyHolder != null) {
             currentPolicyHolder.addDependent(dependent);
             dependents.add(dependent);
 
             // Update the dependents in the system
-            serializeDependentsToFile("data/dependents.dat");
+            dependentsController.serializeDependentsToFile("data/dependents.dat");
         } else {
             System.err.println("Error: No current policy holder set.");
         }
@@ -149,7 +154,7 @@ public class PolicyHoldersController implements Serializable {
                 dependents.remove(dependentToRemove.get());
 
                 // Update the products in the system
-                serializeDependentsToFile("data/dependents.dat");
+                dependentsController.serializeDependentsToFile("data/dependents.dat");
                 return true;
             }
         } else {
@@ -167,9 +172,6 @@ public class PolicyHoldersController implements Serializable {
         }
         return false;
     }
-
-    // Serialize the dependents into the system
-
 
     // Method to get a dependent by ID
     public Dependent getDependentByID(String dependentID) {
@@ -192,11 +194,17 @@ public class PolicyHoldersController implements Serializable {
         return Optional.empty();
     }
 
+    // Method to get all dependents of a policy holder
     public List<Dependent> getAllDependents() {
+        List<Dependent> dependents = new ArrayList<>();
+        for (Dependent dependent : dependentsController.getAllDependents()) {
+            if (dependent.getPolicyHolder().equals(currentPolicyHolder))
+                dependents.add(dependent);
+        }
         return dependents;
     }
 
-    public void setPolicyHolders(List<PolicyHolder> policyHolders) {
+    public void setPolicyHolders(ArrayList<PolicyHolder> policyHolders) {
         this.policyHolders = policyHolders;
     }
 

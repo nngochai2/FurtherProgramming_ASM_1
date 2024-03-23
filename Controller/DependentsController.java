@@ -28,6 +28,7 @@ public class DependentsController implements Serializable {
         return instance;
     }
 
+    // Method to authenticate a dependent's login
     public Dependent authenticateDependent(String userID, String fullName) {
         Dependent dependent = findDependent(userID, fullName);
         if (dependent != null) {
@@ -58,6 +59,12 @@ public class DependentsController implements Serializable {
         return null;
     }
 
+    // Method to get all dependents in the system
+    public List<Dependent> getAllDependents() {
+        return dependents;
+    }
+
+    // Method to get a dependent's insurance card
     public InsuranceCard getInsuranceCard(String dependentID, String fullName) {
         Dependent dependent = findDependent(dependentID, fullName);
         return dependent != null ? dependent.getInsuranceCard() : null;
@@ -66,33 +73,62 @@ public class DependentsController implements Serializable {
     public PolicyHolder getPolicyOwner(Dependent dependent) {
         return dependent.getPolicyHolder();
     }
+
+    // Method to add a dependent into dependents list
+    public void addDependent(Dependent dependent) {
+        dependents.add(dependent);
+    }
+
+    public void removeDependent(Dependent dependent) {
+        dependents.remove(dependent);
+    }
+
+    private void createFileIfNotExists(String filePath) {
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    System.out.println("File created: " + filePath);
+                } else {
+                    System.err.println("Error: Unable to create file " + filePath);
+                }
+            } catch (IOException e) {
+                System.err.println("Error: Unable to create file " + filePath);
+            }
+        }
+    }
+
+    // Method to serialize the dependents to the system
     public void serializeDependentsToFile(String filePath) {
+        createFileIfNotExists(filePath);
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath);
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
 
             objectOutputStream.writeObject(dependents);
-            logger.log(Level.INFO, "Dependents have been serialized and saved to file: " + filePath);
+            System.out.println("Dependents have been serialized and saved to file: " + filePath);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error occurred while serializing dependents to file: " + filePath, e);
         }
     }
 
-    public void deserializeDependentsFromFile(PolicyHolder currentPolicyHolder) {
+    // Method to deserialize dependents of a policy holder
+    public void deserializeDependentsFromFile(String filePath, PolicyHolder currentPolicyHolder) {
         if (currentPolicyHolder != null) {
-            try (FileInputStream fileInputStream = new FileInputStream("data/dependents.dat");
+            try (FileInputStream fileInputStream = new FileInputStream(filePath);
                  ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
                 Object importedObject = objectInputStream.readObject();
 
-                if (importedObject instanceof List<?>) {
-                    List<Dependent> allDependents = (ArrayList<Dependent>) importedObject;
+                if (importedObject instanceof ArrayList<?>) {
+                    ArrayList<Dependent> allDependents = (ArrayList<Dependent>) importedObject;
                     ArrayList<Dependent> dependentArrayList = new ArrayList<>(allDependents);
 
                     dependents = dependentArrayList.stream()
                             .filter(dependent -> dependent.getPolicyHolder().equals(currentPolicyHolder))
                             .collect(Collectors.toCollection(ArrayList::new));
 
-                    logger.log(Level.INFO, "Dependents have been deserialized and imported for policy holder " + currentPolicyHolder.getCustomerID());
+                    System.out.println("Dependents have been deserialized and imported from " + filePath + " for policy holder " + currentPolicyHolder.getCustomerID());
                     return;
                 }
                 logger.log(Level.SEVERE, "Unexpected data format in the dependents file.");
@@ -106,5 +142,22 @@ public class DependentsController implements Serializable {
         }
     }
 
+    // Method to deserialize ALL dependents in the system (used for DependentView)
+    public void deserializeAllDependents(String filePath) {
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+
+            Object importedObject = objectInputStream.readObject();
+
+            if (importedObject instanceof ArrayList<?>) {
+                dependents = (ArrayList<Dependent>) importedObject;
+                logger.log(Level.INFO, "Dependents have been deserialized and imported from " + filePath);
+                return;
+            }
+            logger.log(Level.SEVERE, "Unexpected data format in the dependents file.");
+        } catch (IOException | ClassNotFoundException e) {
+            logger.log(Level.SEVERE, "Error while deserializing dependents from file: " + filePath, e);
+        }
+    }
 
 }

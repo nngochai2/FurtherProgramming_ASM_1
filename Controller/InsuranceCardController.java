@@ -8,10 +8,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InsuranceCardController implements Serializable {
     private static InsuranceCardController instance;
-    public List<InsuranceCard> insuranceCards;
+    private static final Logger logger = Logger.getLogger(InsuranceCardController.class.getName());
+    public ArrayList<InsuranceCard> insuranceCards;
 
     public InsuranceCardController() {
         insuranceCards = new ArrayList<>();
@@ -79,9 +82,11 @@ public class InsuranceCardController implements Serializable {
                     return;
                 }
             }
-            System.err.println("Error: Unexpected data format in the file.");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Unexpected data format in the insurance cards file.");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "IO exception while reading insurance cards file", e);
+        } catch (ClassNotFoundException e) {
+            logger.log(Level.SEVERE, "Class not found during deserialization.");
         }
     }
 
