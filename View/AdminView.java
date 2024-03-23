@@ -64,7 +64,7 @@ public class AdminView {
 
     public void menu() {
         while (true) {
-            System.out.println("========================================================================= WELCOME POLICY HOLDER =========================================================================");
+            System.out.println("========================================================================= WELCOME ADMIN =========================================================================");
             System.out.println("You can choose one of the following procedure:");
             System.out.println("1. Manage Customers");
             System.out.println("2. Manage Claims");
@@ -232,6 +232,32 @@ public class AdminView {
     }
 
     public void manageClaims() {
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS____________________________________________________________________________________");
+        while (true) {
+            System.out.println("You can choose one of the following procedures:");
+            System.out.println("1. View All Claims");
+            System.out.println("2. Modify A Claim");
+            System.out.println("3. Cancel");
+            System.out.println("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1 -> this.viewAllClaims();
+                case 2 -> this.modifyAClaim();
+                case 3 -> {
+                    return;
+                }
+                default -> System.err.println("Invalid input. Please try again.");
+            }
+        }
+    }
+
+    public void viewAllClaims() {
+        
+    }
+
+    public void modifyAClaim() {
 
     }
 
