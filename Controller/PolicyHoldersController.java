@@ -129,8 +129,8 @@ public class PolicyHoldersController implements Serializable {
         policyHolders.add(policyHolder);
     }
 
-    // Method to add a dependent into policy holder's list
-    public void addDependent(Dependent dependent) {
+    // Method to add a dependent into a policy holder's list
+    public void addDependent(PolicyHolder currentPolicyHolder, Dependent dependent) {
         if (currentPolicyHolder != null) {
             currentPolicyHolder.addDependent(dependent);
             dependents.add(dependent);
@@ -140,7 +140,6 @@ public class PolicyHoldersController implements Serializable {
         } else {
             System.err.println("Error: No current policy holder set.");
         }
-
     }
 
     // Allows policyholder to remove a dependent from the dependents list
@@ -165,7 +164,7 @@ public class PolicyHoldersController implements Serializable {
 
     // Checks if a dependent exists
     public boolean dependentExists(String dependentID) {
-        for (Dependent dependent : getAllDependents()) {
+        for (Dependent dependent : getAllDependents(currentPolicyHolder)) {
             if (dependent.getCustomerID().equals(dependentID)) {
                 return true;
             }
@@ -195,7 +194,7 @@ public class PolicyHoldersController implements Serializable {
     }
 
     // Method to get all dependents of a policy holder
-    public List<Dependent> getAllDependents() {
+    public List<Dependent> getAllDependents(PolicyHolder currentPolicyHolder) {
         List<Dependent> dependents = new ArrayList<>();
         for (Dependent dependent : dependentsController.getAllDependents()) {
             if (dependent.getPolicyHolder().equals(currentPolicyHolder))

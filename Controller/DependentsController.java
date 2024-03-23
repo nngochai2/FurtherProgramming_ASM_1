@@ -151,7 +151,7 @@ public class DependentsController implements Serializable {
 
             if (importedObject instanceof ArrayList<?>) {
                 dependents = (ArrayList<Dependent>) importedObject;
-                logger.log(Level.INFO, "Dependents have been deserialized and imported from " + filePath);
+                System.out.println("Dependents have been deserialized and imported from " + filePath);
                 return;
             }
             logger.log(Level.SEVERE, "Unexpected data format in the dependents file.");

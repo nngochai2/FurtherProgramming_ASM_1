@@ -35,6 +35,8 @@ public class DataGenerator {
         // Generate sample Insurance Cards for PolicyHolders
         InsuranceCard insuranceCard1 = insuranceCardController.generateInsuranceCard(policyHolder1, "RMIT");
         InsuranceCard insuranceCard2 = insuranceCardController.generateInsuranceCard(policyHolder2, "RMIT");
+        insuranceCardController.addInsuranceCard(insuranceCard1);
+        insuranceCardController.addInsuranceCard(insuranceCard2);
 
         // Set insurance cards for PolicyHolders
         policyHolder1.setInsuranceCard(insuranceCard1);
@@ -53,6 +55,19 @@ public class DataGenerator {
         dependentsController.addDependent(dependent1);
         dependentsController.addDependent(dependent2);
         dependentsController.addDependent(dependent3);
+
+        // Assign the dependents for the policy holders
+        List<Dependent> dependents1 = new ArrayList<>();
+        dependents1.add(dependent1);
+        policyHolder1.setDependents(dependents1);
+        policyHoldersController.addDependent(policyHolder1, dependent1);
+
+        List<Dependent> dependents2 = new ArrayList<>();
+        dependents2.add(dependent2);
+        dependents2.add(dependent3);
+        policyHolder2.setDependents(dependents2);
+        policyHoldersController.setDependents(policyHolder2, dependents2);
+
     }
 
     private static void serializeData(PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController) {
@@ -63,26 +78,30 @@ public class DataGenerator {
 
     private static void deserializeAndPrintData(PolicyHoldersController policyHoldersController, DependentsController dependentsController, InsuranceCardController insuranceCardController) {
         policyHoldersController.deserializePolicyHoldersFromFile();
-        dependentsController.deserializeAllDependents("data/dependents.dat");
-        insuranceCardController.deserializeInsuranceCardsFromFile();
+        insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
 
+        System.out.println("All policy holders:");
         for (PolicyHolder policyHolder : policyHoldersController.getAllPolicyHolders()) {
             System.out.println(policyHolder);
             System.out.println("Dependents:");
-            for (Dependent dependent : dependentsController.getAllDependents()) {
-                if (dependent.getPolicyHolder().equals(policyHolder)) {
-                    System.out.println(dependent);
-                }
+
+            // Get dependents for the current policy holder
+            List<Dependent> dependents = policyHoldersController.getAllDependents(policyHolder);
+            for (Dependent dependent : dependents) {
+                System.out.println(dependent);
             }
             System.out.println();
         }
 
+        System.out.println("All dependents: ");
         for (Dependent dependent : dependentsController.getAllDependents()) {
             System.out.println(dependent);
         }
 
+        System.out.println("All insurance cards:");
         for (InsuranceCard insuranceCard : insuranceCardController.getInsuranceCards()) {
             System.out.println(insuranceCard);
         }
     }
+
 }

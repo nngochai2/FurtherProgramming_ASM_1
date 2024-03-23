@@ -68,17 +68,16 @@ public class InsuranceCardController implements Serializable {
         }
     }
 
-    public void deserializeInsuranceCardsFromFile() {
-        try (FileInputStream fileInputStream = new FileInputStream("data/insuranceCards.dat");
+    public void deserializeInsuranceCardsFromFile(String filePath) {
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
             Object importedObject = objectInputStream.readObject();
 
             if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
-
                 if (importedData.get(0) instanceof InsuranceCard) {
                     insuranceCards = (ArrayList<InsuranceCard>) importedData;
-                    System.out.println("Insurance cards have been deserialized and imported from data/insuranceCards.dat");
+                    System.out.println("Insurance cards have been deserialized and imported from " + filePath);
                     return;
                 }
             }
@@ -107,6 +106,11 @@ public class InsuranceCardController implements Serializable {
     }
 
     public void addInsuranceCard(InsuranceCard insuranceCard) {
-        insuranceCards.add(insuranceCard);
+        if (insuranceCard != null) {
+            insuranceCards.add(insuranceCard);
+        } else {
+            System.err.println("Error: Cannot add a null insurance card");
+        }
+
     }
 }

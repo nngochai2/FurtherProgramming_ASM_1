@@ -44,7 +44,7 @@ public class PolicyHolderView {
                 currentPolicyHolder = policyHolderCustomer; // Set the current policy holder
                 System.out.println("Login successful. Welcome, " + inputName + "!"); // Return welcome message
                 policyHoldersController.setCurrentPolicyHolder(currentPolicyHolder); // Set the current policy holder in the controller
-                insuranceCardController.deserializeInsuranceCardsFromFile();
+                insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
                 dependentsController.deserializeDependentsFromFile("data/dependents.dat", currentPolicyHolder);
                 menu(); // Proceed to main menu
                 return; // Exit the method
@@ -225,7 +225,7 @@ public class PolicyHolderView {
             // Create a new dependent
             String newDependentID = customersController.generateUserID();
             Dependent newDependent = new Dependent(newDependentID, fullName, null, currentPolicyHolder);
-            policyHoldersController.addDependent(newDependent);
+            policyHoldersController.addDependent(currentPolicyHolder, newDependent);
 
             // Serialize the new dependent into the system
             dependentsController.serializeDependentsToFile("data/dependents.dat");
