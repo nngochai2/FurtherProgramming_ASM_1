@@ -187,26 +187,30 @@ public class PolicyHolderView {
         }
     }
 
+    // Method to display the user's insurance card
     public void viewInsuranceCard() {
-        System.out.println("________________________________________________________________________________POLICY HOLDER - VIEW INSURANCE CARD____________________________________________________________________________________");
+        while (true) {
+            System.out.println("________________________________________________________________________________POLICY HOLDER - VIEW INSURANCE CARD____________________________________________________________________________________");
 
-        // Ask the user to verify their personal information again
-        System.out.println("Enter your user ID: ");
-        String userID = scanner.nextLine();
-
-        System.out.println("Enter your full name: ");
-        String fullName = scanner.nextLine();
-
-        // Get the insurance card
-        InsuranceCard insuranceCard = policyHoldersController.getInsuranceCard(userID, fullName);
-        if (insuranceCard != null) {
-            System.out.println("Insurance Card Details: ");
-            System.out.println("Card Number: " + insuranceCard.getCardNumber());
-            System.out.println("Policy Owner: " + insuranceCard.getPolicyOwner());
-            System.out.println("Expiration Date: " + insuranceCard.getExpirationDate());
-        } else {
-            System.out.println("No insurance card found for the provided ID and full name.");
+            // Get the insurance card
+            InsuranceCard insuranceCard = policyHoldersController.getInsuranceCard(currentPolicyHolder.getCustomerID(), currentPolicyHolder.getFullName());
+            if (insuranceCard != null) {
+                System.out.println("Insurance Card Details: \n");
+                System.out.println("Card Number: " + insuranceCard.getCardNumber());
+                System.out.println("Policy Owner: " + insuranceCard.getPolicyOwner());
+                System.out.println("Card Holder: " + insuranceCard.getCardHolder());
+                System.out.println("Expiration Date: " + insuranceCard.getExpirationDate());
+                System.out.println("\nEnter any key to exit: ");
+                String input = scanner.nextLine();
+                if (input != null) {
+                    return;
+                }
+            } else {
+                System.out.println("No insurance card found for the provided ID and full name.");
+                return;
+            }
         }
+
     }
 
     // Policyholders can create new dependents

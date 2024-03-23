@@ -44,6 +44,10 @@ public class AdminController implements Serializable {
         return null; // Return null if no policyholder is found
     }
 
+    public void addAdmin(Admin admin) {
+        adminList.add(admin);
+    }
+
     public Admin authenticateAdmin(String username, String password) {
         return findAdmin(username, password);
     }
