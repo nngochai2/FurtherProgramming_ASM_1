@@ -169,47 +169,7 @@ public class PolicyHoldersController implements Serializable {
     }
 
     // Serialize the dependents into the system
-    public void serializeDependentsToFile(String filePath) {
-        createFileIfNotExists(filePath);
-        try (
-                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        ){
-            File file = new File(filePath);
-            file.getParentFile().mkdirs(); // Create parent directory
-            objectOutputStream.writeObject(dependents);
-            System.out.println("Dependents have been saved to " + filePath);
-        } catch (IOException e) {
-            System.err.println("Error: Unable to save dependents to " + filePath);
-        }
-    }
 
-    // Read the dependents' data from the system
-    public void deserializeDependentsFromFile() {
-        if (currentPolicyHolder != null) {
-            try (FileInputStream fileInputStream = new FileInputStream("data/dependents.dat");
-                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-
-                Object importedObject = objectInputStream.readObject();
-
-                if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
-
-                    if (importedData.get(0) instanceof Dependent) {
-                        dependents = ((ArrayList<Dependent>) importedData).stream()
-                                .filter(dependent -> dependent.getPolicyHolder().equals(currentPolicyHolder))
-                                .collect(Collectors.toList());
-                        System.out.println("Dependents have been deserialized and imported from data/dependents.dat");
-                        return;
-                    }
-                }
-                System.err.println("Error: Unexpected data format in the file.");
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.err.println("Error: No current policy holder set.");
-        }
-    }
 
     // Method to get a dependent by ID
     public Dependent getDependentByID(String dependentID) {

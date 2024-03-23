@@ -34,8 +34,7 @@ public class AdminView {
 
             if (admin != null) {
                 System.out.println("Login successful. Welcome, " + admin.getUsername() + "!");
-                policyHoldersController.deserializeDependentsFromFile();
-                policyHoldersController.deserializeDependentsFromFile();
+
                 insuranceCardController.deserializeInsuranceCardsFromFile();
                 menu(); // Proceed to main menu
                 return; // Exit the method

@@ -13,6 +13,7 @@ public class PolicyHolderView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private final CustomersController customersController = CustomersController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
+    private final DependentsController dependentsController = DependentsController.getInstance();
     private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
     private PolicyHolder currentPolicyHolder;
     private final ClaimView claimView;
@@ -43,7 +44,7 @@ public class PolicyHolderView {
                 currentPolicyHolder = policyHolderCustomer;
                 System.out.println("Login successful. Welcome, " + inputName + "!");
                 insuranceCardController.deserializeInsuranceCardsFromFile();
-                policyHoldersController.deserializeDependentsFromFile();
+                dependentsController.deserializeDependentsFromFile(currentPolicyHolder);
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {
@@ -110,7 +111,7 @@ public class PolicyHolderView {
 
     // Display a menu for managing dependents
     public void manageDependents() {
-        policyHoldersController.deserializeDependentsFromFile();
+        dependentsController.deserializeDependentsFromFile();
         while (true) {
             System.out.println("___________________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS____________________________________________________________________________________");
             System.out.println("You can choose one of the following options: ");
