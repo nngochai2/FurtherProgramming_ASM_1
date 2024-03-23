@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Dependent extends Customer implements Serializable {
     private PolicyHolder policyHolder;
+    private List<Claim> claims;
     public Dependent(String customerID, String fullName, InsuranceCard insuranceCard, PolicyHolder policyHolder) {
         super(customerID, fullName, insuranceCard);
         this.policyHolder = policyHolder;
@@ -21,5 +22,15 @@ public class Dependent extends Customer implements Serializable {
 
     public void setPolicyHolder(PolicyHolder policyHolder) {
         this.policyHolder = policyHolder;
+    }
+
+    @Override
+    public List<Claim> getClaims() {
+        return claims;
+    }
+
+    @Override
+    public void setClaims(List<Claim> claims) {
+        this.claims = claims;
     }
 }

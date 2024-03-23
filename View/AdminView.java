@@ -160,7 +160,7 @@ public class AdminView {
             for (Customer customer : customers) {
                 String id = customer.getCustomerID();
                 String fullName = customer.getFullName();
-                String insuranceCardNumber = customer.getInsuranceCard().getCardNumber();
+                int insuranceCardNumber = customer.getInsuranceCard().getCardNumber();
                 String role = (customer instanceof PolicyHolder) ? "Policy Holder" : "Dependent";
 
                 System.out.printf("%-20s | %-70s | %-70s | %70s%n\n", id, fullName, insuranceCardNumber, role);
@@ -185,7 +185,7 @@ public class AdminView {
             for (PolicyHolder policyHolder : policyHolders) {
                 String id = policyHolder.getCustomerID();
                 String fullName = policyHolder.getFullName();
-                String insuranceCardNumber = policyHolder.getInsuranceCard().getCardNumber();
+                int insuranceCardNumber = policyHolder.getInsuranceCard().getCardNumber();
                 System.out.printf("%-20s | %-70s | %-70s\n", id, fullName, insuranceCardNumber);
             }
         }
@@ -208,7 +208,7 @@ public class AdminView {
             for (Dependent dependent : dependents) {
                 String id = dependent.getCustomerID();
                 String fullName = dependent.getFullName();
-                String insuranceCardNumber = dependent.getInsuranceCard().getCardNumber();
+                int insuranceCardNumber = dependent.getInsuranceCard().getCardNumber();
                 System.out.printf("%-20s | %-70s | %-70s\n", id, fullName, insuranceCardNumber);
             }
         }

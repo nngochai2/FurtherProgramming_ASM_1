@@ -8,6 +8,7 @@ import java.util.List;
 
 public class PolicyHolder extends Customer implements Serializable {
     private List<Dependent> dependents;
+    private List<Claim> claims;
     public PolicyHolder(String customerID, String fullName, InsuranceCard insuranceCard) {
         super(customerID, fullName, insuranceCard);
         this.dependents = new ArrayList<>();
@@ -28,6 +29,16 @@ public class PolicyHolder extends Customer implements Serializable {
 
     public void setDependents(List<Dependent> dependents) {
         this.dependents = dependents;
+    }
+
+    @Override
+    public List<Claim> getClaims() {
+        return claims;
+    }
+
+    @Override
+    public void setClaims(List<Claim> claims) {
+        this.claims = claims;
     }
 
     public void updateDependentInfo(Dependent dependent, String fullName, InsuranceCard insuranceCard) {

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class ClaimsController implements Serializable, ClaimProcessManager {
     private static ClaimsController instance;
+    private static int lastClaimID = 0;
     public ArrayList<Claim> claims;
     public ClaimsController() {
         claims = new ArrayList<>();
@@ -82,6 +83,12 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
             }
         }
         return false;
+    }
+
+    // Method to generate random claim IDs
+    public String generateClaimID() {
+        lastClaimID++;
+        return "f-" + String.format("%10d", lastClaimID);
     }
 
     // Method to get a claim by ID

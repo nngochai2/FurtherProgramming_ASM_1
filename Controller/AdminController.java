@@ -15,10 +15,10 @@ public class AdminController implements Serializable {
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
     private final ClaimsController claimsController = ClaimsController.getInstance();
-    private List<Admin> adminList;
-    private List<Customer> customers;
+    private final List<Admin> adminList;
+    private final List<Customer> customers;
     private List<PolicyHolder> policyHolders;
-    private List<Dependent> dependents;
+    private final List<Dependent> dependents;
 
     public AdminController() {
         this.adminList = new ArrayList<>();
