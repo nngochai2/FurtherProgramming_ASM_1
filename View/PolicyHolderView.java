@@ -187,6 +187,7 @@ public class PolicyHolderView {
         }
     }
 
+
     // Method to display the user's insurance card
     public void viewInsuranceCard() {
         while (true) {
@@ -300,7 +301,7 @@ public class PolicyHolderView {
                 String confirmation = scanner.nextLine();
 
                 if (confirmation.equalsIgnoreCase("yes")) {
-                    boolean removed = policyHoldersController.removeDependent(selectedID);
+                    boolean removed = policyHoldersController.removeDependent(currentPolicyHolder, selectedID);
                     if (removed) {
                         System.out.println("Dependent has been removed successfully.");
                     }

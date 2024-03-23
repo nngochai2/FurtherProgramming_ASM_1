@@ -16,12 +16,10 @@ public class PolicyHoldersController implements Serializable {
     private static PolicyHoldersController instance;
     private PolicyHolder currentPolicyHolder;
     private ArrayList<PolicyHolder> policyHolders;
-    private final ArrayList<Dependent> dependents;
     private final DependentsController dependentsController = DependentsController.getInstance();
     private static final Logger logger = Logger.getLogger(PolicyHoldersController.class.getName());
     public PolicyHoldersController() {
         policyHolders = new ArrayList<>();
-        dependents = new ArrayList<>();
     }
 
     public static PolicyHoldersController getInstance() {
@@ -133,7 +131,6 @@ public class PolicyHoldersController implements Serializable {
     public void addDependent(PolicyHolder currentPolicyHolder, Dependent dependent) {
         if (currentPolicyHolder != null) {
             currentPolicyHolder.addDependent(dependent);
-            dependents.add(dependent);
 
             // Update the dependents in the system
             dependentsController.serializeDependentsToFile("data/dependents.dat");
@@ -143,23 +140,22 @@ public class PolicyHoldersController implements Serializable {
     }
 
     // Allows policyholder to remove a dependent from the dependents list
-    public boolean removeDependent(String dependentID) {
+    public boolean removeDependent(PolicyHolder currentPolicyHolder, String dependentID) {
         if (currentPolicyHolder != null) {
-            Optional<Dependent> dependentToRemove = dependents.stream()
+            Optional<Dependent> dependentToRemove = currentPolicyHolder.getDependents().stream()
                     .filter(dependent -> dependent.getCustomerID().equals(dependentID))
                     .findFirst();
             if (dependentToRemove.isPresent()) {
                 currentPolicyHolder.removeDependent(dependentToRemove.get());
-                dependents.remove(dependentToRemove.get());
-
-                // Update the products in the system
-                dependentsController.serializeDependentsToFile("data/dependents.dat");
                 return true;
+            } else {
+                System.err.println("Error: Dependent with ID " + dependentID + " not found.");
+                return false;
             }
         } else {
             System.err.println("Error: No current policy holder set.");
+            return false;
         }
-        return false;
     }
 
     // Checks if a dependent exists
@@ -175,7 +171,7 @@ public class PolicyHoldersController implements Serializable {
     // Method to get a dependent by ID
     public Dependent getDependentByID(String dependentID) {
         Dependent dependent = null;
-        for (Dependent d : dependents) {
+        for (Dependent d : getCurrentPolicyHolder().getDependents()) {
             if (d.getCustomerID().equals(dependentID)) {
                 dependent = d;
             }
@@ -185,7 +181,7 @@ public class PolicyHoldersController implements Serializable {
 
     // Allows policyholder to find a dependent by name
     public Optional<Dependent> getDependentByName(String dependentName) {
-        for (Dependent dependent : dependents) {
+        for (Dependent dependent : getCurrentPolicyHolder().getDependents()) {
             if (dependent.getFullName().equalsIgnoreCase(dependentName)) {
                 return Optional.of(dependent);
             }
@@ -195,18 +191,14 @@ public class PolicyHoldersController implements Serializable {
 
     // Method to get all dependents of a policy holder
     public List<Dependent> getAllDependents(PolicyHolder currentPolicyHolder) {
-        List<Dependent> dependents = new ArrayList<>();
-        for (Dependent dependent : dependentsController.getAllDependents()) {
-            if (dependent.getPolicyHolder().equals(currentPolicyHolder))
-                dependents.add(dependent);
-        }
-        return dependents;
+        return currentPolicyHolder.getDependents();
     }
 
     public void setPolicyHolders(ArrayList<PolicyHolder> policyHolders) {
         this.policyHolders = policyHolders;
     }
 
+    // Method to quickly set the dependents list
     public void setDependents(PolicyHolder currentPolicyHolder, List<Dependent> dependents) {
         if (currentPolicyHolder != null) {
             currentPolicyHolder.setDependents(dependents);
