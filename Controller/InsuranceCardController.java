@@ -43,7 +43,8 @@ public class InsuranceCardController implements Serializable {
 
     // Method to generate a random card number
     private int generateCardNumber() {
-        return (int) (Math.random() * 9_000_000_000L) + 1_000_000_000;
+        long randomNumber = (long) (Math.random() * 9_000_000_000L) + 1_000_000_000L;
+        return (int) (randomNumber % Integer.MAX_VALUE);
     }
 
     // Method to generate default expiration date

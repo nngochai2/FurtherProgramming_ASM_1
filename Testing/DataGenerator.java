@@ -24,10 +24,10 @@ public class DataGenerator {
         generateSampleData(policyHoldersController, insuranceCardController, dependentsController, adminController);
 
         // Serialize the generated data
-        serializeData(policyHoldersController, insuranceCardController, dependentsController);
+        serializeData(adminController, policyHoldersController, insuranceCardController, dependentsController);
 
         // Deserialize and print the data
-        deserializeAndPrintData(policyHoldersController, dependentsController, insuranceCardController);
+        deserializeAndPrintData(adminController, policyHoldersController, dependentsController, insuranceCardController);
     }
 
     private static void generateSampleData(PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController, AdminController adminController) {
@@ -79,15 +79,26 @@ public class DataGenerator {
         policyHoldersController.setDependents(policyHolder2, dependents2);
     }
 
-    private static void serializeData(PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController) {
+    private static void serializeData(AdminController adminController, PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController) {
+        adminController.serializeAdminToFile("data/admins.dat");
         policyHoldersController.serializePolicyHoldersToFile("data/policyholders.dat");
         dependentsController.serializeDependentsToFile("data/dependents.dat");
         insuranceCardController.serializeInsuranceCardsToFile("data/insuranceCards.dat");
+
     }
 
-    private static void deserializeAndPrintData(PolicyHoldersController policyHoldersController, DependentsController dependentsController, InsuranceCardController insuranceCardController) {
-        policyHoldersController.deserializePolicyHoldersFromFile();
+    private static void deserializeAndPrintData(AdminController adminController, PolicyHoldersController policyHoldersController, DependentsController dependentsController, InsuranceCardController insuranceCardController) {
+        policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
+        dependentsController.deserializeAllDependents("data/dependents.dat");
         insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
+        adminController.deserializeAdminsFromFile("data/admins.dat");
+
+        System.out.println("All admins:");
+        for (Admin admin : adminController.getAdminList()) {
+            System.out.println("Username: " + admin.getUsername());
+            System.out.println("Password: " + admin.getPassword());
+            System.out.println("-----------------------------------------------------\n");
+        }
 
         System.out.println("All policy holders:");
         for (PolicyHolder policyHolder : policyHoldersController.getAllPolicyHolders()) {
@@ -115,5 +126,4 @@ public class DataGenerator {
             System.out.println("\n");
         }
     }
-
 }

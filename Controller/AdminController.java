@@ -7,6 +7,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AdminController implements Serializable {
     private static AdminController instance;
@@ -15,16 +17,17 @@ public class AdminController implements Serializable {
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
     private final ClaimsController claimsController = ClaimsController.getInstance();
-    private final List<Admin> adminList;
+    private static final Logger logger = Logger.getLogger(AdminController.class.getName());
+    private List<Admin> adminList;
     private final List<Customer> customers;
-    private List<PolicyHolder> policyHolders;
+    private final List<PolicyHolder> policyHolders;
     private final List<Dependent> dependents;
 
     public AdminController() {
         this.adminList = new ArrayList<>();
-        this.customers = new ArrayList<>();
-        this.policyHolders = new ArrayList<>();
-        this.dependents = new ArrayList<>();
+        this.customers = customersController.getCustomers();
+        this.policyHolders = policyHoldersController.getAllPolicyHolders();
+        this.dependents = dependentsController.getAllDependents();
     }
 
     public static AdminController getInstance() {
@@ -44,6 +47,7 @@ public class AdminController implements Serializable {
         return null; // Return null if no policyholder is found
     }
 
+    // Add an admin into the system
     public void addAdmin(Admin admin) {
         adminList.add(admin);
     }
@@ -77,7 +81,6 @@ public class AdminController implements Serializable {
                 customers.remove(customer);
             }
         });
-
     }
 
     // Find a customer by ID
@@ -88,19 +91,26 @@ public class AdminController implements Serializable {
                 .orElse(null);
     }
 
-    // Get all customers
+    // Method to get all admins
+    public List<Admin> getAdminList() {
+        return adminList;
+    }
 
+    // Method to get all customers
     public List<Customer> getAllCustomers() {
         return customers;
     }
 
-    public List<PolicyHolder> getPolicyHolders() {
+    // Method to get all policy holders
+    public List<PolicyHolder> getAllPolicyHolders() {
         return policyHolders;
     }
 
-    public List<Dependent> getDependents() {
+    // Method to get all dependents
+    public List<Dependent> getAllDependents() {
         return dependents;
     }
+
 
     // Create a new file for admins' data
     private void createFileIfNotExists(String filePath) {
@@ -131,28 +141,30 @@ public class AdminController implements Serializable {
             objectOutputStream.writeObject(adminList);
             System.out.println("Admin have been saved to " + filePath);
         } catch (IOException e) {
-            System.err.println("Error: Unable to save admins to " + filePath);
+            logger.log(Level.SEVERE, "IO exception while serializing admins file.");
         }
     }
 
     // Method to read the admins' data
-    public void deserializeAdminsFromFile() {
-        try (FileInputStream fileInputStream = new FileInputStream("data/admins.dat");
+    public void deserializeAdminsFromFile(String filePath) {
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
             Object importedObject = objectInputStream.readObject();
 
             if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
 
-                if (importedData.get(0) instanceof PolicyHolder) {
-                    policyHolders = (ArrayList<PolicyHolder>) importedData;
+                if (importedData.get(0) instanceof Admin) {
+                    adminList = (ArrayList<Admin>) importedData;
                     System.out.println("Admins have been deserialized and imported from data/admins.dat");
                     return;
                 }
             }
             System.err.println("Error: Unexpected data format in the file.");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "IO exception while reading admins file.");
+        } catch (ClassNotFoundException e) {
+            logger.log(Level.SEVERE, "Class not found during deserialization.");
         }
     }
 

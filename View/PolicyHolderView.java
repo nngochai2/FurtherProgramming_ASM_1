@@ -29,7 +29,7 @@ public class PolicyHolderView {
         int attempts = 0;
 
         while (true) {
-            policyHoldersController.deserializePolicyHoldersFromFile();
+            policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
             System.out.println("________________________________________________________________________________POLICY HOLDER LOGIN____________________________________________________________________________________");
             System.out.println("Enter your user ID:");
             String inputID = scanner.nextLine();

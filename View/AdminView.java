@@ -22,7 +22,7 @@ public class AdminView {
         int maxAttempts = 5;
         int attempts = 0;
         while (true) {
-            adminController.deserializeAdminsFromFile();
+            adminController.deserializeAdminsFromFile("data/admins.dat");
             System.out.println("________________________________________________________________________________ADMIN LOGIN____________________________________________________________________________________");
             System.out.println("Enter your username:");
             String username = scanner.nextLine();
@@ -170,7 +170,7 @@ public class AdminView {
 
     public void viewAllPolicyHolders() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL POLICY HOLDERS____________________________________________________________________________________");
-        List<PolicyHolder> policyHolders = adminController.getPolicyHolders();
+        List<PolicyHolder> policyHolders = adminController.getAllPolicyHolders();
         if (policyHolders.isEmpty()) {
             System.out.println("No policy holder found.");
             this.viewAllCustomersMenu();
@@ -193,7 +193,7 @@ public class AdminView {
 
     public void viewAllDependents() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL DEPENDENTS____________________________________________________________________________________");
-        List<Dependent> dependents = adminController.getDependents();
+        List<Dependent> dependents = adminController.getAllDependents();
         if (dependents.isEmpty()) {
             System.out.println("No dependents found.");
             this.viewAllCustomersMenu();
@@ -254,7 +254,7 @@ public class AdminView {
     }
 
     public void viewAllClaims() {
-        
+
     }
 
     public void modifyAClaim() {

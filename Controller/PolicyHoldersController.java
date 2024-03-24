@@ -86,8 +86,8 @@ public class PolicyHoldersController implements Serializable {
     }
 
     // Method to read the policyholders' data from the system
-    public void deserializePolicyHoldersFromFile() {
-        try (FileInputStream fileInputStream = new FileInputStream("data/policyholders.dat");
+    public void deserializePolicyHoldersFromFile(String filaPath) {
+        try (FileInputStream fileInputStream = new FileInputStream(filaPath);
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
             Object importedObject = objectInputStream.readObject();
