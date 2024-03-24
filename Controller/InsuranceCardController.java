@@ -112,6 +112,5 @@ public class InsuranceCardController implements Serializable {
         } else {
             System.err.println("Error: Cannot add a null insurance card");
         }
-
     }
 }

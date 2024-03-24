@@ -95,6 +95,7 @@ public class ClaimView {
 
     }
 
+    // Display a claim's details
     public void displayClaimDetails(String claimID) {
         if (claimsController.claimExits(claimID)) {
             Claim claim = claimsController.getClaimByID(claimID);
@@ -110,9 +111,9 @@ public class ClaimView {
         } else {
             System.err.println("The claim with the ID" + claimID + " does not exist.");
         }
-
     }
 
+    // Display to submit a claim
     public void submitClaim() {
         String user = null;
         if (currentCustomer instanceof PolicyHolder) {
