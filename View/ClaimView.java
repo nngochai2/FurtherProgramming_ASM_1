@@ -8,6 +8,7 @@ import Model.PolicyHolder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -133,6 +134,12 @@ public class ClaimView {
 
             System.out.println("Enter your banking information: ");
             String bankingInfo = scanner.nextLine();
+
+            List<String> documents = new ArrayList<>();
+            boolean continueAddingDocuments = true;
+            while (continueAddingDocuments) {
+                System.out.println("Enter the document name or path (e.g., ClaimID");
+            }
 
             // Asking for user's confirmation
             System.out.println("Do you want to submit this claim? (yes/no):");
