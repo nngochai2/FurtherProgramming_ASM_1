@@ -1,11 +1,16 @@
 package Model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Admin implements Serializable {
     private String userID;
     private String username;
     private String password;
+    private List<Customer> customerList;
+    private List<PolicyHolder> policyHolderList;
+    private List<Dependent> dependentList;
+    private List<InsuranceCard> insuranceCardList;
 
     public Admin(String userID, String username, String password) {
         this.userID = userID;
@@ -35,5 +40,37 @@ public class Admin implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Customer> getCustomerList() {
+        return customerList;
+    }
+
+    public void setCustomerList(List<Customer> customerList) {
+        this.customerList = customerList;
+    }
+
+    public List<PolicyHolder> getPolicyHolderList() {
+        return policyHolderList;
+    }
+
+    public void setPolicyHolderList(List<PolicyHolder> policyHolderList) {
+        this.policyHolderList = policyHolderList;
+    }
+
+    public List<Dependent> getDependentList() {
+        return dependentList;
+    }
+
+    public void setDependentList(List<Dependent> dependentList) {
+        this.dependentList = dependentList;
+    }
+
+    public List<InsuranceCard> getInsuranceCardList() {
+        return insuranceCardList;
+    }
+
+    public void setInsuranceCardList(List<InsuranceCard> insuranceCardList) {
+        this.insuranceCardList = insuranceCardList;
     }
 }
