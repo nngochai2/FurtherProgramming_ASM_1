@@ -7,6 +7,8 @@ import Model.Customer;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ClaimsController implements Serializable, ClaimProcessManager {
@@ -16,6 +18,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     public ClaimsController() {
         claims = new ArrayList<>();
     }
+    private static final Logger logger = Logger.getLogger(ClaimsController.class.getName());
 
     public static ClaimsController getInstance() {
         if (instance == null) {
@@ -103,41 +106,65 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     }
 
     // Serialize the claims to the system
+//    public void serializeClaimsToFile(String filePath) {
+//        createFileIfNotExists("data/claims.dat");
+//        try (
+//                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+//                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+//        ){
+//            File file = new File(filePath);
+//            file.getParentFile().mkdirs(); // Create parent directories if they don't exist
+//            objectOutputStream.writeObject(claims);
+//            System.out.println("Claims has been saved to " + filePath);
+//        } catch (IOException e) {
+//            System.err.println("Error: Unable to save products to " + filePath);
+//        }
+//    }
+//
+//    // Read the claims from the system
+//    public void deserializeClaimsFromFile() {
+//        try (FileInputStream fileInputStream = new FileInputStream("src/data/products.dat");
+//             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+//
+//            Object importedObject = objectInputStream.readObject();
+//
+//            if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
+//
+//                if (importedData.get(0) instanceof Claim) {
+//                    claims = (ArrayList<Claim>) importedData;
+//                    System.out.println("Products have been deserialized and imported from src/data/products.dat");
+//                    return;
+//                }
+//            }
+//
+//            System.err.println("Error: Unexpected data format in the file.");
+//        } catch (IOException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    // Serialize the claims to a .txt file
     public void serializeClaimsToFile(String filePath) {
-        createFileIfNotExists("data/claims.dat");
-        try (
-                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        ){
-            File file = new File(filePath);
-            file.getParentFile().mkdirs(); // Create parent directories if they don't exist
-            objectOutputStream.writeObject(claims);
-            System.out.println("Claims has been saved to " + filePath);
+        createFileIfNotExists(filePath);
+        try (FileWriter fileWriter = new FileWriter(filePath);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);)
+        {
+            for (Claim claim : claims) {
+                String serializedClaim = serializeClaimToText(claim);
+                bufferedWriter.write(serializedClaim);
+                bufferedWriter.newLine();
+            }
+            System.out.println();
         } catch (IOException e) {
-            System.err.println("Error: Unable to save products to " + filePath);
+            logger.log(Level.SEVERE, "Unable to save claims to " + filePath);
         }
     }
 
-    // Read the claims from the system
-    public void deserializeClaimsFromFile() {
-        try (FileInputStream fileInputStream = new FileInputStream("src/data/products.dat");
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-
-            Object importedObject = objectInputStream.readObject();
-
-            if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
-
-                if (importedData.get(0) instanceof Claim) {
-                    claims = (ArrayList<Claim>) importedData;
-                    System.out.println("Products have been deserialized and imported from src/data/products.dat");
-                    return;
-                }
-            }
-
-            System.err.println("Error: Unexpected data format in the file.");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    private String serializeClaimToText(Claim claim) {
+        return "ID:" + claim.getClaimID() +
+                ", Date: " + claim.getClaimDate() +
+                ", Insured Person: " + claim.getInsuredPerson() +
+                ", Status: " + claim.getStatus();
     }
 
     public void createFileIfNotExists(String filePath) {

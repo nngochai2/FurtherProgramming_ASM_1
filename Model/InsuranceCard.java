@@ -6,12 +6,14 @@ import java.util.List;
 
 public class InsuranceCard implements Serializable {
     private int cardNumber;
+    private PolicyHolder policyHolder;
     private Customer cardHolder; // Every customer has their one and only insurance card
     private String policyOwner; // There is only one policy owner, which must be the policyholder customer
     private Date expirationDate;
 
-    public InsuranceCard(int cardNumber, Customer cardHolder, String policyOwner, Date expirationDate) {
+    public InsuranceCard(int cardNumber, PolicyHolder policyHolder, Customer cardHolder, String policyOwner, Date expirationDate) {
         this.cardNumber = cardNumber;
+        this.policyHolder = policyHolder;
         this.cardHolder = cardHolder;
         this.policyOwner = policyOwner;
         this.expirationDate = expirationDate;
@@ -23,6 +25,14 @@ public class InsuranceCard implements Serializable {
 
     public void setCardNumber(int cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+    public PolicyHolder getPolicyHolder() {
+        return policyHolder;
+    }
+
+    public void setPolicyHolder(PolicyHolder policyHolder) {
+        this.policyHolder = policyHolder;
     }
 
     public Customer getCardHolder() {
@@ -53,6 +63,7 @@ public class InsuranceCard implements Serializable {
     public String toString() {
         return "Insurance Card Number: " + cardNumber + "\n"
                 + "Policy Owner: " + getPolicyOwner() + "\n"
-                + "Card Holder: " + getCardHolder();
+                + "Policy Holder: " + getPolicyHolder() + "\n"
+                + "Current Card Holder: " + getCardHolder();
     }
 }
