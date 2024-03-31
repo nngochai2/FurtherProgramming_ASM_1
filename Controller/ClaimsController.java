@@ -91,7 +91,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     // Method to generate random claim IDs
     public String generateClaimID() {
         lastClaimID++;
-        return "f-" + String.format("%10d", lastClaimID);
+        return "f-" + String.format("%010d", lastClaimID);
     }
 
     // Method to get a claim by ID
@@ -104,44 +104,6 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
         }
         return claim;
     }
-
-    // Serialize the claims to the system
-//    public void serializeClaimsToFile(String filePath) {
-//        createFileIfNotExists("data/claims.dat");
-//        try (
-//                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-//                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-//        ){
-//            File file = new File(filePath);
-//            file.getParentFile().mkdirs(); // Create parent directories if they don't exist
-//            objectOutputStream.writeObject(claims);
-//            System.out.println("Claims has been saved to " + filePath);
-//        } catch (IOException e) {
-//            System.err.println("Error: Unable to save products to " + filePath);
-//        }
-//    }
-//
-//    // Read the claims from the system
-//    public void deserializeClaimsFromFile() {
-//        try (FileInputStream fileInputStream = new FileInputStream("src/data/products.dat");
-//             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-//
-//            Object importedObject = objectInputStream.readObject();
-//
-//            if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
-//
-//                if (importedData.get(0) instanceof Claim) {
-//                    claims = (ArrayList<Claim>) importedData;
-//                    System.out.println("Products have been deserialized and imported from src/data/products.dat");
-//                    return;
-//                }
-//            }
-//
-//            System.err.println("Error: Unexpected data format in the file.");
-//        } catch (IOException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     // Serialize the claims to a .txt file
     public void serializeClaimsToFile(String filePath) {

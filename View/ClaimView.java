@@ -70,17 +70,18 @@ public class ClaimView {
         } else {
             System.out.println("Claims for " + customer.getFullName() + ":");
             // Display header
-            System.out.printf("%-10s | %-20s | %-20s | %-15s | %-15s | %-15s | %-15s | %-15s\n",
+            System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
                     "ID", "Date", "Insured Person", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
-            System.out.println("-------------------------------------------------------------------------------------------------------------------");
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (Claim claim : claims) {
-                System.out.printf("%-10s | %-20s | %-20s | %-15s | %-15s | %-15s | %-15s | %-15s\n",
+                System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
                         claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(),
                         claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
-                        claim.getClaimAmount(), claim.getStatus());
+                        claim.getClaimAmount() + "$", claim.getStatus());
             }
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Customer can view a claim by entering claim ID
             System.out.println("Enter a claim ID to view the details (enter 'cancel' to cancel): ");
@@ -160,7 +161,8 @@ public class ClaimView {
                 // Add the claim to the controller
                 claimsController.addClaim(claim);
                 System.out.println("Claim submitted successfully!");
-                claimsController.serializeClaimsToFile("data/claims.dat"); // Serialize the claim
+                claimsController.serializeClaimsToFile("data/claims.txt"); // Serialize the claim
+                return;
 
             } else if (confirmation.equalsIgnoreCase("no")) {
                 System.out.println("Procedure has been canceled.");

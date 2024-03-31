@@ -40,8 +40,8 @@ public class DataGenerator {
         PolicyHolder policyHolder2 = new PolicyHolder("c-0000002", "Elton John", null);
 
         // Generate sample Insurance Cards for PolicyHolders
-        InsuranceCard insuranceCard1 = insuranceCardController.generateInsuranceCard(policyHolder1, "RMIT");
-        InsuranceCard insuranceCard2 = insuranceCardController.generateInsuranceCard(policyHolder2, "RMIT");
+        InsuranceCard insuranceCard1 = insuranceCardController.generateInsuranceCard(policyHolder1, policyHolder1, "RMIT");
+        InsuranceCard insuranceCard2 = insuranceCardController.generateInsuranceCard(policyHolder2, policyHolder2, "RMIT");
         insuranceCardController.addInsuranceCard(insuranceCard1);
         insuranceCardController.addInsuranceCard(insuranceCard2);
 
