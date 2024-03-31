@@ -135,10 +135,19 @@ public class ClaimView {
             System.out.println("Enter your banking information: ");
             String bankingInfo = scanner.nextLine();
 
+            // Prompt user to attach documents
             List<String> documents = new ArrayList<>();
-            boolean continueAddingDocuments = true;
-            while (continueAddingDocuments) {
-                System.out.println("Enter the document name or path (e.g., ClaimID");
+            while (true) {
+                System.out.println("Enter the document name:");
+                String documentName = scanner.nextLine();
+                documents.add(documentName);
+
+                // Prompt if users want to add another document
+                System.out.println("Do you want to add another document? (yes/no):");
+                String confirmation = scanner.nextLine();
+                if (!confirmation.equalsIgnoreCase("yes")) {
+                    break;
+                }
             }
 
             // Asking for user's confirmation
@@ -146,7 +155,7 @@ public class ClaimView {
             String confirmation = scanner.nextLine();
             if (confirmation.equalsIgnoreCase("yes")) {
                 Claim claim = new Claim(claimsController.generateClaimID(), new Date(), currentCustomer, currentCustomer.getInsuranceCard().getCardNumber(),
-                        examDate, null, claimAmount, Claim.Status.NEW, bankingInfo);
+                        examDate, documents, claimAmount, Claim.Status.NEW, bankingInfo);
 
                 // Add the claim to the controller
                 claimsController.addClaim(claim);

@@ -10,12 +10,12 @@ public class Claim implements Serializable {
     private Customer insuredPerson;
     private int cardNumber;
     private Date examDate;
-    private List<Document> documents;
+    private List<String> documents;
     private int claimAmount;
     private Status status;
     private String receiverBankingInfo;
 
-    public Claim(String claimID, Date claimDate, Customer insuredPerson, int cardNumber, Date examDate, List<Document> documents, int claimAmount, Status status, String receiverBankingInfo) {
+    public Claim(String claimID, Date claimDate, Customer insuredPerson, int cardNumber, Date examDate, List<String> documents, int claimAmount, Status status, String receiverBankingInfo) {
         this.claimID = claimID;
         this.claimDate = claimDate;
         this.insuredPerson = insuredPerson;
@@ -73,11 +73,11 @@ public class Claim implements Serializable {
         this.examDate = examDate;
     }
 
-    public List<Document> getDocuments() {
+    public List<String> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(List<Document> documents) {
+    public void setDocuments(List<String> documents) {
         this.documents = documents;
     }
 
