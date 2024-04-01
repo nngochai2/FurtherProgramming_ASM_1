@@ -31,4 +31,13 @@ public class CustomersController implements Serializable {
     public ArrayList<Customer> getCustomers() {
         return customers;
     }
+
+    public Customer findCustomerByID(String customerID) {
+        for (Customer customer : customers) {
+            if (customer.getCustomerID().equals(customerID)) {
+                return customer;
+            }
+        }
+        return null;
+    }
 }

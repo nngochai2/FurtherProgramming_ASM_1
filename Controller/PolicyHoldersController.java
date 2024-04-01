@@ -52,6 +52,15 @@ public class PolicyHoldersController implements Serializable {
         return null; // Return null if no policyholder is found
     }
 
+    public PolicyHolder findPolicyHolderByID(String policyHolderID) {
+        for (PolicyHolder policyHolder : policyHolders) {
+            if (policyHolder.getCustomerID().equals(policyHolderID)) {
+                return policyHolder;
+            }
+        }
+        return null;
+    }
+
     // Method to create a file if the targeted file does not exist during the serialize process
     private void createFileIfNotExists(String filePath) {
         File file = new File(filePath);

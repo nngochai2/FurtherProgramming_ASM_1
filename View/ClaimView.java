@@ -40,6 +40,7 @@ public class ClaimView {
             user = "DEPENDENT";
         }
         System.out.println("__________________________________________________________________________" + user + " - MANAGE CLAIMS____________________________________________________________________________________");
+        claimsController.deserializeCustomerClaimsFromFile("data/claims.txt", currentCustomer.getCustomerID());
         while (true) {
             System.out.println("You can choose one of the following options: ");
             System.out.println("1. View All Claims");

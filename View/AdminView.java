@@ -1,16 +1,14 @@
 package View;
 
 import Controller.*;
-import Model.Admin;
-import Model.Customer;
-import Model.Dependent;
-import Model.PolicyHolder;
+import Model.*;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class AdminView {
     private final AdminController adminController = AdminController.getInstance();
+    private final CustomersController customersController = CustomersController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final ClaimsController claimsController = ClaimsController.getInstance();
@@ -39,6 +37,7 @@ public class AdminView {
                 policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
                 dependentsController.deserializeAllDependents("data/dependents.dat");
                 insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
+                claimsController.deserializeAllClaimsFromFile("data/claims.txt");
 
                 menu(); // Proceed to main menu
                 return; // Exit the method
@@ -97,7 +96,7 @@ public class AdminView {
         while (true) {
             System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS____________________________________________________________________________________");
             System.out.println("You can choose one of the following options:");
-            System.out.println("1. View all customers");
+            System.out.println("1. View customers");
             System.out.println("2. Add a new policy holder");
             System.out.println("3. Add a new dependent");
             System.out.println("4. Remove a customer");
@@ -130,7 +129,8 @@ public class AdminView {
             System.out.println("1. View all customers");
             System.out.println("2. View all policy holders");
             System.out.println("3. View all dependents");
-            System.out.println("4. Cancel");
+            System.out.println("4. View a customer's details");
+            System.out.println("5. Cancel");
             System.out.println("Enter your choice:");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -139,7 +139,8 @@ public class AdminView {
                 case 1 -> this.viewAllCustomers();
                 case 2 -> this.viewAllPolicyHolders();
                 case 3 -> this.viewAllDependents();
-                case 4 -> {
+                case 4 -> this.displayACustomerDetails();
+                case 5 -> {
                     this.manageCustomers();
                     return;
                 }
@@ -196,6 +197,41 @@ public class AdminView {
         }
     }
 
+    public void displayACustomerDetails() {
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW A CUSTOMER DETAILS____________________________________________________________________________________");
+        System.out.println("Enter customer ID (enter 'cancel' to cancel): ");
+        String customerID = scanner.nextLine();
+
+        if (customerID.equalsIgnoreCase("cancel")) {
+            System.out.println("Procedure has been canceled.");
+            return;
+        }
+
+        Customer customer = customersController.findCustomerByID(customerID);
+        if (customer == null) {
+            System.err.println("Customer not found. Please try again.");
+        } else {
+            System.out.println("Customer found: ");
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("Customer ID: " + customer.getCustomerID());
+            System.out.println("Customer full name: " + customer.getFullName());
+            String role;
+            if (customer instanceof PolicyHolder) {
+                role = "Policy Holder";
+                System.out.println("Role: " + role);
+                System.out.println("Dependents: ");
+                for (Dependent dependent : ((PolicyHolder) customer).getDependents()) {
+                   System.out.println(dependent.getFullName() + " (" + dependent.getCustomerID() + ")");
+                }
+            } else if (customer instanceof Dependent) {
+                role = "Dependent";
+                System.out.println("Role: " + role);
+            }
+            System.out.println("Insurance card: " + customer.getInsuranceCard().getCardNumber());
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+        }
+    }
+
     public void viewAllDependents() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL DEPENDENTS____________________________________________________________________________________");
         List<Dependent> dependents = adminController.getAllDependents();
@@ -219,13 +255,92 @@ public class AdminView {
         }
     }
 
-
     public void addPolicyHolder() {
-        
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - CREATE NEW POLICY HOLDER____________________________________________________________________________________");
+        System.out.println("Enter the policy holder's name (enter 'cancel' to cancel): ");
+        String newPolicyHolderName = scanner.nextLine();
+
+        if (newPolicyHolderName.equals("cancel")) {
+            System.out.println("Procedure has been canceled.");
+            return;
+        }
+
+        System.out.println("Enter the policy owner (enter 'cancel' to cancel): ");
+        String newPolicyOwner = scanner.nextLine();
+        if (newPolicyOwner.equals("cancel")) {
+            System.out.println("Procedure has been canceled.");
+            return;
+        }
+
+        // Asking for user's confirmation
+        System.out.println("Do you want to create this policy holder with new insurance card (yes/no): ");
+        String confirmation = scanner.nextLine();
+        if (confirmation.equals("yes")) {
+            String newPolicyHolderID = customersController.generateUserID();
+            PolicyHolder newPolicyHolder = new PolicyHolder(newPolicyHolderID, newPolicyHolderName, null);
+
+            // Create new insurance card
+            InsuranceCard newPolicyHolderInsuranceCard = insuranceCardController.generateInsuranceCard(newPolicyHolder, newPolicyHolder, newPolicyOwner);
+            newPolicyHolder.setInsuranceCard(newPolicyHolderInsuranceCard); // Assign new insurance card to new policy holder
+
+            // Serialize new policy holder to the system
+            policyHoldersController.serializePolicyHoldersToFile("data/policyholders.dat");
+            System.out.println("New policy holder with new insurance card has been created: ");
+
+            this.manageCustomers(); // Return to manage customers menu
+
+        } else {
+            System.out.println("Procedure has been canceled.");
+            this.manageCustomers(); // Return to manage customers menu
+        }
     }
 
     public void addDependent() {
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - CREATE NEW DEPENDENT____________________________________________________________________________________");
+        System.out.println("Enter a policy holder ID to add a dependent:");
+        String policyHolderID = scanner.nextLine();
+        PolicyHolder policyHolder = policyHoldersController.findPolicyHolderByID(policyHolderID);
 
+        System.out.println("Policy Holder found: ");
+        System.out.println("Policy Holder ID: " + policyHolder.getCustomerID());
+        System.out.println("Policy Holder Name: " + policyHolder.getFullName());
+        System.out.println("Insurance Card Number: " + policyHolder.getInsuranceCard().getCardNumber());
+        System.out.println("Current Dependents: ");
+        for (Dependent dependent : policyHolder.getDependents()) {
+            System.out.println(dependent.getFullName() + " (" + dependent.getCustomerID() + ")");
+        }
+
+        // Asking for user's confirmation
+        System.out.println("Do you want to add a new dependent to this policy holder? (yes/no): ");
+        String confirmation = scanner.nextLine();
+        if (confirmation.equals("yes")) {
+            // Asking for new dependent's name
+            System.out.println("Enter new dependent's full name (enter 'cancel' to cancel): ");
+            String newDependentName = scanner.nextLine();
+
+            if (newDependentName.equalsIgnoreCase("cancel")) {
+                System.out.println("Procedure has been canceled.");
+            } else {
+                // Create a new dependent instance
+                Dependent newDependent = new Dependent(customersController.generateUserID(), newDependentName, null, policyHolder);
+
+                // Assign insurance card
+                newDependent.setInsuranceCard(policyHolder.getInsuranceCard());
+
+                // Add new dependent to the policy holder's class
+                policyHolder.addDependent(newDependent);
+
+                // Add new dependent into the controller
+                dependentsController.addDependent(newDependent);
+
+                System.out.println("New dependent has been added!");
+
+                // Serialize the dependent into the system
+                dependentsController.serializeDependentsToFile("data/dependents.dat");
+            }
+        } else {
+            System.out.println("Procedure has been canceled.");
+        }
     }
 
     public void removeCustomer() {
@@ -259,7 +374,56 @@ public class AdminView {
     }
 
     public void viewAllClaims() {
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - VIEW ALL CLAIMS____________________________________________________________________________________");
+        List<Claim> claims = claimsController.getAllClaims();
 
+        if (claims.isEmpty()) {
+            System.out.println("No claims found in the system.");
+        } else {
+            System.out.println("All claims in the system:");
+            // Display header
+            System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
+                    "ID", "Date", "Insured Person", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+            // Display content
+            for (Claim claim : claims) {
+                System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
+                        claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(),
+                        claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
+                        claim.getClaimAmount() + "$", claim.getStatus());
+            }
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+            // Admin can view a claim by entering claim ID
+            System.out.println("Enter a claim ID to view the details (enter 'cancel' to cancel): ");
+            String selectedID = scanner.nextLine();
+
+            if (!selectedID.equalsIgnoreCase("cancel")) {
+                this.displayClaimDetails(selectedID);
+            } else {
+                System.out.println("Exiting...");
+                this.manageClaims();
+            }
+        }
+    }
+
+    // Display a claim's details
+    public void displayClaimDetails(String claimID) {
+        if (claimsController.claimExits(claimID)) {
+            Claim claim = claimsController.getClaimByID(claimID);
+            System.out.println("Claim ID: " + claim.getClaimID());
+            System.out.println("Date: " + claim.getClaimDate());
+            System.out.println("Insured person: " + claim.getInsuredPerson());
+            System.out.println("Card number: " + claim.getCardNumber());
+            System.out.println("Exam date: " + claim.getClaimDate());
+            System.out.println("Documents: " + claim.getDocuments());
+            System.out.println("Claim amount: " + claim.getClaimAmount());
+            System.out.println("Status: " + claim.getStatus());
+            System.out.println("Receiver Banking Information: " + claim.getReceiverBankingInfo());
+        } else {
+            System.err.println("The claim with the ID" + claimID + " does not exist.");
+        }
     }
 
     public void modifyAClaim() {
