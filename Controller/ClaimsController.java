@@ -122,6 +122,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
         }
     }
 
+    // Method to serialize a single claim to a String
     private String serializeClaimToText(Claim claim) {
         return "ID:" + claim.getClaimID() +
                 ", Date: " + claim.getClaimDate() +
@@ -129,6 +130,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
                 ", Status: " + claim.getStatus();
     }
 
+    // Method to create a file in case the file path does not exist
     public void createFileIfNotExists(String filePath) {
         File file = new File(filePath);
 
@@ -142,6 +144,52 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
             } catch (IOException e) {
                 System.err.println("Error: Unable to create file " + filePath);
             }
+        }
+    }
+
+    // Method to deserialize all claims in the system (developed for admins only)
+    public void deserializeAllClaimsFromFile(String filePath) {
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath))) {
+            Object importedObject = objectInputStream.readObject();
+
+            if (importedObject instanceof ArrayList<?>) {
+                @SuppressWarnings("unchecked")
+                ArrayList<Claim> importedClaims = (ArrayList<Claim>) importedObject;
+                claims.addAll(importedClaims);
+                System.out.println("Claims have been deserialized and imported from " + filePath);
+            } else {
+                logger.log(Level.SEVERE, "Unexpected data format in the file");
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "IO exception while reading claims.", e);
+        } catch (ClassNotFoundException e) {
+            logger.log(Level.SEVERE, "Class not found during deserialization.", e);
+        }
+    }
+
+    // Method to deserialize claims of a single customer
+    public void deserializeCustomerClaimsFromFile(String filePath, String customerID) {
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath))) {
+            Object importedObject = objectInputStream.readObject();
+
+            if (importedObject instanceof ArrayList<?>) {
+                @SuppressWarnings("unchecked")
+                ArrayList<Claim> importedClaims = (ArrayList<Claim>) importedObject;
+
+                // Filter and add claims belonging to the specified customer
+                for (Claim claim : importedClaims) {
+                    if (claim.getInsuredPerson().getCustomerID().equals(customerID)) {
+                        claims.add(claim);
+                    }
+                }
+                System.out.println("Customer's claim have been deserialized and imported from " + filePath);
+            } else {
+                System.err.println("Error: Unexpected data format in the file");
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "IO exception while reading claims file.", e);
+        } catch (ClassNotFoundException e) {
+            logger.log(Level.SEVERE, "Class not found during deserialization.");
         }
     }
 }

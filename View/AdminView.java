@@ -17,7 +17,7 @@ public class AdminView {
     private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
     private final Scanner scanner = new Scanner(System.in);
 
-    // Authenticate admins' login
+    // Authenticate admins' login menu
     public void authenticateAdmins() {
         int maxAttempts = 5;
         int attempts = 0;
@@ -35,7 +35,11 @@ public class AdminView {
             if (admin != null) {
                 System.out.println("Login successful. Welcome, " + admin.getUsername() + "!");
 
+                // Deserialize all data in the system
+                policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
+                dependentsController.deserializeAllDependents("data/dependents.dat");
                 insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
+
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {
@@ -62,6 +66,7 @@ public class AdminView {
         }
     }
 
+    // Display the menu for admins
     public void menu() {
         while (true) {
             System.out.println("========================================================================= WELCOME ADMIN =========================================================================");
