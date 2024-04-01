@@ -121,6 +121,7 @@ public class DependentsController implements Serializable {
                 Object importedObject = objectInputStream.readObject();
 
                 if (importedObject instanceof ArrayList<?>) {
+                    @SuppressWarnings("unchecked")
                     ArrayList<Dependent> allDependents = (ArrayList<Dependent>) importedObject;
                     ArrayList<Dependent> dependentArrayList = new ArrayList<>(allDependents);
 
@@ -135,7 +136,7 @@ public class DependentsController implements Serializable {
             } catch (IOException e) {
                 logger.log(Level.SEVERE, "IO exception while reading dependents file", e);
             } catch (ClassNotFoundException e) {
-                logger.log(Level.SEVERE, "Class not found during serialization.", e);
+                logger.log(Level.SEVERE, "Class not found during deserialization.", e);
             }
         } else {
             logger.log(Level.SEVERE, "Error: No current policy holder set.");

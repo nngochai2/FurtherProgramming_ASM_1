@@ -3,6 +3,7 @@ package Controller;
 import Model.Claim;
 import Model.ClaimProcessManager;
 import Model.Customer;
+import Model.PolicyHolder;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -105,14 +106,14 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
         return claim;
     }
 
-    // Serialize the claims to a .txt file
-    public void serializeClaimsToFile(String filePath) {
+    // Save the claims to a .txt file
+    public void saveClaimsToTextFile(String filePath) {
         createFileIfNotExists(filePath);
         try (FileWriter fileWriter = new FileWriter(filePath);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);)
         {
             for (Claim claim : claims) {
-                String serializedClaim = serializeClaimToText(claim);
+                String serializedClaim = saveClaimToText(claim);
                 bufferedWriter.write(serializedClaim);
                 bufferedWriter.newLine();
             }
@@ -123,7 +124,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     }
 
     // Method to serialize a single claim to a String
-    private String serializeClaimToText(Claim claim) {
+    private String saveClaimToText(Claim claim) {
         return "ID:" + claim.getClaimID() +
                 ", Date: " + claim.getClaimDate() +
                 ", Insured Person: " + claim.getInsuredPerson() +
@@ -147,49 +148,65 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
         }
     }
 
+    // Method to serialize the claims to .dat file
+    public void serializeClaimsToFile(String filePath) {
+        createFileIfNotExists(filePath);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)){
+
+            objectOutputStream.writeObject(claims);
+            System.out.println("Claims have been serialized to file: " + filePath);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error occurred while serializing claims to file " + filePath, e);
+        }
+    }
+
     // Method to deserialize all claims in the system (developed for admins only)
     public void deserializeAllClaimsFromFile(String filePath) {
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath))) {
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+
             Object importedObject = objectInputStream.readObject();
 
-            if (importedObject instanceof ArrayList<?>) {
-                @SuppressWarnings("unchecked")
-                ArrayList<Claim> importedClaims = (ArrayList<Claim>) importedObject;
-                claims.addAll(importedClaims);
-                System.out.println("Claims have been deserialized and imported from " + filePath);
-            } else {
-                logger.log(Level.SEVERE, "Unexpected data format in the file");
+            if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
+                if (importedData.get(0) instanceof Claim) {
+                    claims = (ArrayList<Claim>) importedData;
+                    System.out.println("Claims have been deserialized and imported from " + filePath);
+                    return;
+                }
             }
+            logger.log(Level.SEVERE, "Unexpected data format in the policy holders file.");
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "IO exception while reading claims.", e);
+            logger.log(Level.SEVERE, "IO exception while reading policy holders file.", e);
         } catch (ClassNotFoundException e) {
             logger.log(Level.SEVERE, "Class not found during deserialization.", e);
         }
     }
 
-    // Method to deserialize claims of a single customer
-    public void deserializeCustomerClaimsFromFile(String filePath, String customerID) {
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath))) {
+    // Method to serialize claims of a specific customer
+    public void deserializeClaimsForCustomer(String filePath, Customer customer) {
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+
             Object importedObject = objectInputStream.readObject();
 
             if (importedObject instanceof ArrayList<?>) {
                 @SuppressWarnings("unchecked")
-                ArrayList<Claim> importedClaims = (ArrayList<Claim>) importedObject;
+                ArrayList<Claim> allClaims = (ArrayList<Claim>) importedObject;
+                ArrayList<Claim> claimArrayList = new ArrayList<>(allClaims);
 
-                // Filter and add claims belonging to the specified customer
-                for (Claim claim : importedClaims) {
-                    if (claim.getInsuredPerson().getCustomerID().equals(customerID)) {
-                        claims.add(claim);
-                    }
-                }
-                System.out.println("Customer's claim have been deserialized and imported from " + filePath);
-            } else {
-                System.err.println("Error: Unexpected data format in the file");
+                claims = claimArrayList.stream()
+                        .filter(claim -> claim.getInsuredPerson().equals(customer))
+                        .collect(Collectors.toCollection(ArrayList::new));
+
+                System.out.println("Claims have been deserialized and imported from " + filePath);
+                return;
             }
+            logger.log(Level.SEVERE, "Unexpected data format in the claims file.");
         } catch (IOException e) {
             logger.log(Level.SEVERE, "IO exception while reading claims file.", e);
         } catch (ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "Class not found during deserialization.");
+            logger.log(Level.SEVERE, "Class not found during deserialization.", e);
         }
     }
 }

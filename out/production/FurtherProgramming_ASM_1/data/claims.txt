@@ -1,1 +1,1 @@
-ID:f-0000000001, Date: Sun Mar 31 23:47:26 ICT 2024, Insured Person: Policy Owner: Nguyen Ngoc Hai(c-0000001), Status: NEW
+ID:f-0000000001, Date: Mon Apr 01 20:06:16 ICT 2024, Insured Person: Policy Owner: Nguyen Ngoc Hai(c-0000001), Status: NEW

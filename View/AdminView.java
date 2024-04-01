@@ -37,7 +37,7 @@ public class AdminView {
                 policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
                 dependentsController.deserializeAllDependents("data/dependents.dat");
                 insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
-                claimsController.deserializeAllClaimsFromFile("data/claims.txt");
+                claimsController.deserializeAllClaimsFromFile("data/claims.dat");
 
                 menu(); // Proceed to main menu
                 return; // Exit the method
@@ -427,6 +427,24 @@ public class AdminView {
     }
 
     public void modifyAClaim() {
+        while (true) {
+            System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - MODIFY A CLAIM____________________________________________________________________________________");
+            System.out.println("Enter the claim ID you want to modify: ");
+            String claimID = scanner.nextLine();
+
+            Claim claimToEdit = claimsController.getClaimByID(claimID);
+            if (claimToEdit == null) {
+                System.out.println("Claim not found. Please try again.");
+                return;
+            }
+
+            // Display current details of the claim
+            System.out.println("Claim found: ");
+            this.displayClaimDetails(claimID);
+
+            // Allow admin to approve or process a claim
+            System.out.println("Enter the new ");
+        }
 
     }
 

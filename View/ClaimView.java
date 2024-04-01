@@ -40,7 +40,6 @@ public class ClaimView {
             user = "DEPENDENT";
         }
         System.out.println("__________________________________________________________________________" + user + " - MANAGE CLAIMS____________________________________________________________________________________");
-        claimsController.deserializeCustomerClaimsFromFile("data/claims.txt", currentCustomer.getCustomerID());
         while (true) {
             System.out.println("You can choose one of the following options: ");
             System.out.println("1. View All Claims");
@@ -64,6 +63,8 @@ public class ClaimView {
 
     // Method to display all claims of a customer
     public void displayAllClaims(Customer customer) {
+        claimsController.deserializeClaimsForCustomer("data/claims.dat", currentCustomer);
+
         List<Claim> claims = claimsController.getAllClaimsForCustomer(customer);
 
         if (claims.isEmpty()) {
@@ -71,14 +72,14 @@ public class ClaimView {
         } else {
             System.out.println("Claims for " + customer.getFullName() + ":");
             // Display header
-            System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
-                    "ID", "Date", "Insured Person", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
+            System.out.printf("%-11s | %-32s | %-40s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
+                    "ID", "Date", "Insured Person", "Banking Info", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
             System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (Claim claim : claims) {
-                System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
-                        claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(),
+                System.out.printf("%-11s | %-32s | %-40s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
+                        claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(), claim.getReceiverBankingInfo(),
                         claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
                         claim.getClaimAmount() + "$", claim.getStatus());
             }
@@ -134,7 +135,7 @@ public class ClaimView {
             int claimAmount = scanner.nextInt();
             scanner.nextLine();
 
-            System.out.println("Enter your banking information: ");
+            System.out.println("Enter your banking information (Bank - Name - Number): ");
             String bankingInfo = scanner.nextLine();
 
             // Prompt user to attach documents
@@ -162,7 +163,8 @@ public class ClaimView {
                 // Add the claim to the controller
                 claimsController.addClaim(claim);
                 System.out.println("Claim submitted successfully!");
-                claimsController.serializeClaimsToFile("data/claims.txt"); // Serialize the claim
+                claimsController.serializeClaimsToFile("data/claims.dat"); // Serialize the claim
+                claimsController.saveClaimsToTextFile("data/claims.txt"); // Save the claim as a text file
                 return;
 
             } else if (confirmation.equalsIgnoreCase("no")) {

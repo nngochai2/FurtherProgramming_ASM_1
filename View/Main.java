@@ -18,6 +18,7 @@ public class Main {
             scanner.nextLine();
 
             switch (choice) {
+                // This will lead to AdminView, which is the main part of this project
                 case 1 -> {
                     AdminView adminView = new AdminView();
                     adminView.authenticateAdmins();

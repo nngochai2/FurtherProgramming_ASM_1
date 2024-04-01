@@ -30,7 +30,8 @@ public class Claim implements Serializable {
     public enum Status {
         NEW,
         PROCESSING,
-        DONE
+        DONE,
+        DENIED,
     }
 
     public String getClaimID() {

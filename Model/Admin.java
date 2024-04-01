@@ -11,6 +11,7 @@ public class Admin implements Serializable {
     private List<PolicyHolder> policyHolderList;
     private List<Dependent> dependentList;
     private List<InsuranceCard> insuranceCardList;
+    private List<Claim> claimList;
 
     public Admin(String userID, String username, String password) {
         this.userID = userID;
@@ -72,5 +73,13 @@ public class Admin implements Serializable {
 
     public void setInsuranceCardList(List<InsuranceCard> insuranceCardList) {
         this.insuranceCardList = insuranceCardList;
+    }
+
+    public List<Claim> getClaimList() {
+        return claimList;
+    }
+
+    public void setClaimList(List<Claim> claimList) {
+        this.claimList = claimList;
     }
 }
