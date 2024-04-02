@@ -366,6 +366,7 @@ public class AdminView {
                 case 1 -> this.viewAllClaims();
                 case 2 -> this.modifyAClaim();
                 case 3 -> {
+                    this.menu();
                     return;
                 }
                 default -> System.err.println("Invalid input. Please try again.");
@@ -373,6 +374,7 @@ public class AdminView {
         }
     }
 
+    // Display all claims
     public void viewAllClaims() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - VIEW ALL CLAIMS____________________________________________________________________________________");
         List<Claim> claims = claimsController.getAllClaims();
@@ -384,7 +386,7 @@ public class AdminView {
             // Display header
             System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
                     "ID", "Date", "Insured Person", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
-            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (Claim claim : claims) {
@@ -393,7 +395,7 @@ public class AdminView {
                         claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
                         claim.getClaimAmount() + "$", claim.getStatus());
             }
-            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Admin can view a claim by entering claim ID
             System.out.println("Enter a claim ID to view the details (enter 'cancel' to cancel): ");
@@ -412,15 +414,17 @@ public class AdminView {
     public void displayClaimDetails(String claimID) {
         if (claimsController.claimExits(claimID)) {
             Claim claim = claimsController.getClaimByID(claimID);
+            System.out.println("________________________________________________________________________________");
             System.out.println("Claim ID: " + claim.getClaimID());
             System.out.println("Date: " + claim.getClaimDate());
             System.out.println("Insured person: " + claim.getInsuredPerson());
             System.out.println("Card number: " + claim.getCardNumber());
             System.out.println("Exam date: " + claim.getClaimDate());
             System.out.println("Documents: " + claim.getDocuments());
-            System.out.println("Claim amount: " + claim.getClaimAmount());
+            System.out.println("Claim amount: " + claim.getClaimAmount() + "$");
             System.out.println("Status: " + claim.getStatus());
             System.out.println("Receiver Banking Information: " + claim.getReceiverBankingInfo());
+            System.out.println("________________________________________________________________________________");
         } else {
             System.err.println("The claim with the ID" + claimID + " does not exist.");
         }
@@ -429,8 +433,12 @@ public class AdminView {
     public void modifyAClaim() {
         while (true) {
             System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - MODIFY A CLAIM____________________________________________________________________________________");
-            System.out.println("Enter the claim ID you want to modify: ");
+            System.out.println("Enter the claim ID you want to modify (enter 'cancel' to cancel): ");
             String claimID = scanner.nextLine();
+
+            if (claimID.equalsIgnoreCase("cancel")) {
+                break;
+            }
 
             Claim claimToEdit = claimsController.getClaimByID(claimID);
             if (claimToEdit == null) {
@@ -443,7 +451,34 @@ public class AdminView {
             this.displayClaimDetails(claimID);
 
             // Allow admin to approve or process a claim
-            System.out.println("Enter the new ");
+            System.out.println("Enter the new status of this claim (enter '0' to cancel): ");
+            System.out.println("1. PROCESSING");
+            System.out.println("2. DONE");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (choice == 1) {
+                claimToEdit.setStatus(Claim.Status.PROCESSING);
+            } else if (choice == 2) {
+                claimToEdit.setStatus(Claim.Status.DONE);
+            } else if (choice == 0) {
+                return;
+            } else {
+                System.err.println("Invalid input. Please try again.");
+                return;
+            }
+
+            System.out.println("Do you want to save this change? (yes/no): ");
+            String confirmation = scanner.nextLine();
+
+            if (confirmation.equalsIgnoreCase("yes")) {
+                claimsController.serializeClaimsToFile("data/claims.dat");
+                claimsController.saveClaimsToTextFile("data/claims.txt");
+                System.out.println("Claim has been updated successfully.");
+            } else {
+                System.out.println("Procedure has been canceled.");
+                return;
+            }
         }
 
     }
