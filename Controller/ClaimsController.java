@@ -106,7 +106,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
         return claim;
     }
 
-    // Save the claims to a .txt file
+    // Method to save the claims to a .txt file
     public void saveClaimsToTextFile(String filePath) {
         createFileIfNotExists(filePath);
         try (FileWriter fileWriter = new FileWriter(filePath);

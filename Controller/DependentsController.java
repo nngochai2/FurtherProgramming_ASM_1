@@ -37,16 +37,14 @@ public class DependentsController implements Serializable {
         return dependent;
     }
 
+    // Method to get the current dependent
     public Dependent getCurrentDependent() {
         return currentDependent;
     }
 
+    // Method to set the current dependent
     public void setCurrentDependent(Dependent currentDependent) {
         this.currentDependent = currentDependent;
-    }
-
-    public List<Dependent> getAllDependentCustomers() {
-        return dependents;
     }
 
     // Find a dependent by name and ID for login purpose
@@ -79,8 +77,18 @@ public class DependentsController implements Serializable {
         dependents.add(dependent);
     }
 
-    public void removeDependent(Dependent dependent) {
+    public void removeDependent(String dependentID) {
+        Dependent dependent = findDependentByID(dependentID);
         dependents.remove(dependent);
+    }
+
+    public Dependent findDependentByID(String dependentID) {
+        for (Dependent dependent : dependents) {
+            if (dependent.getCustomerID().equals(dependentID)) {
+                return dependent;
+            }
+        }
+        return null;
     }
 
     private void createFileIfNotExists(String filePath) {

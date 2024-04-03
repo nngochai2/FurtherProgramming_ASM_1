@@ -139,7 +139,7 @@ public class AdminView {
                 case 1 -> this.viewAllCustomers();
                 case 2 -> this.viewAllPolicyHolders();
                 case 3 -> this.viewAllDependents();
-                case 4 -> this.displayACustomerDetails();
+                case 4 -> this.viewACustomerDetails();
                 case 5 -> {
                     this.manageCustomers();
                     return;
@@ -159,7 +159,7 @@ public class AdminView {
             System.out.println("There are currently " + customers.size() + " users in the system.");
 
             // Display header
-            System.out.printf("%-20s | %-70s | %-70s | %70s%n\n" , "ID", "Full name", "Insurance Card Number", "Role");
+            System.out.printf("%-20s | %-40s | %-40s | %40s\n" , "ID", "Full name", "Insurance Card Number", "Role");
             System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
@@ -169,7 +169,7 @@ public class AdminView {
                 int insuranceCardNumber = customer.getInsuranceCard().getCardNumber();
                 String role = (customer instanceof PolicyHolder) ? "Policy Holder" : "Dependent";
 
-                System.out.printf("%-20s | %-70s | %-70s | %70s%n\n", id, fullName, insuranceCardNumber, role);
+                System.out.printf("%-20s | %-40s | %-40s | %40s\n", id, fullName, insuranceCardNumber, role);
             }
         }
     }
@@ -197,7 +197,7 @@ public class AdminView {
         }
     }
 
-    public void displayACustomerDetails() {
+    public void viewACustomerDetails() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW A CUSTOMER DETAILS____________________________________________________________________________________");
         System.out.println("Enter customer ID (enter 'cancel' to cancel): ");
         String customerID = scanner.nextLine();
@@ -207,9 +207,13 @@ public class AdminView {
             return;
         }
 
-        Customer customer = customersController.findCustomerByID(customerID);
+        this.displayCustomerDetails(customerID);
+    }
+
+    private void displayCustomerDetails(String customerID) {
+        Customer customer = adminController.findCustomer(customerID);
         if (customer == null) {
-            System.err.println("Customer not found. Please try again.");
+            System.err.println("No customer found. Please try again.");
         } else {
             System.out.println("Customer found: ");
             System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
@@ -221,7 +225,7 @@ public class AdminView {
                 System.out.println("Role: " + role);
                 System.out.println("Dependents: ");
                 for (Dependent dependent : ((PolicyHolder) customer).getDependents()) {
-                   System.out.println(dependent.getFullName() + " (" + dependent.getCustomerID() + ")");
+                    System.out.println(dependent.getFullName() + " (" + dependent.getCustomerID() + ")");
                 }
             } else if (customer instanceof Dependent) {
                 role = "Dependent";
@@ -230,6 +234,7 @@ public class AdminView {
             System.out.println("Insurance card: " + customer.getInsuranceCard().getCardNumber());
             System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
         }
+
     }
 
     public void viewAllDependents() {
@@ -344,6 +349,30 @@ public class AdminView {
     }
 
     public void removeCustomer() {
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - REMOVE A CUSTOMER____________________________________________________________________________________");
+        System.out.println("Enter the ID of the customer you want to remove (enter 'cancel' to cancel): ");
+        String customerID = scanner.nextLine();
+
+        if (customerID.equalsIgnoreCase("cancel")) {
+            return;
+        }
+
+        // Display the customer details
+        System.out.println("Customer found: ");
+        this.displayCustomerDetails(customerID);
+
+        // Prompt user confirmation
+        System.out.println("Do you want to remove this user? (yes/no):");
+        String confirmation = scanner.nextLine();
+
+        if (confirmation.equalsIgnoreCase("yes")) {
+            adminController.removeUser(customerID);
+            System.out.println("Customer has been removed successfully.");
+        } else if (confirmation.equalsIgnoreCase("no")) {
+            System.out.println("Procedure has been canceled.");
+        } else {
+            System.out.println("Invalid input. Procedure has been canceled");
+        }
 
     }
 

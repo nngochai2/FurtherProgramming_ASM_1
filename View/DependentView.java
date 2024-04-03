@@ -2,6 +2,7 @@ package View;
 
 import Controller.ClaimsController;
 import Controller.DependentsController;
+import Controller.InsuranceCardController;
 import Model.Claim;
 import Model.Dependent;
 import Model.InsuranceCard;
@@ -10,8 +11,8 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class DependentView {
-    private final ClaimsController claimsController = ClaimsController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
+    private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
     private Dependent currentDependent;
     private final ClaimView claimView;
     private final Scanner scanner = new Scanner(System.in);
@@ -21,7 +22,7 @@ public class DependentView {
         this.claimView = new ClaimView(currentDependent);
     }
 
-    // Authenticates dependent logins
+    // Authenticate dependent logins
     public void authenticateUser() {
         int maxAttempts = 5; // Limits fail attempts
         int attempts = 0;
@@ -40,6 +41,8 @@ public class DependentView {
             if (dependentCustomer != null) {
                 currentDependent = dependentCustomer;
                 System.out.println("Login successful. Welcome, " + inputName + "!");
+                dependentsController.setCurrentDependent(currentDependent);
+                insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {

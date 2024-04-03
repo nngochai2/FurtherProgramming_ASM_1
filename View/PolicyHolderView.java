@@ -187,7 +187,6 @@ public class PolicyHolderView {
         }
     }
 
-
     // Method to display the user's insurance card
     public void viewInsuranceCard() {
         while (true) {
@@ -214,7 +213,7 @@ public class PolicyHolderView {
 
     }
 
-    // Policyholders can create new dependents
+    // Method to display adding dependent procedure
     public void addDependent() {
         System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - ADD A DEPENDENT____________________________________________________________________________________");
         while (true){
@@ -244,7 +243,7 @@ public class PolicyHolderView {
         }
     }
 
-    // Method to edit a dependent
+    // Method to display modifying a dependent procedure
     public void modifyDependent() {
         System.out.println("_____________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - MODIFY A DEPENDENT'S INFORMATION____________________________________________________________________________________");
         System.out.println("Enter the dependent's ID: ");
@@ -284,6 +283,7 @@ public class PolicyHolderView {
         }
     }
 
+    // Method to display removing a dependent procedure
     public void removeDependent() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("______________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS - REMOVING A DEPENDENT____________________________________________________________________________________");

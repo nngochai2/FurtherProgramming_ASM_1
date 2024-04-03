@@ -136,6 +136,11 @@ public class PolicyHoldersController implements Serializable {
         policyHolders.add(policyHolder);
     }
 
+    public void removePolicyHolder(String policyHolderID) {
+        PolicyHolder policyHolder = findPolicyHolderByID(policyHolderID);
+        policyHolders.remove(policyHolder);
+    }
+
     // Method to add a dependent into a policy holder's list
     public void addDependent(PolicyHolder currentPolicyHolder, Dependent dependent) {
         if (currentPolicyHolder != null) {

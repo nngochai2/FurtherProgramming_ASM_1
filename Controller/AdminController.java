@@ -1,33 +1,22 @@
 package Controller;
 
 import Model.*;
-import View.AdminView;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AdminController implements Serializable {
     private static AdminController instance;
-    private final CustomersController customersController = CustomersController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
-    private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
-    private final ClaimsController claimsController = ClaimsController.getInstance();
     private static final Logger logger = Logger.getLogger(AdminController.class.getName());
-    private List<Admin> adminList;
-    private final List<Customer> customers;
-    private final List<PolicyHolder> policyHolders;
-    private final List<Dependent> dependents;
+    private List<Admin> admins;
 
     public AdminController() {
-        this.adminList = new ArrayList<>();
-        this.customers = customersController.getCustomers();
-        this.policyHolders = policyHoldersController.getAllPolicyHolders();
-        this.dependents = dependentsController.getAllDependents();
+        this.admins = new ArrayList<>();
     }
 
     public static AdminController getInstance() {
@@ -39,7 +28,7 @@ public class AdminController implements Serializable {
 
     // Find an admin by his/her username and password
     public Admin findAdmin(String username, String password) {
-        for (Admin admin : adminList) {
+        for (Admin admin : admins) {
             if (admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
                 return admin;
             }
@@ -49,68 +38,64 @@ public class AdminController implements Serializable {
 
     // Add an admin into the system
     public void addAdmin(Admin admin) {
-        adminList.add(admin);
+        admins.add(admin);
     }
 
+    // Method to authenticate admin logins
     public Admin authenticateAdmin(String username, String password) {
         return findAdmin(username, password);
     }
 
-    // Add a policyholder
-    public void addPolicyHolder(String fullName, InsuranceCard insuranceCard) {
-        String customerID = customersController.generateUserID();
-        PolicyHolder newPolicyHolder = new PolicyHolder(customerID, fullName, insuranceCard);
-        policyHolders.add(newPolicyHolder);
-    }
-
-    // Remove a user
+    // Method to remove a user
     public void removeUser(String customerID) {
-        Optional<Customer> customerToRemove = customers.stream()
-                .filter(customer -> customer.getCustomerID().equals(customerID))
-                .findFirst();
-        customerToRemove.ifPresent(customer -> {
-            // If the target user is a policyholder, remove them as well as their dependents
-            if (customer instanceof PolicyHolder) {
-                policyHolders.remove(customer);
-                List<Dependent> policyHolderDependents = ((PolicyHolder) customer).getDependents();
-                dependents.removeAll(policyHolderDependents);
-                customers.removeAll(policyHolderDependents);
-            } else if (customer instanceof Dependent) {
-                // Remove a dependent
-                dependents.remove(customer);
-                customers.remove(customer);
+        for (Customer customer : this.getAllCustomers()) {
+            if (customer.getCustomerID().equals(customerID)) {
+                if (customer instanceof PolicyHolder) {
+                    policyHoldersController.removePolicyHolder(customerID);
+                    List<Dependent> dependentsToRemove = ((PolicyHolder) customer).getDependents();
+                    for (Dependent dependent : dependentsToRemove) {
+                        dependentsController.removeDependent(dependent.getCustomerID());
+                    }
+                } else if (customer instanceof Dependent) {
+                    dependentsController.removeDependent(customerID);
+                }
+                break;
             }
-        });
+        }
     }
 
-    // Find a customer by ID
+    // Method to find a customer by ID
     public Customer findCustomer(String customerID) {
-        return customers.stream()
-                .filter(customer -> customer.getCustomerID().equals(customerID))
-                .findFirst()
-                .orElse(null);
+        for (Customer customer : this.getAllCustomers()) {
+            if (customer.getCustomerID().equals(customerID)) {
+                return customer;
+            }
+        }
+        return null;
     }
 
     // Method to get all admins
     public List<Admin> getAdminList() {
-        return adminList;
+        return admins;
     }
 
     // Method to get all customers
     public List<Customer> getAllCustomers() {
-        return customers;
+        List<Customer> allCustomers = new ArrayList<>();
+        allCustomers.addAll(policyHoldersController.getAllPolicyHolders());
+        allCustomers.addAll(dependentsController.getAllDependents());
+        return allCustomers;
     }
 
     // Method to get all policy holders
     public List<PolicyHolder> getAllPolicyHolders() {
-        return policyHolders;
+        return policyHoldersController.getAllPolicyHolders();
     }
 
     // Method to get all dependents
     public List<Dependent> getAllDependents() {
-        return dependents;
+        return dependentsController.getAllDependents();
     }
-
 
     // Create a new file for admins' data
     private void createFileIfNotExists(String filePath) {
@@ -129,7 +114,7 @@ public class AdminController implements Serializable {
         }
     }
 
-    // Serialize admins to file
+    // Method to serialize admins to file
     public void serializeAdminToFile(String filePath) {
         createFileIfNotExists(filePath);
         try (
@@ -138,7 +123,7 @@ public class AdminController implements Serializable {
         ){
             File file = new File(filePath);
             file.getParentFile().mkdirs(); // Create parent directory
-            objectOutputStream.writeObject(adminList);
+            objectOutputStream.writeObject(admins);
             System.out.println("Admin have been saved to " + filePath);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "IO exception while serializing admins file.");
@@ -155,7 +140,7 @@ public class AdminController implements Serializable {
             if (importedObject instanceof ArrayList<?> importedData && !((ArrayList<?>) importedObject).isEmpty()) {
 
                 if (importedData.get(0) instanceof Admin) {
-                    adminList = (ArrayList<Admin>) importedData;
+                    admins = (ArrayList<Admin>) importedData;
                     System.out.println("Admins have been deserialized and imported from data/admins.dat");
                     return;
                 }
@@ -167,7 +152,4 @@ public class AdminController implements Serializable {
             logger.log(Level.SEVERE, "Class not found during deserialization.");
         }
     }
-
-    // Read all customers' data from the system
-
 }
