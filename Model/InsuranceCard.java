@@ -61,9 +61,12 @@ public class InsuranceCard implements Serializable {
 
     @Override
     public String toString() {
-        return "Insurance Card Number: " + cardNumber + "\n"
-                + "Policy Owner: " + getPolicyOwner() + "\n"
-                + "Policy Holder: " + getPolicyHolder() + "\n"
-                + "Current Card Holder: " + getCardHolder();
+        return "InsuranceCard{" +
+                "cardNumber=" + cardNumber +
+                ", policyHolder=" + policyHolder +
+                ", cardHolder=" + cardHolder +
+                ", policyOwner='" + policyOwner + '\'' +
+                ", expirationDate=" + expirationDate +
+                '}';
     }
 }

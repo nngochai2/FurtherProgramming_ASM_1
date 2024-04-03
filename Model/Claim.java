@@ -31,7 +31,6 @@ public class Claim implements Serializable {
         NEW,
         PROCESSING,
         DONE,
-        DENIED,
     }
 
     public String getClaimID() {

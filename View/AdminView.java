@@ -159,8 +159,8 @@ public class AdminView {
             System.out.println("There are currently " + customers.size() + " users in the system.");
 
             // Display header
-            System.out.printf("%-20s | %-40s | %-40s | %40s\n" , "ID", "Full name", "Insurance Card Number", "Role");
-            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("%-20s | %-40s | %-40s | %-40s\n" , "ID", "Full name", "Insurance Card Number", "Role");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (Customer customer : customers) {
@@ -169,8 +169,9 @@ public class AdminView {
                 int insuranceCardNumber = customer.getInsuranceCard().getCardNumber();
                 String role = (customer instanceof PolicyHolder) ? "Policy Holder" : "Dependent";
 
-                System.out.printf("%-20s | %-40s | %-40s | %40s\n", id, fullName, insuranceCardNumber, role);
+                System.out.printf("%-20s | %-40s | %-40s | %-40s\n", id, fullName, insuranceCardNumber, role);
             }
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
         }
     }
 
@@ -185,7 +186,7 @@ public class AdminView {
 
             // Display header
             System.out.printf("%-20s | %-70s | %-70s\n" , "ID", "Full name", "Insurance Card Number");
-            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (PolicyHolder policyHolder : policyHolders) {
@@ -194,6 +195,7 @@ public class AdminView {
                 int insuranceCardNumber = policyHolder.getInsuranceCard().getCardNumber();
                 System.out.printf("%-20s | %-70s | %-70s\n", id, fullName, insuranceCardNumber);
             }
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
         }
     }
 
@@ -248,7 +250,7 @@ public class AdminView {
 
             // Display header
             System.out.printf("%-20s | %-70s | %-70s\n" , "ID", "Full name", "Insurance Card Number");
-            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (Dependent dependent : dependents) {

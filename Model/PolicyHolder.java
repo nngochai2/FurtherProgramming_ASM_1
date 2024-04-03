@@ -76,6 +76,6 @@ public class PolicyHolder extends Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "Policy Owner: " + getFullName() + "(" + getCustomerID() + ")";
+        return getFullName() + "(" + getCustomerID() + ")";
     }
 }
