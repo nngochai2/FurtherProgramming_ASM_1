@@ -3,6 +3,8 @@ package View;
 import Controller.*;
 import Model.*;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -428,6 +430,22 @@ public class AdminView {
             }
             System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
+            // Provide sorting options
+            System.out.println("\nSort claims by: ");
+            System.out.printf("%-25s | %-25s | %-25s\n", "1. Date (Latest to Oldest)", "2. Date (Oldest to Latest)", "3. Cancel");
+            System.out.println("Enter your choice: ");
+            int sortChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (sortChoice != 3) {
+                // Sort claims
+                List<Claim> sortedClaims = this.sortClaims(sortChoice);
+
+                // Display sorted claims
+                System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - VIEW ALL SORTED CLAIMS____________________________________________________________________________________");
+                this.displaySortedClaims(sortedClaims);
+            }
+
             // Admin can view a claim by entering claim ID
             System.out.println("Enter a claim ID to view the details (enter 'cancel' to cancel): ");
             String selectedID = scanner.nextLine();
@@ -439,6 +457,33 @@ public class AdminView {
                 this.manageClaims();
             }
         }
+    }
+
+    // Method to sort the claims
+    private List<Claim> sortClaims(int sortChoice) {
+        List<Claim> sortedClaims = new ArrayList<>(claimsController.getAllClaims());
+        switch (sortChoice) {
+            case 1 -> sortedClaims.sort(Comparator.comparing(Claim::getClaimDate).reversed());
+            case 2 -> sortedClaims.sort(Comparator.comparing(Claim::getClaimDate));
+            default -> System.err.println("Invalid choice. Sorting by default order.");
+        }
+        return sortedClaims;
+    }
+
+    private void displaySortedClaims(List<Claim> sortedClaims) {
+        // Display header
+        System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
+                "ID", "Date", "Insured Person", "Banking Info", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+        // Display content
+        for (Claim claim : sortedClaims) {
+            System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
+                    claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(), claim.getReceiverBankingInfo(),
+                    claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
+                    claim.getClaimAmount() + "$", claim.getStatus());
+        }
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
 
     // Display a claim's details
