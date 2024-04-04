@@ -16,11 +16,10 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     private static ClaimsController instance;
     private static int lastClaimID = 0;
     public ArrayList<Claim> claims;
-    public ClaimsController() {
+    private static final Logger logger = Logger.getLogger(ClaimsController.class.getName());
+    private ClaimsController() {
         claims = new ArrayList<>();
     }
-    private static final Logger logger = Logger.getLogger(ClaimsController.class.getName());
-
     public static ClaimsController getInstance() {
         if (instance == null) {
             instance = new ClaimsController();
@@ -74,6 +73,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     // Method to get all claims of a customer
     public List<Claim> getAllClaimsForCustomer(Customer customer) {
         // Filter claims based on the customer's ID
+        deserializeAllClaimsFromFile("data/claims.dat");
         return claims.stream()
                 .filter(claim -> claim.getInsuredPerson().getCustomerID().equals(customer.getCustomerID()))
                 .collect(Collectors.toList());

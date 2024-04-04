@@ -9,6 +9,7 @@ import java.util.*;
 public class DataGenerator {
 
     public static void main(String[] args) {
+        CustomersController customersController = CustomersController.getInstance();
         PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
         InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
         DependentsController dependentsController = DependentsController.getInstance();
@@ -16,7 +17,7 @@ public class DataGenerator {
         ClaimsController claimsController = ClaimsController.getInstance();
 
         // Generate sample data
-        generateSampleData(policyHoldersController, insuranceCardController, dependentsController, adminController);
+        generateSampleData(customersController, policyHoldersController, insuranceCardController, dependentsController, adminController);
 
         // Generate claims for existing customers
         List<PolicyHolder> policyHolders = new ArrayList<>(policyHoldersController.getAllPolicyHolders());
@@ -42,7 +43,7 @@ public class DataGenerator {
         deserializeAndPrintData(adminController, policyHoldersController, dependentsController, insuranceCardController, claimsController);
     }
 
-    private static void generateSampleData(PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController, AdminController adminController) {
+    private static void generateSampleData(CustomersController customersController, PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController, AdminController adminController) {
         // Generate sample admins
         Admin admin1 = new Admin("13052004", "Hai Nguyen", "123456");
         Admin admin2 = new Admin("0000001", "Demo Admin", "123456");
@@ -52,8 +53,8 @@ public class DataGenerator {
         adminController.addAdmin(admin2);
 
         // Generate sample PolicyHolders
-        PolicyHolder policyHolder1 = new PolicyHolder("c-0000001", "Nguyen Ngoc Hai", null); // Constant
-        PolicyHolder policyHolder2 = new PolicyHolder("c-0000002", "Elton John", null);
+        PolicyHolder policyHolder1 = new PolicyHolder(customersController.generateUserID(), "Nguyen Ngoc Hai", null); // Constant
+        PolicyHolder policyHolder2 = new PolicyHolder(customersController.generateUserID(), "Elton John", null);
 
         // Generate sample Insurance Cards for PolicyHolders
         InsuranceCard insuranceCard1 = insuranceCardController.generateInsuranceCard(policyHolder1, policyHolder1, "RMIT");
@@ -70,9 +71,9 @@ public class DataGenerator {
         policyHoldersController.addPolicyHolder(policyHolder2);
 
         // Generate sample Dependents
-        Dependent dependent1 = new Dependent("c-0000003", "Dependent 1", insuranceCard1, policyHolder1);
-        Dependent dependent2 = new Dependent("c-0000004", "Dependent 2", insuranceCard1, policyHolder1);
-        Dependent dependent3 = new Dependent("c-0000005", "Dependent 3", insuranceCard2, policyHolder2);
+        Dependent dependent1 = new Dependent(customersController.generateUserID(), "Dependent 1", insuranceCard1, policyHolder1);
+        Dependent dependent2 = new Dependent(customersController.generateUserID(), "Dependent 2", insuranceCard1, policyHolder1);
+        Dependent dependent3 = new Dependent(customersController.generateUserID(), "Dependent 3", insuranceCard2, policyHolder2);
 
         // Add dependents to the controller
         dependentsController.addDependent(dependent1);
@@ -107,7 +108,7 @@ public class DataGenerator {
 
         // Generate dependents
         List<Dependent> dependents = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 30; i++) {
             PolicyHolder policyHolder = policyHolders.get(i / 5);
             Dependent dependent = generateDependent(policyHolder);
             dependents.add(dependent);
@@ -116,23 +117,32 @@ public class DataGenerator {
         }
 
         // Assign dependents to policy holders
-        for (int i = 0; i < 15; i += 5) {
-            PolicyHolder policyHolder = policyHolders.get(i / 5);
-            List<Dependent> policyHolderDependents = new ArrayList<>(dependents.subList(i, i + 5));
+        for (int i = 0; i < 30; i += 2) {
+            PolicyHolder policyHolder = policyHolders.get(i / 2);
+            List<Dependent> policyHolderDependents = new ArrayList<>(dependents.subList(i, i + 2));
             policyHolder.setDependents(policyHolderDependents);
             policyHoldersController.setDependents(policyHolder, policyHolderDependents);
         }
 
         // Generate and add claims
-        int totalClaims = 0;
+        int totalClaims1 = 0;
         Random random = new Random();
         ClaimsController claimsController = ClaimsController.getInstance();
-        while (totalClaims < 20) {
+        while (totalClaims1 < 10) {
             int index = random.nextInt(policyHolders.size());
             PolicyHolder policyHolder = policyHolders.get(index);
             Claim claim = generateClaim(policyHolder, 1);
             claimsController.addClaim(claim);
-            totalClaims++;
+            totalClaims1++;
+        }
+
+        int totalClaims2 = 0;
+        while (totalClaims2 < 10) {
+            int index = random.nextInt(dependents.size());
+            Dependent dependent = dependents.get(index);
+            Claim claim = generateClaim(dependent, 1);
+            claimsController.addClaim(claim);
+            totalClaims2++;
         }
     }
 
@@ -170,6 +180,10 @@ public class DataGenerator {
 
         // Update the claim with banking info
         claim.setReceiverBankingInfo(receiverBankingInfo);
+
+        // Add the claim to the customer
+        customer.addClaim(claim);
+
         return claim;
     }
 

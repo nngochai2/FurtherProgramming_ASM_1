@@ -1,14 +1,16 @@
 package Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Dependent extends Customer implements Serializable {
     private PolicyHolder policyHolder;
-    private List<Claim> claims;
+    protected List<Claim> claims;
     public Dependent(String customerID, String fullName, InsuranceCard insuranceCard, PolicyHolder policyHolder) {
         super(customerID, fullName, insuranceCard);
         this.policyHolder = policyHolder;
+        this.claims = new ArrayList<>();
     }
 
     // View claim history

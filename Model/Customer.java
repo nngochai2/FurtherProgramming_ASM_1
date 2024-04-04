@@ -2,6 +2,7 @@ package Model;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Customer implements Serializable {
@@ -11,12 +12,13 @@ public abstract class Customer implements Serializable {
     private String customerID;
     private String fullName;
     private InsuranceCard insuranceCard;
-    private List<Claim> claims;
+    protected List<Claim> claims;
 
     public Customer(String customerID, String fullName, InsuranceCard insuranceCard) {
         this.customerID = customerID;
         this.fullName = fullName;
         this.insuranceCard = insuranceCard;
+        this.claims = new ArrayList<>();
     }
 
     private String generateID() {
@@ -50,11 +52,15 @@ public abstract class Customer implements Serializable {
     }
 
     public List<Claim> getClaims() {
-        return claims;
+        return new ArrayList<>(claims);
     }
 
     public void setClaims(List<Claim> claims) {
         this.claims = claims;
+    }
+
+    public void addClaim(Claim claim) {
+        claims.add(claim);
     }
 
     @Override

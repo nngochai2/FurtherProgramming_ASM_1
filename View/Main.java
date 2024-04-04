@@ -13,36 +13,31 @@ public class Main {
             System.out.println("1. Login as Admin");
             System.out.println("2. Login as a Policy Holder");
             System.out.println("3. Login as a Dependent");
+            System.out.println("4. Cancel");
             System.out.println("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
 
             switch (choice) {
-                // This will lead to AdminView, which is the main part of this project
                 case 1 -> {
-                    AdminView adminView = new AdminView();
+                    AdminView adminView = new AdminView(); // Leading to admins' interface
                     adminView.authenticateAdmins();
                 }
                 case 2 -> {
-                    System.out.println("This is an addition feature. Do you really want to explore it? (yes/no): ");
-                    String confirmation = scanner.nextLine();
-                    if (confirmation.equalsIgnoreCase("yes")) {
-                        PolicyHolderView policyHolderView = new PolicyHolderView();
-                        policyHolderView.authenticateUser();
-                    } else {
-                        return;
-                    }
-
+                    PolicyHolderView policyHolderView = new PolicyHolderView(); // Leading to policy holders' interface
+                    policyHolderView.authenticateUser();
                 }
                 case 3 -> {
-                    System.out.println("This is an addition feature. Do you really want to explore it? (yes/no): ");
-                    String confirmation = scanner.nextLine();
-                    if (confirmation.equalsIgnoreCase("yes")) {
-                        DependentView dependentView = new DependentView();
-                        dependentView.authenticateUser();
-                    } else {
-                        return;
-                    }
+                    DependentView dependentView = new DependentView(); // Leading to dependents' interface
+                    dependentView.authenticateUser();
+                }
+                case 4 -> {
+                    System.out.println("Exiting the system...");
+                    System.exit(0);
+                }
+                default -> {
+                    System.err.println("Invalid input. Please try again.");
+                    return;
                 }
             }
         }

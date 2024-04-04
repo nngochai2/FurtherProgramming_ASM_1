@@ -8,10 +8,11 @@ import java.util.List;
 
 public class PolicyHolder extends Customer implements Serializable {
     private List<Dependent> dependents;
-    private List<Claim> claims;
+    protected List<Claim> claims;
     public PolicyHolder(String customerID, String fullName, InsuranceCard insuranceCard) {
         super(customerID, fullName, insuranceCard);
         this.dependents = new ArrayList<>();
+        this.claims = new ArrayList<>();
     }
 
     // Policy holder can add dependent(s)

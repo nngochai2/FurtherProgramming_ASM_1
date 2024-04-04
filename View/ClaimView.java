@@ -63,27 +63,25 @@ public class ClaimView {
 
     // Method to display all claims of a customer
     public void displayAllClaims(Customer customer) {
-        claimsController.deserializeClaimsForCustomer("data/claims.dat", currentCustomer);
-
         List<Claim> claims = claimsController.getAllClaimsForCustomer(customer);
 
         if (claims.isEmpty()) {
-            System.out.println("No claims found for " + customer.getFullName());
+            System.out.println("No claims found for " + currentCustomer.getFullName());
         } else {
             System.out.println("Claims for " + customer.getFullName() + ":");
             // Display header
-            System.out.printf("%-11s | %-32s | %-40s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
+            System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
                     "ID", "Date", "Insured Person", "Banking Info", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
-            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (Claim claim : claims) {
-                System.out.printf("%-11s | %-32s | %-40s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
+                System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
                         claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(), claim.getReceiverBankingInfo(),
                         claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
                         claim.getClaimAmount() + "$", claim.getStatus());
             }
-            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Customer can view a claim by entering claim ID
             System.out.println("Enter a claim ID to view the details (enter 'cancel' to cancel): ");
