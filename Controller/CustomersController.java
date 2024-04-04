@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CustomersController implements Serializable {
     private static CustomersController instance;
-    private final ArrayList<Customer> customers;
+    private ArrayList<Customer> customers;
     private static int lastUserID = 0; // Ensuring each generated ID is unique
 
     public static CustomersController getInstance() {
@@ -39,5 +39,9 @@ public class CustomersController implements Serializable {
             }
         }
         return null;
+    }
+
+    public void setCustomers(ArrayList<Customer> customers) {
+        this.customers = customers;
     }
 }

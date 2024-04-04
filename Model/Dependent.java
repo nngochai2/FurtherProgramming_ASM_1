@@ -33,4 +33,9 @@ public class Dependent extends Customer implements Serializable {
     public void setClaims(List<Claim> claims) {
         this.claims = claims;
     }
+
+    @Override
+    public String toString() {
+        return getFullName() + "(" + getCustomerID() + ")";
+    }
 }

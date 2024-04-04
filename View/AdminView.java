@@ -415,18 +415,18 @@ public class AdminView {
         } else {
             System.out.println("All claims in the system:");
             // Display header
-            System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
-                    "ID", "Date", "Insured Person", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
+                    "ID", "Date", "Insured Person", "Banking Info", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
             for (Claim claim : claims) {
-                System.out.printf("%-13s | %-35s | %-40s | %-15s | %-35s | %-20s | %-15s | %-15s\n",
-                        claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(),
+                System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
+                        claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(), claim.getReceiverBankingInfo(),
                         claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
                         claim.getClaimAmount() + "$", claim.getStatus());
             }
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Admin can view a claim by entering claim ID
             System.out.println("Enter a claim ID to view the details (enter 'cancel' to cancel): ");

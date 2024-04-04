@@ -1,36 +1,48 @@
 package Testing;
 
 import Controller.*;
-import Model.Admin;
-import Model.Dependent;
-import Model.InsuranceCard;
-import Model.PolicyHolder;
+import Model.*;
+import View.AdminView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class DataGenerator {
 
     public static void main(String[] args) {
-        CustomersController customersController = CustomersController.getInstance();
         PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
         InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
         DependentsController dependentsController = DependentsController.getInstance();
         AdminController adminController = AdminController.getInstance();
+        ClaimsController claimsController = ClaimsController.getInstance();
 
         // Generate sample data
-        generateSampleData(customersController, policyHoldersController, insuranceCardController, dependentsController, adminController);
+        generateSampleData(policyHoldersController, insuranceCardController, dependentsController, adminController);
+
+        // Generate claims for existing customers
+        List<PolicyHolder> policyHolders = new ArrayList<>(policyHoldersController.getAllPolicyHolders());
+        for (PolicyHolder policyHolder : policyHolders) {
+            for (int i = 0; i < 2; i++) {
+                Claim claim = generateClaim(policyHolder, 2);
+                claimsController.addClaim(claim);
+            }
+        }
+
+        List<Dependent> dependents = new ArrayList<>(dependentsController.getAllDependents());
+        for (Dependent dependent : dependents) {
+            for (int i = 0; i < 2; i++) {
+                Claim claim = generateClaim(dependent, 2);
+                claimsController.addClaim(claim);
+            }
+        }
 
         // Serialize the generated data
-        serializeData(adminController, policyHoldersController, insuranceCardController, dependentsController);
+        serializeData(adminController, policyHoldersController, insuranceCardController, dependentsController, claimsController);
 
         // Deserialize and print the data
-        deserializeAndPrintData(adminController, policyHoldersController, dependentsController, insuranceCardController);
+        deserializeAndPrintData(adminController, policyHoldersController, dependentsController, insuranceCardController, claimsController);
     }
 
-    private static void generateSampleData(CustomersController customersController, PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController, AdminController adminController) {
+    private static void generateSampleData(PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController, AdminController adminController) {
         // Generate sample admins
         Admin admin1 = new Admin("13052004", "Hai Nguyen", "123456");
         Admin admin2 = new Admin("0000001", "Demo Admin", "123456");
@@ -96,7 +108,7 @@ public class DataGenerator {
         // Generate dependents
         List<Dependent> dependents = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
-            PolicyHolder policyHolder = policyHolders.get(i/5);
+            PolicyHolder policyHolder = policyHolders.get(i / 5);
             Dependent dependent = generateDependent(policyHolder);
             dependents.add(dependent);
             dependentsController.addDependent(dependent);
@@ -104,11 +116,23 @@ public class DataGenerator {
         }
 
         // Assign dependents to policy holders
-        for (int i = 0; i < 15; i+= 5) {
-            PolicyHolder policyHolder = policyHolders.get(i/5);
+        for (int i = 0; i < 15; i += 5) {
+            PolicyHolder policyHolder = policyHolders.get(i / 5);
             List<Dependent> policyHolderDependents = new ArrayList<>(dependents.subList(i, i + 5));
             policyHolder.setDependents(policyHolderDependents);
             policyHoldersController.setDependents(policyHolder, policyHolderDependents);
+        }
+
+        // Generate and add claims
+        int totalClaims = 0;
+        Random random = new Random();
+        ClaimsController claimsController = ClaimsController.getInstance();
+        while (totalClaims < 20) {
+            int index = random.nextInt(policyHolders.size());
+            PolicyHolder policyHolder = policyHolders.get(index);
+            Claim claim = generateClaim(policyHolder, 1);
+            claimsController.addClaim(claim);
+            totalClaims++;
         }
     }
 
@@ -119,24 +143,101 @@ public class DataGenerator {
     }
 
     private static Dependent generateDependent(PolicyHolder policyHolder) {
+        CustomersController customersController = CustomersController.getInstance();
         String fullName = NameGenerator.generateFullName();
-        InsuranceCard insuranceCard = policyHolder.getInsuranceCard();
-        return new Dependent("c-" + UUID.randomUUID().toString().substring(0, 8), fullName, null, policyHolder);
+        return new Dependent(customersController.generateUserID(), fullName, null, policyHolder);
     }
 
-    private static void serializeData(AdminController adminController, PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController) {
+    private static Claim generateClaim(Customer customer, int index) {
+        ClaimsController claimsController = ClaimsController.getInstance();
+        // Generate claim details
+        String claimID = claimsController.generateClaimID();
+        Date claimDate = generateClaimDate(index);
+        int cardNumber = customer.getInsuranceCard().getCardNumber();
+        Date examDate = new Date();
+        List<String> documents = generateRandomDocuments();
+        int claimAmount = (int) (Math.random() * 1000);
+        Claim.Status status = Claim.Status.NEW;
+        String receiverBankingInfo;
+
+        Claim claim = new Claim(claimID, claimDate, customer, cardNumber, examDate, documents, claimAmount, status, null);
+
+        // Generate banking info
+        BankingInfoGenerator bankingInfoGenerator = new BankingInfoGenerator(claim);
+        String bankName = BankingInfoGenerator.BANK_NAME[new Random().nextInt(BankingInfoGenerator.BANK_NAME.length)];
+        String claimantName = bankingInfoGenerator.getClaimantName();
+        receiverBankingInfo = bankingInfoGenerator.generateBankNumber(bankName, claimantName);
+
+        // Update the claim with banking info
+        claim.setReceiverBankingInfo(receiverBankingInfo);
+        return claim;
+    }
+
+    private static Date generateClaimDate(int index) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023, Calendar.JANUARY, 1);
+
+        Random random = new Random();
+        int daysToAdd = random.nextInt(365) + index;
+        calendar.add(Calendar.DAY_OF_YEAR, daysToAdd);
+        return calendar.getTime();
+    }
+    private static List<String> generateRandomDocuments() {
+        List<String> documents = new ArrayList<>();
+        String[] documentTypes = {"Insurance Card", "Doctor's Prescription", "Police Report", "Proof of Loss", "Medical Records", "Witness Statements",};
+        Random random = new Random();
+        for (int i = 0; i < 2; i++) {
+            int index = random.nextInt(documentTypes.length);
+            documents.add(documentTypes[index]);
+        }
+        return documents;
+    }
+
+    private record BankingInfoGenerator(Claim claim) {
+        private static final String[] BANK_NAME = {"VP Bank", "Vietcombank", "Techcombank", "MB Bank", "BIDV", "SHB"};
+
+        public String getClaimantName() {
+            return claim.getInsuredPerson().getFullName();
+        }
+
+        public String generateBankNumber(String bankName, String claimantName) {
+            Random random = new Random();
+
+            // Remove spaces from claimant's name
+            claimantName = claimantName.replaceAll("\\s", "");
+
+            // Generate a random 12-digit bank number
+            StringBuilder bankNumber = new StringBuilder(bankName);
+            bankNumber.append("-").append(claimantName).append("-");
+
+            int randomNumber;
+            for (int i = 0; i < 12; i++) {
+                randomNumber = random.nextInt(10);
+                bankNumber.append(randomNumber); // Append a random digit (0-9)
+            }
+
+            return bankNumber.toString();
+        }
+    }
+
+
+
+
+    private static void serializeData(AdminController adminController, PolicyHoldersController policyHoldersController, InsuranceCardController insuranceCardController, DependentsController dependentsController, ClaimsController claimsController) {
         adminController.serializeAdminToFile("data/admins.dat");
         policyHoldersController.serializePolicyHoldersToFile("data/policyholders.dat");
         dependentsController.serializeDependentsToFile("data/dependents.dat");
         insuranceCardController.serializeInsuranceCardsToFile("data/insuranceCards.dat");
-
+        claimsController.serializeClaimsToFile("data/claims.dat");
     }
 
-    private static void deserializeAndPrintData(AdminController adminController, PolicyHoldersController policyHoldersController, DependentsController dependentsController, InsuranceCardController insuranceCardController) {
+    private static void deserializeAndPrintData(AdminController adminController, PolicyHoldersController policyHoldersController, DependentsController dependentsController, InsuranceCardController insuranceCardController, ClaimsController claimsController) {
         policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
         dependentsController.deserializeAllDependents("data/dependents.dat");
         insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
         adminController.deserializeAdminsFromFile("data/admins.dat");
+        claimsController.deserializeAllClaimsFromFile("data/claims.dat");
+        claimsController.saveClaimsToTextFile("data/claims.txt");
 
         System.out.println("All admins:");
         for (Admin admin : adminController.getAdminList()) {
@@ -170,6 +271,9 @@ public class DataGenerator {
             System.out.println(insuranceCard.toString());
             System.out.println("\n");
         }
+
+        AdminView adminView = new AdminView();
+        adminView.viewAllClaims();
     }
 
     public static class NameGenerator {

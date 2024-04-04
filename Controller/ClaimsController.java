@@ -126,9 +126,14 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     // Method to serialize a single claim to a String
     private String saveClaimToText(Claim claim) {
         return "ID:" + claim.getClaimID() +
-                ", Date: " + claim.getClaimDate() +
+                ", Claim Date: " + claim.getClaimDate() +
                 ", Insured Person: " + claim.getInsuredPerson() +
-                ", Status: " + claim.getStatus();
+                ", Card Number: " + claim.getCardNumber() +
+                ", Exam Date: " + claim.getExamDate() +
+                ", Documents: " + claim.getDocuments() +
+                ", Claim amount: " + claim.getClaimAmount() +
+                ", Status: " + claim.getStatus() +
+                ", Receiver Banking Info: " + claim.getReceiverBankingInfo();
     }
 
     // Method to create a file in case the file path does not exist
