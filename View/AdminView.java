@@ -8,13 +8,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class AdminView {
     private final AdminController adminController = AdminController.getInstance();
     private final CustomersController customersController = CustomersController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final ClaimsController claimsController = ClaimsController.getInstance();
-    private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
+    private final InsuranceCardsController insuranceCardsController = InsuranceCardsController.getInstance();
     private final Scanner scanner = new Scanner(System.in);
 
     // Authenticate admins' login menu
@@ -38,7 +42,7 @@ public class AdminView {
                 // Deserialize all data in the system
                 policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
                 dependentsController.deserializeAllDependents("data/dependents.dat");
-                insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
+                insuranceCardsController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
                 claimsController.deserializeAllClaimsFromFile("data/claims.dat");
 
                 menu(); // Proceed to main menu
@@ -201,6 +205,29 @@ public class AdminView {
         }
     }
 
+    public void viewAllDependents() {
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL DEPENDENTS____________________________________________________________________________________");
+        List<Dependent> dependents = adminController.getAllDependents();
+        if (dependents.isEmpty()) {
+            System.out.println("No dependents found.");
+            this.viewAllCustomersMenu();
+        } else {
+            System.out.println("There are currently " + dependents.size() + " dependents in the system.");
+
+            // Display header
+            System.out.printf("%-20s | %-70s | %-70s\n" , "ID", "Full name", "Insurance Card Number");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+
+            // Display content
+            for (Dependent dependent : dependents) {
+                String id = dependent.getCustomerID();
+                String fullName = dependent.getFullName();
+                int insuranceCardNumber = dependent.getInsuranceCard().getCardNumber();
+                System.out.printf("%-20s | %-70s | %-70s\n", id, fullName, insuranceCardNumber);
+            }
+        }
+    }
+
     public void viewACustomerDetails() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW A CUSTOMER DETAILS____________________________________________________________________________________");
         System.out.println("Enter customer ID (enter 'cancel' to cancel): ");
@@ -241,29 +268,6 @@ public class AdminView {
 
     }
 
-    public void viewAllDependents() {
-        System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL DEPENDENTS____________________________________________________________________________________");
-        List<Dependent> dependents = adminController.getAllDependents();
-        if (dependents.isEmpty()) {
-            System.out.println("No dependents found.");
-            this.viewAllCustomersMenu();
-        } else {
-            System.out.println("There are currently " + dependents.size() + " dependents in the system.");
-
-            // Display header
-            System.out.printf("%-20s | %-70s | %-70s\n" , "ID", "Full name", "Insurance Card Number");
-            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
-
-            // Display content
-            for (Dependent dependent : dependents) {
-                String id = dependent.getCustomerID();
-                String fullName = dependent.getFullName();
-                int insuranceCardNumber = dependent.getInsuranceCard().getCardNumber();
-                System.out.printf("%-20s | %-70s | %-70s\n", id, fullName, insuranceCardNumber);
-            }
-        }
-    }
-
     public void addPolicyHolder() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - CREATE NEW POLICY HOLDER____________________________________________________________________________________");
         System.out.println("Enter the policy holder's name (enter 'cancel' to cancel): ");
@@ -289,7 +293,7 @@ public class AdminView {
             PolicyHolder newPolicyHolder = new PolicyHolder(newPolicyHolderID, newPolicyHolderName, null);
 
             // Create new insurance card
-            InsuranceCard newPolicyHolderInsuranceCard = insuranceCardController.generateInsuranceCard(newPolicyHolder, newPolicyHolder, newPolicyOwner);
+            InsuranceCard newPolicyHolderInsuranceCard = insuranceCardsController.generateInsuranceCard(newPolicyHolder, newPolicyHolder, newPolicyOwner);
             newPolicyHolder.setInsuranceCard(newPolicyHolderInsuranceCard); // Assign new insurance card to new policy holder
 
             // Serialize new policy holder to the system

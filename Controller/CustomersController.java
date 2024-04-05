@@ -4,8 +4,6 @@ import Model.Customer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-
 public class CustomersController implements Serializable {
     private static CustomersController instance;
     private ArrayList<Customer> customers;
@@ -28,10 +26,6 @@ public class CustomersController implements Serializable {
         this.customers = new ArrayList<>();
     }
 
-    public ArrayList<Customer> getCustomers() {
-        return customers;
-    }
-
     public Customer findCustomerByID(String customerID) {
         for (Customer customer : customers) {
             if (customer.getCustomerID().equals(customerID)) {
@@ -41,7 +35,7 @@ public class CustomersController implements Serializable {
         return null;
     }
 
-    public void setCustomers(ArrayList<Customer> customers) {
-        this.customers = customers;
+    public ArrayList<Customer> getCustomers() {
+        return customers;
     }
 }

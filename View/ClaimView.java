@@ -13,6 +13,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class ClaimView {
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private Customer currentCustomer; // Attribute to store the current customer
@@ -20,10 +24,6 @@ public class ClaimView {
 
     public ClaimView(Customer currentCustomer) {
         this.currentCustomer = currentCustomer;
-    }
-
-    public Customer getCurrentCustomer() {
-        return currentCustomer;
     }
 
     public void setCurrentCustomer(Customer currentCustomer) {
@@ -175,9 +175,9 @@ public class ClaimView {
     }
 
     // Method to convert String to Date
-    private Date parseDate(String dataString) {
+    private Date parseDate(String dateString) {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(dataString);
+            return new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
         } catch (ParseException e) {
             System.err.println("Error: Invalid data format. Please enter data in YYYY-MM-DD format.");
             return null;

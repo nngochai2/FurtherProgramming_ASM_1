@@ -1,18 +1,19 @@
 package View;
 
-import Controller.ClaimsController;
 import Controller.DependentsController;
-import Controller.InsuranceCardController;
-import Model.Claim;
+import Controller.InsuranceCardsController;
 import Model.Dependent;
 import Model.InsuranceCard;
-
-import java.util.Optional;
 import java.util.Scanner;
+
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 
 public class DependentView {
     private final DependentsController dependentsController = DependentsController.getInstance();
-    private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
+    private final InsuranceCardsController insuranceCardsController = InsuranceCardsController.getInstance();
     private Dependent currentDependent;
     private final ClaimView claimView;
     private final Scanner scanner = new Scanner(System.in);
@@ -42,7 +43,7 @@ public class DependentView {
                 currentDependent = dependentCustomer;
                 System.out.println("Login successful. Welcome, " + inputName + "!");
                 dependentsController.setCurrentDependent(currentDependent);
-                insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
+                insuranceCardsController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {

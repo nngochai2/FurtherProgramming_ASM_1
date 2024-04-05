@@ -13,11 +13,6 @@ public class Dependent extends Customer implements Serializable {
         this.claims = new ArrayList<>();
     }
 
-    // View claim history
-    public List<Claim> viewClaimHistory() {
-        return getClaims();
-    }
-
     public PolicyHolder getPolicyHolder() {
         return policyHolder;
     }

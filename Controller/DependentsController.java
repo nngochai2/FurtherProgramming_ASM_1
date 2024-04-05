@@ -7,7 +7,6 @@ import Model.PolicyHolder;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -68,10 +67,6 @@ public class DependentsController implements Serializable {
         return dependent != null ? dependent.getInsuranceCard() : null;
     }
 
-    public PolicyHolder getPolicyOwner(Dependent dependent) {
-        return dependent.getPolicyHolder();
-    }
-
     // Method to add a dependent into dependents list
     public void addDependent(Dependent dependent) {
         dependents.add(dependent);
@@ -121,7 +116,7 @@ public class DependentsController implements Serializable {
     }
 
     // Method to deserialize dependents of a policy holder
-    public void deserializeDependentsFromFile(String filePath, PolicyHolder currentPolicyHolder) {
+    public void deserializeDependentsForPolicyHolder(String filePath, PolicyHolder currentPolicyHolder) {
         if (currentPolicyHolder != null) {
             try (FileInputStream fileInputStream = new FileInputStream(filePath);
                  ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {

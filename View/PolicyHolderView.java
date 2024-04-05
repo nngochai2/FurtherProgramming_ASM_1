@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PolicyHolderView {
-    private final ClaimsController claimsController = ClaimsController.getInstance();
     private final CustomersController customersController = CustomersController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();
     private final DependentsController dependentsController = DependentsController.getInstance();
-    private final InsuranceCardController insuranceCardController = InsuranceCardController.getInstance();
+    private final InsuranceCardsController insuranceCardsController = InsuranceCardsController.getInstance();
     private PolicyHolder currentPolicyHolder;
     private final ClaimView claimView;
     private final Scanner scanner = new Scanner(System.in);
@@ -44,8 +43,8 @@ public class PolicyHolderView {
                 currentPolicyHolder = policyHolderCustomer; // Set the current policy holder
                 System.out.println("Login successful. Welcome, " + inputName + "!"); // Return welcome message
                 policyHoldersController.setCurrentPolicyHolder(currentPolicyHolder); // Set the current policy holder in the controller
-                insuranceCardController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
-                dependentsController.deserializeDependentsFromFile("data/dependents.dat", currentPolicyHolder);
+                insuranceCardsController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
+                dependentsController.deserializeDependentsForPolicyHolder("data/dependents.dat", currentPolicyHolder);
                 menu(); // Proceed to main menu
                 return; // Exit the method
             } else {
@@ -112,7 +111,7 @@ public class PolicyHolderView {
 
     // Display a menu for managing dependents
     public void manageDependents() {
-        dependentsController.deserializeDependentsFromFile("data/dependents.dat", currentPolicyHolder);
+        dependentsController.deserializeDependentsForPolicyHolder("data/dependents.dat", currentPolicyHolder);
         while (true) {
             System.out.println("___________________________________________________________________________POLICY HOLDER - MANAGE DEPENDENTS____________________________________________________________________________________");
             System.out.println("You can choose one of the following options: ");

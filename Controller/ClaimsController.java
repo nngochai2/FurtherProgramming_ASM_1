@@ -3,7 +3,6 @@ package Controller;
 import Model.Claim;
 import Model.ClaimProcessManager;
 import Model.Customer;
-import Model.PolicyHolder;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     public List<Claim> getAllClaims() {
         return claims;
     }
-
 
     @Override
     public void addClaim(Claim claim) {

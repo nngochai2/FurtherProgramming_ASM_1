@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class InsuranceCardController implements Serializable {
-    private static InsuranceCardController instance;
-    private static final Logger logger = Logger.getLogger(InsuranceCardController.class.getName());
+public class InsuranceCardsController implements Serializable {
+    private static InsuranceCardsController instance;
+    private static final Logger logger = Logger.getLogger(InsuranceCardsController.class.getName());
     public ArrayList<InsuranceCard> insuranceCards;
 
-    public InsuranceCardController() {
+    public InsuranceCardsController() {
         insuranceCards = new ArrayList<>();
     }
 
-    public static InsuranceCardController getInstance() {
+    public static InsuranceCardsController getInstance() {
         if (instance == null) {
-            instance = new InsuranceCardController();
+            instance = new InsuranceCardsController();
         }
         return instance;
     }
@@ -54,6 +54,7 @@ public class InsuranceCardController implements Serializable {
         return new Date(System.currentTimeMillis() + oneYearInMillis);
     }
 
+    // Method to serialize the insurance cards to the system
     public void serializeInsuranceCardsToFile(String filePath) {
         createFileIfNotExists("data/insuranceCards.dat");
         try (

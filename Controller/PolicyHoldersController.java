@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class PolicyHoldersController implements Serializable {
     private static PolicyHoldersController instance;
@@ -136,6 +135,7 @@ public class PolicyHoldersController implements Serializable {
         policyHolders.add(policyHolder);
     }
 
+    // Method to remove a policy holder
     public void removePolicyHolder(String policyHolderID) {
         PolicyHolder policyHolder = findPolicyHolderByID(policyHolderID);
         policyHolders.remove(policyHolder);
@@ -153,7 +153,7 @@ public class PolicyHoldersController implements Serializable {
         }
     }
 
-    // Allows policyholder to remove a dependent from the dependents list
+    // Method to remove a dependent from the dependents list
     public boolean removeDependent(PolicyHolder currentPolicyHolder, String dependentID) {
         if (currentPolicyHolder != null) {
             Optional<Dependent> dependentToRemove = currentPolicyHolder.getDependents().stream()
@@ -172,7 +172,7 @@ public class PolicyHoldersController implements Serializable {
         }
     }
 
-    // Checks if a dependent exists
+    // Method to check if a dependent exists
     public boolean dependentExists(String dependentID) {
         for (Dependent dependent : getAllDependents(currentPolicyHolder)) {
             if (dependent.getCustomerID().equals(dependentID)) {
@@ -193,7 +193,7 @@ public class PolicyHoldersController implements Serializable {
         return dependent;
     }
 
-    // Allows policyholder to find a dependent by name
+    // Method to allow policyholder to find a dependent by name
     public Optional<Dependent> getDependentByName(String dependentName) {
         for (Dependent dependent : getCurrentPolicyHolder().getDependents()) {
             if (dependent.getFullName().equalsIgnoreCase(dependentName)) {

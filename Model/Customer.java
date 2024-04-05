@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Customer implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
     private static int lastAssignedID = 0;
     private String customerID;
     private String fullName;
@@ -19,12 +17,6 @@ public abstract class Customer implements Serializable {
         this.fullName = fullName;
         this.insuranceCard = insuranceCard;
         this.claims = new ArrayList<>();
-    }
-
-    private String generateID() {
-        // Increment the last assigned ID and format it
-        lastAssignedID++;
-        return "c-" + String.format("%07d", lastAssignedID);
     }
 
     public String getCustomerID() {

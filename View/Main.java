@@ -1,6 +1,13 @@
 package View;
 
+import Testing.DataGenerator;
+
 import java.util.Scanner;
+
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 
 public class Main {
     public static void main(String[] args) {
