@@ -102,9 +102,7 @@ public class PolicyHolderView {
                     policyHoldersController.clearCurrentPolicyHolder();
                     System.exit(0);
                 }
-                default -> {
-                    System.err.println("Error: Invalid input.");
-                }
+                default -> System.err.println("Error: Invalid input.");
             }
         }
     }

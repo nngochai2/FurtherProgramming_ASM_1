@@ -44,7 +44,8 @@ public class ClaimView {
             System.out.println("You can choose one of the following options: ");
             System.out.println("1. View All Claims");
             System.out.println("2. Submit A Claim");
-            System.out.println("3. Exit");
+            System.out.println("3. Delete A Claim");
+            System.out.println("4. Exit");
             System.out.println("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -52,7 +53,8 @@ public class ClaimView {
             switch (choice) {
                 case 1 -> this.displayAllClaims(currentCustomer);
                 case 2 -> this.submitClaim();
-                case 3 -> {
+                case 3 -> this.deleteAClaim();
+                case 4 -> {
                     System.out.println("Exiting claim view...");
                     return;
                 }
@@ -65,6 +67,14 @@ public class ClaimView {
     public void displayAllClaims(Customer customer) {
         List<Claim> claims = claimsController.getAllClaimsForCustomer(customer);
 
+        // Customize the header
+        String user = null;
+        if (currentCustomer instanceof PolicyHolder) {
+            user = "POLICY HOLDER";
+        } else if (currentCustomer instanceof Dependent) {
+            user = "DEPENDENT";
+        }
+        System.out.println("__________________________________________________________________________" + user + " - MANAGE CLAIMS - VIEW ALL CLAIMS____________________________________________________________________________________");
         if (claims.isEmpty()) {
             System.out.println("No claims found for " + currentCustomer.getFullName());
         } else {
@@ -172,6 +182,49 @@ public class ClaimView {
                 System.out.println("Invalid input. Please try again.");
             }
         }
+    }
+    public void deleteAClaim() {
+        // Customize the header
+        String user = null;
+        if (currentCustomer instanceof PolicyHolder) {
+            user = "POLICY HOLDER";
+        } else if (currentCustomer instanceof Dependent) {
+            user = "DEPENDENT";
+        }
+        System.out.println("__________________________________________________________________________" + user + " - MANAGE CLAIMS - REMOVE A CLAIM____________________________________________________________________________________");
+        System.out.println("Enter the claim ID you want to remove (enter 'cancel' to cancel): ");
+        String claimID = scanner.nextLine();
+
+        if (claimID.equalsIgnoreCase("cancel")) {
+            System.out.println("Procedure has been canceled.");
+            return;
+        }
+
+        // Get the claim instance
+        Claim claimToRemove = claimsController.getAClaim(claimID);
+        if (claimToRemove == null) {
+            System.out.println("No claim with the ID found. Please try again. ");
+        } else if (!claimToRemove.getStatus().equals(Claim.Status.NEW)) {
+            System.out.println("You cannot remove this claim since it is being or has been reviewed.");
+        } else {
+            // Display claim details
+            System.out.println("Claim found: ");
+            this.displayClaimDetails(claimID);
+
+            // Asking for user confirmation
+            System.out.println("\nDo you want to remove this claim? (yes/no): ");
+            String confirmation = scanner.nextLine();
+
+            if (confirmation.equalsIgnoreCase("yes")) {
+                claimsController.deleteClaim(claimID);
+                System.out.println("Claim has been removed successfully.");
+
+                // Save the changes
+                claimsController.serializeClaimsToFile("data/claims.dat");
+                claimsController.saveClaimsToTextFile("data/claims.txt");
+            }
+        }
+
     }
 
     // Method to convert String to Date

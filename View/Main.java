@@ -1,7 +1,5 @@
 package View;
 
-import Testing.DataGenerator;
-
 import java.util.Scanner;
 
 /**

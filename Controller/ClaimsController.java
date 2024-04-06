@@ -49,7 +49,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     @Override
     public void deleteClaim(String claimID) {
         // Find and remove the claim by ID
-        claims.removeIf(claim -> claim.getClaimID().equals(claimID));
+        claims.removeIf(claim -> claim.getClaimID().equals(claimID) && claim.getStatus().equals(Claim.Status.NEW));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     // Method to get all claims of a customer
     public List<Claim> getAllClaimsForCustomer(Customer customer) {
         // Filter claims based on the customer's ID
-        deserializeAllClaimsFromFile("data/claims.dat");
+        deserializeClaimsForCustomer("data/claims.dat", customer);
         return claims.stream()
                 .filter(claim -> claim.getInsuredPerson().getCustomerID().equals(customer.getCustomerID()))
                 .collect(Collectors.toList());
@@ -108,7 +108,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     public void saveClaimsToTextFile(String filePath) {
         createFileIfNotExists(filePath);
         try (FileWriter fileWriter = new FileWriter(filePath);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);)
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))
         {
             for (Claim claim : claims) {
                 String serializedClaim = saveClaimToText(claim);

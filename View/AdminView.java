@@ -381,7 +381,6 @@ public class AdminView {
         } else {
             System.out.println("Invalid input. Procedure has been canceled");
         }
-
     }
 
     public void modifyCustomer() {
