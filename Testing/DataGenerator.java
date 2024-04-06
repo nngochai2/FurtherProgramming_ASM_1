@@ -273,6 +273,7 @@ public class DataGenerator {
 
     // Method to read the data in the system
     private static void deserializeAndPrintData(AdminController adminController, PolicyHoldersController policyHoldersController, DependentsController dependentsController, InsuranceCardsController insuranceCardsController, ClaimsController claimsController) {
+        // Read all data
         policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
         dependentsController.deserializeAllDependents("data/dependents.dat");
         insuranceCardsController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
@@ -280,6 +281,7 @@ public class DataGenerator {
         claimsController.deserializeAllClaimsFromFile("data/claims.dat");
         claimsController.saveClaimsToTextFile("data/claims.txt");
 
+        // Print out the data
         System.out.println("All admins:");
         for (Admin admin : adminController.getAdminList()) {
             System.out.println("Username: " + admin.getUsername());
