@@ -51,7 +51,7 @@ public class ClaimView {
             scanner.nextLine();
 
             switch (choice) {
-                case 1 -> this.displayAllClaims(currentCustomer);
+                case 1 -> this.displayAllClaims();
                 case 2 -> this.submitClaim();
                 case 3 -> this.deleteAClaim();
                 case 4 -> {
@@ -64,8 +64,8 @@ public class ClaimView {
     }
 
     // Method to display all claims of a customer
-    public void displayAllClaims(Customer customer) {
-        List<Claim> claims = claimsController.getAllClaimsForCustomer(customer);
+    public void displayAllClaims() {
+        List<Claim> claims = claimsController.getAllClaimsForCustomer(currentCustomer);
 
         // Customize the header
         String user = null;
@@ -76,9 +76,9 @@ public class ClaimView {
         }
         System.out.println("__________________________________________________________________________" + user + " - MANAGE CLAIMS - VIEW ALL CLAIMS____________________________________________________________________________________");
         if (claims.isEmpty()) {
-            System.out.println("No claims found for " + currentCustomer.getFullName());
+            System.out.println("No claim found for " + currentCustomer.getFullName());
         } else {
-            System.out.println("Claims for " + customer.getFullName() + ":");
+            System.out.println("Claims for " + currentCustomer.getFullName() + ":");
             // Display header
             System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
                     "ID", "Date", "Insured Person", "Banking Info", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
@@ -171,8 +171,8 @@ public class ClaimView {
                 // Add the claim to the controller
                 claimsController.addClaim(claim);
                 System.out.println("Claim submitted successfully!");
-                claimsController.serializeClaimsToFile("data/claims.dat"); // Serialize the claim
-                claimsController.saveClaimsToTextFile("data/claims.txt"); // Save the claim as a text file
+                claimsController.appendClaimToTextFile(claim,"data/claims.txt");
+                claimsController.serializeClaimsToFile("data/claims.dat");
                 return;
 
             } else if (confirmation.equalsIgnoreCase("no")) {

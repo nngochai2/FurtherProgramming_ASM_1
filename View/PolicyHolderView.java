@@ -8,6 +8,10 @@ import Model.PolicyHolder;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class PolicyHolderView {
     private final CustomersController customersController = CustomersController.getInstance();
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();

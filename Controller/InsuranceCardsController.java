@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class InsuranceCardsController implements Serializable {
     private static InsuranceCardsController instance;
     private static final Logger logger = Logger.getLogger(InsuranceCardsController.class.getName());

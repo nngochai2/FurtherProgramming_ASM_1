@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class PolicyHolder extends Customer implements Serializable {
     private List<Dependent> dependents;
     protected List<Claim> claims;

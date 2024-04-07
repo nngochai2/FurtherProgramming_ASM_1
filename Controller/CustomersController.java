@@ -4,6 +4,11 @@ import Model.Customer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class CustomersController implements Serializable {
     private static CustomersController instance;
     private ArrayList<Customer> customers;

@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class AdminController implements Serializable {
     private static AdminController instance;
     private final PolicyHoldersController policyHoldersController = PolicyHoldersController.getInstance();

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class Claim implements Serializable {
     private String claimID;
     private Date claimDate;

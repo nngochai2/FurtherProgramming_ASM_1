@@ -11,6 +11,10 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class PolicyHoldersController implements Serializable {
     private static PolicyHoldersController instance;
     private PolicyHolder currentPolicyHolder;

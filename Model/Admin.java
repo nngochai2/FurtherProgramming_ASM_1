@@ -3,6 +3,10 @@ package Model;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class Admin implements Serializable {
     private String userID;
     private String username;

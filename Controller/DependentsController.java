@@ -11,6 +11,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
+
 public class DependentsController implements Serializable {
     private static DependentsController instance;
     private Dependent currentDependent;

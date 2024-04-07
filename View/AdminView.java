@@ -423,7 +423,7 @@ public class AdminView {
     // Display all claims
     public void viewAllClaims() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - VIEW ALL CLAIMS____________________________________________________________________________________");
-        List<Claim> claims = claimsController.getAllClaims();
+        List<Claim> claims = claimsController.deserializeAllClaimsFromFile("data/claims.dat");
 
         if (claims.isEmpty()) {
             System.out.println("No claims found in the system.");

@@ -1,9 +1,12 @@
 package Model;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * @author Nguyen Ngoc Hai - s3978281
+ */
 
 public abstract class Customer implements Serializable {
     private static int lastAssignedID = 0;

@@ -137,6 +137,7 @@ public class DataGenerator {
             PolicyHolder policyHolder = policyHolders.get(index);
             Claim claim = generateClaim(policyHolder, 1);
             claimsController.addClaim(claim);
+            policyHolder.addClaim(claim);
             totalClaims1++;
         }
 
@@ -147,6 +148,7 @@ public class DataGenerator {
             Dependent dependent = dependents.get(index);
             Claim claim = generateClaim(dependent, 1);
             claimsController.addClaim(claim);
+            dependent.addClaim(claim);
             totalClaims2++;
         }
     }
