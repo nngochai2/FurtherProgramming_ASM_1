@@ -15,12 +15,10 @@ public class DependentView {
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final InsuranceCardsController insuranceCardsController = InsuranceCardsController.getInstance();
     private Dependent currentDependent;
-    private final ClaimView claimView;
     private final Scanner scanner = new Scanner(System.in);
 
     public DependentView() {
         this.currentDependent = dependentsController.getCurrentDependent();
-        this.claimView = new ClaimView(currentDependent);
     }
 
     // Authenticate dependent logins
@@ -29,6 +27,7 @@ public class DependentView {
         int attempts = 0;
 
         while (true) {
+            dependentsController.deserializeAllDependents("data/dependents.dat");
             System.out.println("________________________________________________________________________________DEPENDENT LOGIN____________________________________________________________________________________");
             System.out.println("Enter your user ID:");
             String inputID = scanner.nextLine();
@@ -40,9 +39,11 @@ public class DependentView {
             Dependent dependentCustomer = dependentsController.authenticateDependent(inputID, inputName);
 
             if (dependentCustomer != null) {
-                currentDependent = dependentCustomer;
-                System.out.println("Login successful. Welcome, " + inputName + "!");
-                dependentsController.setCurrentDependent(currentDependent);
+                currentDependent = dependentCustomer; // Set the current dependent in this view
+                System.out.println("Login successful. Welcome, " + inputName + "!"); // Return welcome message
+                dependentsController.setCurrentDependent(currentDependent); // Set the current dependent in controller
+
+                // Get the data
                 insuranceCardsController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
                 menu(); // Proceed to main menu
                 return; // Exit the method
@@ -88,6 +89,7 @@ public class DependentView {
                 case 1 -> this.viewInsuranceCard();
                 case 2 -> this.viewPersonalInfo();
                 case 3 -> {
+                    ClaimView claimView = new ClaimView(currentDependent);
                     claimView.setCurrentCustomer(currentDependent);
                     claimView.viewClaimsMenu();
                 }

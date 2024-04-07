@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * @author Nguyen Ngoc Hai - s3978281
@@ -66,6 +67,7 @@ public class ClaimView {
     // Method to display all claims of a customer
     public void displayAllClaims() {
         List<Claim> claims = claimsController.getAllClaimsForCustomer(currentCustomer);
+        List<Claim> distinctClaims = claims.stream().distinct().toList();
 
         // Customize the header
         String user = null;
@@ -75,21 +77,18 @@ public class ClaimView {
             user = "DEPENDENT";
         }
         System.out.println("__________________________________________________________________________" + user + " - MANAGE CLAIMS - VIEW ALL CLAIMS____________________________________________________________________________________");
-        if (claims.isEmpty()) {
+        if (distinctClaims.isEmpty()) {
             System.out.println("No claim found for " + currentCustomer.getFullName());
         } else {
-            System.out.println("Claims for " + currentCustomer.getFullName() + ":");
+            System.out.println("\nClaims for " + currentCustomer.getFullName() + ":");
             // Display header
             System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
                     "ID", "Date", "Insured Person", "Banking Info", "Card Number", "Exam Date", "Documents", "Claim Amount", "Status");
             System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             // Display content
-            for (Claim claim : claims) {
-                System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
-                        claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(), claim.getReceiverBankingInfo(),
-                        claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
-                        claim.getClaimAmount() + "$", claim.getStatus());
+            for (Claim claim : distinctClaims) {
+                displayAllClaimsDetails(claim);
             }
             System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
@@ -104,7 +103,13 @@ public class ClaimView {
                 this.viewClaimsMenu();
             }
         }
+    }
 
+    private void displayAllClaimsDetails(Claim claim) {
+        System.out.printf("%-13s | %-30s | %-30s | %-40s | %-15s | %-35s | %-50s | %-15s | %-15s\n",
+                claim.getClaimID(), claim.getClaimDate(), claim.getInsuredPerson(), claim.getReceiverBankingInfo(),
+                claim.getCardNumber(), claim.getExamDate(), claim.getDocuments(),
+                claim.getClaimAmount() + "$", claim.getStatus());
     }
 
     // Display a claim's details

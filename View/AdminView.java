@@ -521,59 +521,57 @@ public class AdminView {
 
     // Display menu to modify a claim
     public void modifyAClaim() {
-        while (true) {
-            System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - MODIFY A CLAIM____________________________________________________________________________________");
-            System.out.println("Enter the claim ID you want to modify (enter 'cancel' to cancel): ");
-            String claimID = scanner.nextLine();
+        System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - MODIFY A CLAIM____________________________________________________________________________________");
+        System.out.println("Enter the claim ID you want to modify (enter 'cancel' to cancel): ");
+        String claimID = scanner.nextLine();
 
-            if (claimID.equalsIgnoreCase("cancel")) {
-                break;
-            }
-
-            // Get claim object
-            Claim claimToEdit = claimsController.getAClaim(claimID);
-            if (claimToEdit == null) {
-                System.out.println("Claim not found. Please try again.");
-                return;
-            }
-
-            // Display current details of the claim
-            System.out.println("Claim found: ");
-            this.displayClaimDetails(claimID);
-
-            // Allow admin to approve or process a claim
-            System.out.println("Enter the new status of this claim (enter '0' to cancel): ");
-            System.out.println("1. PROCESSING");
-            System.out.println("2. DONE");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            if (choice == 1) {
-                claimToEdit.setStatus(Claim.Status.PROCESSING);
-            } else if (choice == 2) {
-                claimToEdit.setStatus(Claim.Status.DONE);
-            } else if (choice == 0) {
-                return;
-            } else {
-                System.err.println("Invalid input. Please try again.");
-                return;
-            }
-
-            // Asking for confirmation
-            System.out.println("Do you want to save this change? (yes/no): ");
-            String confirmation = scanner.nextLine();
-
-            if (confirmation.equalsIgnoreCase("yes")) {
-                // Saving the changes
-                System.out.println("Claim has been updated successfully.");
-                claimsController.serializeClaimsToFile("data/claims.dat");
-                claimsController.saveClaimsToTextFile("data/claims.txt");
-            } else {
-                System.out.println("Procedure has been canceled.");
-                return;
-            }
+        if (claimID.equalsIgnoreCase("cancel")) {
+            System.out.println("Procedure has been canceled.");
+            return;
         }
 
+        // Get claim object
+        Claim claimToEdit = claimsController.getAClaim(claimID);
+        if (claimToEdit == null) {
+            System.out.println("Claim not found. Please try again.");
+            return;
+        }
+
+        // Display current details of the claim
+        System.out.println("Claim found: ");
+        this.displayClaimDetails(claimID);
+
+        // Allow admin to approve or process a claim
+        System.out.println("Enter the new status of this claim (enter '0' to cancel): ");
+        System.out.println("1. PROCESSING");
+        System.out.println("2. DONE");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice == 1 && claimToEdit.getStatus() != Claim.Status.PROCESSING) {
+            claimToEdit.setStatus(Claim.Status.PROCESSING);
+        } else if (choice == 2 && claimToEdit.getStatus() != Claim.Status.DONE) {
+            claimToEdit.setStatus(Claim.Status.DONE);
+        } else if (choice == 0) {
+            System.out.println("Procedure has been canceled.");
+            return;
+        } else {
+            System.err.println("Invalid input or claim is already in the desired state. Please try again.");
+            return;
+        }
+
+        // Asking for confirmation
+        System.out.println("Do you want to save this change? (yes/no): ");
+        String confirmation = scanner.nextLine();
+
+        if (confirmation.equalsIgnoreCase("yes")) {
+            // Saving the changes
+            System.out.println("Claim has been updated successfully.");
+            claimsController.serializeClaimsToFile("data/claims.dat");
+            claimsController.saveClaimsToTextFile("data/claims.txt");
+        } else {
+            System.out.println("Procedure has been canceled.");
+        }
     }
 
     public void manageInsuranceCards() {

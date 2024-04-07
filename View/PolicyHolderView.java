@@ -18,7 +18,6 @@ public class PolicyHolderView {
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final InsuranceCardsController insuranceCardsController = InsuranceCardsController.getInstance();
     private PolicyHolder currentPolicyHolder;
-    private ClaimView claimView = null;
     private final Scanner scanner = new Scanner(System.in);
 
     public PolicyHolderView() {
@@ -95,9 +94,8 @@ public class PolicyHolderView {
                 case 1 -> this.manageDependents();
                 case 2 -> this.viewInsuranceCard();
                 case 3 -> {
-                    // Set the current policyholder to be the current user in ClaimView
-                    claimView = new ClaimView(currentPolicyHolder);
-                    claimView.setCurrentCustomer(currentPolicyHolder);
+                    ClaimView claimView = new ClaimView(currentPolicyHolder);
+                    claimView.setCurrentCustomer(currentPolicyHolder); // Set the current policyholder to be the current user in ClaimView
                     claimView.viewClaimsMenu();
                 }
                 case 4 -> this.managePersonalInfo();

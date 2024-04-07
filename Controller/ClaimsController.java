@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * @author Nguyen Ngoc Hai - s3978281
@@ -31,7 +30,16 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     }
 
     public List<Claim> getAllClaims() {
+        if (claims.isEmpty()) {
+            updateCachedClaims();
+        }
         return claims;
+    }
+
+    private void updateCachedClaims() {
+        List<Claim> fetchedClaims = deserializeAllClaimsFromFile("data/claims.dat");
+        claims.clear();
+        claims.addAll(fetchedClaims);
     }
 
     @Override
@@ -74,10 +82,15 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
 
     // Method to get all claims of a customer
     public List<Claim> getAllClaimsForCustomer(Customer customer) {
+        if (claims.isEmpty()) {
+            // If the cached list is empty, fetch claims from the data source and cache them
+            claims = deserializeClaimsForCustomer("data/claims.dat", customer);
+        }
         // Filter claims based on the customer's ID
         return claims.stream()
                 .filter(claim -> claim.getInsuredPerson().getCustomerID().equals(customer.getCustomerID()))
-                .collect(Collectors.toList());
+                .distinct()
+                .toList();
     }
 
     // Check if a claim has already exits
@@ -191,29 +204,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
         }
     }
 
-    // Method to deserialize all claims in the system (developed for admins only)
-    public List<Claim> deserializeAllClaimsFromFile(String filePath) {
-        List<Claim> importedClaims = new ArrayList<>();
-        try (FileInputStream fileInputStream = new FileInputStream(filePath);
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
 
-            Object importedObject = objectInputStream.readObject();
-
-            if (importedObject instanceof ArrayList<?>) {
-                @SuppressWarnings("unchecked")
-                ArrayList<Claim> allClaims = (ArrayList<Claim>) importedObject;
-                importedClaims.addAll(allClaims);
-                System.out.println("Claims have been deserialized and imported from " + filePath);
-            } else {
-                logger.log(Level.SEVERE, "Unexpected data format in the claims file.");
-            }
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "IO exception while reading claims file.", e);
-        } catch (ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "Class not found during deserialization.", e);
-        }
-        return importedClaims;
-    }
 
     // Method to serialize the claims to a .dat file
     public void serializeClaimsToFile(String filePath) {
@@ -240,6 +231,29 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
         }
     }
 
+    // Method to deserialize all claims in the system (developed for admins only)
+    public List<Claim> deserializeAllClaimsFromFile(String filePath) {
+        List<Claim> importedClaims = new ArrayList<>();
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+
+            Object importedObject = objectInputStream.readObject();
+
+            if (importedObject instanceof ArrayList<?>) {
+                @SuppressWarnings("unchecked")
+                ArrayList<Claim> allClaims = (ArrayList<Claim>) importedObject;
+                importedClaims.addAll(allClaims);
+                System.out.println("Claims have been deserialized and imported from " + filePath);
+            } else {
+                logger.log(Level.SEVERE, "Unexpected data format in the claims file.");
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "IO exception while reading claims file.", e);
+        } catch (ClassNotFoundException e) {
+            logger.log(Level.SEVERE, "Class not found during deserialization.", e);
+        }
+        return importedClaims;
+    }
 
     // Method to deserialize claims for a specific customer
     public List<Claim> deserializeClaimsForCustomer(String filePath, Customer customer) {
