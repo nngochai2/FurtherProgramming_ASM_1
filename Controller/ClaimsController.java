@@ -6,7 +6,9 @@ import Model.Customer;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -173,20 +175,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
         }
     }
 
-    // Method to serialize the claims to .dat file
-//    public void serializeClaimsToFile(String filePath) {
-//        createFileIfNotExists(filePath);
-//        try (FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-//            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)){
-//
-//            objectOutputStream.writeObject(claims);
-//            System.out.println("Claims have been serialized to file: " + filePath);
-//        } catch (IOException e) {
-//            logger.log(Level.SEVERE, "Error occurred while serializing claims to file " + filePath, e);
-//        }
-//    }
-
-
+    // Save new instance of claim to the text file without making any changes to the data file
     public void appendClaimToTextFile(Claim claim, String filePath) {
         try (FileWriter fileWriter = new FileWriter(filePath, true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -242,7 +231,13 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
             if (importedObject instanceof ArrayList<?>) {
                 @SuppressWarnings("unchecked")
                 ArrayList<Claim> allClaims = (ArrayList<Claim>) importedObject;
-                importedClaims.addAll(allClaims);
+                // Filter out duplicate claims based on claim ID
+                Set<String> claimIDs = new HashSet<>();
+                for (Claim claim : allClaims) {
+                    if (claimIDs.add(claim.getClaimID())) {
+                        importedClaims.add(claim);
+                    }
+                }
                 System.out.println("Claims have been deserialized and imported from " + filePath);
             } else {
                 logger.log(Level.SEVERE, "Unexpected data format in the claims file.");

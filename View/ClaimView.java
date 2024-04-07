@@ -115,7 +115,7 @@ public class ClaimView {
     // Display a claim's details
     public void displayClaimDetails(String claimID) {
         if (claimsController.claimExits(claimID)) {
-            Claim claim = claimsController.getClaimByID(claimID);
+            Claim claim = claimsController.getAClaim(claimID);
             System.out.println("Claim ID: " + claim.getClaimID());
             System.out.println("Date: " + claim.getClaimDate());
             System.out.println("Insured person: " + claim.getInsuredPerson());
