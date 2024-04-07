@@ -21,7 +21,7 @@ public class AdminView {
     private final InsuranceCardsController insuranceCardsController = InsuranceCardsController.getInstance();
     private final Scanner scanner = new Scanner(System.in);
 
-    // Authenticate admins' login menu
+    // Authenticate admins' login
     public void authenticateAdmins() {
         int maxAttempts = 5;
         int attempts = 0;
@@ -127,7 +127,7 @@ public class AdminView {
         }
     }
 
-    // Method to view all customers in the system (admin can choose to view all customers, all policyholders, or all dependents)
+    // Display a menu view all customers in the system (admin can choose to view all customers, all policyholders, or all dependents)
     public void viewAllCustomersMenu() {
         while (true) {
             System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMER____________________________________________________________________________________");
@@ -155,6 +155,7 @@ public class AdminView {
         }
     }
 
+    // Display all customers
     public void viewAllCustomers() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS____________________________________________________________________________________");
         List<Customer> customers = adminController.getAllCustomers();
@@ -181,6 +182,7 @@ public class AdminView {
         }
     }
 
+    // Display all policy holders
     public void viewAllPolicyHolders() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL POLICY HOLDERS____________________________________________________________________________________");
         List<PolicyHolder> policyHolders = adminController.getAllPolicyHolders();
@@ -205,6 +207,7 @@ public class AdminView {
         }
     }
 
+    // Display all dependents
     public void viewAllDependents() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW ALL DEPENDENTS____________________________________________________________________________________");
         List<Dependent> dependents = adminController.getAllDependents();
@@ -228,6 +231,7 @@ public class AdminView {
         }
     }
 
+    // Display a menu to prompt customer ID to display customer details
     public void viewACustomerDetails() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - VIEW ALL CUSTOMERS - VIEW A CUSTOMER DETAILS____________________________________________________________________________________");
         System.out.println("Enter customer ID (enter 'cancel' to cancel): ");
@@ -241,6 +245,7 @@ public class AdminView {
         this.displayCustomerDetails(customerID);
     }
 
+    // Display a customer details
     private void displayCustomerDetails(String customerID) {
         Customer customer = adminController.findCustomer(customerID);
         if (customer == null) {
@@ -268,6 +273,7 @@ public class AdminView {
 
     }
 
+    // Display a menu to add a policy holder
     public void addPolicyHolder() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - CREATE NEW POLICY HOLDER____________________________________________________________________________________");
         System.out.println("Enter the policy holder's name (enter 'cancel' to cancel): ");
@@ -308,6 +314,7 @@ public class AdminView {
         }
     }
 
+    // Display a menu to add a dependent
     public void addDependent() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - CREATE NEW DEPENDENT____________________________________________________________________________________");
         System.out.println("Enter a policy holder ID to add a dependent:");
@@ -356,6 +363,7 @@ public class AdminView {
         }
     }
 
+    // Display a menu to remove a customer
     public void removeCustomer() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE USERS - REMOVE A CUSTOMER____________________________________________________________________________________");
         System.out.println("Enter the ID of the customer you want to remove (enter 'cancel' to cancel): ");
@@ -383,10 +391,12 @@ public class AdminView {
         }
     }
 
-    public void modifyCustomer() {
 
+    public void modifyCustomer() {
+        // Have not been developed
     }
 
+    // Display a menu for admins to manage all claims in the system
     public void manageClaims() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS____________________________________________________________________________________");
         while (true) {
@@ -466,8 +476,8 @@ public class AdminView {
     private List<Claim> sortClaims(int sortChoice) {
         List<Claim> sortedClaims = new ArrayList<>(claimsController.getAllClaims());
         switch (sortChoice) {
-            case 1 -> sortedClaims.sort(Comparator.comparing(Claim::getClaimDate).reversed());
-            case 2 -> sortedClaims.sort(Comparator.comparing(Claim::getClaimDate));
+            case 1 -> sortedClaims.sort(Comparator.comparing(Claim::getClaimDate).reversed()); // Sort the claims from latest to oldest
+            case 2 -> sortedClaims.sort(Comparator.comparing(Claim::getClaimDate)); // Sort the claims from oldest to latest
             default -> System.err.println("Invalid choice. Sorting by default order.");
         }
         return sortedClaims;
@@ -509,6 +519,7 @@ public class AdminView {
         }
     }
 
+    // Display menu to modify a claim
     public void modifyAClaim() {
         while (true) {
             System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - MODIFY A CLAIM____________________________________________________________________________________");
@@ -519,6 +530,7 @@ public class AdminView {
                 break;
             }
 
+            // Get claim object
             Claim claimToEdit = claimsController.getClaimByID(claimID);
             if (claimToEdit == null) {
                 System.out.println("Claim not found. Please try again.");
@@ -547,13 +559,15 @@ public class AdminView {
                 return;
             }
 
+            // Asking for confirmation
             System.out.println("Do you want to save this change? (yes/no): ");
             String confirmation = scanner.nextLine();
 
             if (confirmation.equalsIgnoreCase("yes")) {
+                // Saving the changes
+                System.out.println("Claim has been updated successfully.");
                 claimsController.serializeClaimsToFile("data/claims.dat");
                 claimsController.saveClaimsToTextFile("data/claims.txt");
-                System.out.println("Claim has been updated successfully.");
             } else {
                 System.out.println("Procedure has been canceled.");
                 return;

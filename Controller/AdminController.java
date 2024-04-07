@@ -126,7 +126,7 @@ public class AdminController implements Serializable {
             objectOutputStream.writeObject(admins);
             System.out.println("Admin have been saved to " + filePath);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "IO exception while serializing admins file.");
+            logger.log(Level.SEVERE, "IO exception while serializing admins file.", e);
         }
     }
 
