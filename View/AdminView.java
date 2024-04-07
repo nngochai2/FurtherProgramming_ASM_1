@@ -19,6 +19,7 @@ public class AdminView {
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final ClaimsController claimsController = ClaimsController.getInstance();
     private final InsuranceCardsController insuranceCardsController = InsuranceCardsController.getInstance();
+    private List<Claim> claims = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
 
     // Authenticate admins' login
@@ -43,7 +44,7 @@ public class AdminView {
                 policyHoldersController.deserializePolicyHoldersFromFile("data/policyholders.dat");
                 dependentsController.deserializeAllDependents("data/dependents.dat");
                 insuranceCardsController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
-                claimsController.deserializeAllClaimsFromFile("data/claims.dat");
+                this.claims = claimsController.deserializeAllClaimsFromFile("data/claims.dat");
 
                 menu(); // Proceed to main menu
                 return; // Exit the method
@@ -423,7 +424,6 @@ public class AdminView {
     // Display all claims
     public void viewAllClaims() {
         System.out.println("________________________________________________________________________________ADMIN - MANAGE CLAIMS - VIEW ALL CLAIMS____________________________________________________________________________________");
-        List<Claim> claims = claimsController.deserializeAllClaimsFromFile("data/claims.dat");
 
         if (claims.isEmpty()) {
             System.out.println("No claims found in the system.");
@@ -502,7 +502,7 @@ public class AdminView {
     // Display a claim's details
     public void displayClaimDetails(String claimID) {
         if (claimsController.claimExits(claimID)) {
-            Claim claim = claimsController.getClaimByID(claimID);
+            Claim claim = claimsController.getAClaim(claimID);
             System.out.println("________________________________________________________________________________");
             System.out.println("Claim ID: " + claim.getClaimID());
             System.out.println("Date: " + claim.getClaimDate());
@@ -531,7 +531,7 @@ public class AdminView {
             }
 
             // Get claim object
-            Claim claimToEdit = claimsController.getClaimByID(claimID);
+            Claim claimToEdit = claimsController.getAClaim(claimID);
             if (claimToEdit == null) {
                 System.out.println("Claim not found. Please try again.");
                 return;

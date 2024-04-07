@@ -105,7 +105,7 @@ public class ClaimsController implements Serializable, ClaimProcessManager {
     // Method to get a claim by ID
     public Claim getClaimByID(String claimID) {
         Claim claim = null;
-        for (Claim c : deserializeAllClaimsFromFile("data/claims.dat")) {
+        for (Claim c : claims) {
             if (c.getClaimID().equals(claimID)) {
                 claim = c;
             }

@@ -165,7 +165,7 @@ public class ClaimView {
             System.out.println("Do you want to submit this claim? (yes/no):");
             String confirmation = scanner.nextLine();
             if (confirmation.equalsIgnoreCase("yes")) {
-                Claim claim = new Claim(claimsController.generateClaimID(), new Date(), currentCustomer, currentCustomer.getInsuranceCard().getCardNumber(),
+                Claim claim = new Claim(ClaimsController.generateClaimID(), new Date(), currentCustomer, currentCustomer.getInsuranceCard().getCardNumber(),
                         examDate, documents, claimAmount, Claim.Status.NEW, bankingInfo);
 
                 // Add the claim to the controller

@@ -136,7 +136,7 @@ public class DependentsController implements Serializable {
                             .filter(dependent -> dependent.getPolicyHolder().equals(currentPolicyHolder))
                             .collect(Collectors.toCollection(ArrayList::new));
 
-                    System.out.println("Dependents have been deserialized and imported from " + filePath + " for policy holder " + currentPolicyHolder.getCustomerID());
+                    System.out.println("Dependents have been deserialized and imported from " + filePath + " for policy holder " + currentPolicyHolder.getFullName());
                     return;
                 }
                 logger.log(Level.SEVERE, "Unexpected data format in the dependents file.");

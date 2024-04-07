@@ -18,12 +18,11 @@ public class PolicyHolderView {
     private final DependentsController dependentsController = DependentsController.getInstance();
     private final InsuranceCardsController insuranceCardsController = InsuranceCardsController.getInstance();
     private PolicyHolder currentPolicyHolder;
-    private final ClaimView claimView;
+    private ClaimView claimView = null;
     private final Scanner scanner = new Scanner(System.in);
 
     public PolicyHolderView() {
         this.currentPolicyHolder = policyHoldersController.getCurrentPolicyHolder();
-        this.claimView = new ClaimView(currentPolicyHolder);
     }
 
     // Manage user login
@@ -47,6 +46,8 @@ public class PolicyHolderView {
                 currentPolicyHolder = policyHolderCustomer; // Set the current policy holder
                 System.out.println("Login successful. Welcome, " + inputName + "!"); // Return welcome message
                 policyHoldersController.setCurrentPolicyHolder(currentPolicyHolder); // Set the current policy holder in the controller
+
+                // Get the data of policy holder
                 insuranceCardsController.deserializeInsuranceCardsFromFile("data/insuranceCards.dat");
                 dependentsController.deserializeDependentsForPolicyHolder("data/dependents.dat", currentPolicyHolder);
                 menu(); // Proceed to main menu
@@ -95,6 +96,7 @@ public class PolicyHolderView {
                 case 2 -> this.viewInsuranceCard();
                 case 3 -> {
                     // Set the current policyholder to be the current user in ClaimView
+                    claimView = new ClaimView(currentPolicyHolder);
                     claimView.setCurrentCustomer(currentPolicyHolder);
                     claimView.viewClaimsMenu();
                 }
